@@ -83,15 +83,15 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section
-        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
-    >
+    <section class="relative overflow-hidden border-b border-slate-200 bg-white">
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <h1 class="text-3xl font-bold md:text-5xl">Kontak Kami</h1>
-            <p class="mx-auto mt-4 max-w-2xl text-sm text-white/80 md:text-base">
+            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl">
+                Kontak <span class="text-amber-600">Kami</span>
+            </h1>
+            <p class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
                 Hubungi tim peneliti untuk informasi lebih lanjut tentang
                 pengembangan KRIYALAB.
             </p>
@@ -154,7 +154,7 @@
                     >
                         <div class="flex items-start gap-4">
                             <div
-                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-amber-500 to-orange-500 text-xl font-bold text-white"
+                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xl font-bold text-white"
                             >
                                 {person.name
                                     .split(' ')
@@ -366,7 +366,7 @@
                         <Button
                             type="submit"
                             disabled={processing}
-                            class="w-full gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 py-6 text-base font-semibold text-white hover:opacity-95"
+                            class="w-full gap-2 rounded-full bg-amber-500 py-6 text-base font-semibold text-white hover:bg-amber-600"
                         >
                             {#if processing}<Spinner />{/if}
                             <Send class="size-4" />

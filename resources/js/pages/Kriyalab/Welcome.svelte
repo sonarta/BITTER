@@ -58,40 +58,33 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section
-        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
-    >
+    <section class="relative overflow-hidden bg-white">
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.15),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(251,146,60,0.25),transparent_50%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
         ></div>
         <div
             class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-16 text-center md:py-24 lg:py-32"
         >
             <span
-                class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold backdrop-blur-sm"
+                class="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-700"
             >
                 <Sparkles class="size-4" />
                 Model Pembelajaran FLIS-FREAN
             </span>
             <h1
-                class="max-w-4xl text-3xl font-bold leading-tight md:text-4xl lg:text-5xl xl:text-6xl"
+                class="max-w-4xl text-3xl font-bold leading-tight text-slate-900 md:text-4xl lg:text-5xl xl:text-6xl"
             >
                 Bangun Masa Depan
-                <span class="block text-amber-300">
+                <span class="block text-amber-600">
                     Bisnis Kreatif Anda di KRIYALAB
                 </span>
             </h1>
             <div class="mt-6 max-w-2xl space-y-3">
                 <p
-                    class="text-sm font-medium text-white/90 md:text-base lg:text-lg"
+                    class="text-sm font-medium text-slate-700 md:text-base lg:text-lg"
                 >
                     Platform Inkubator Bisnis Digital Mahasiswa Pendidikan Kriya
                     berbasis Model Pembelajaran FLIS-FREAN.
-                </p>
-                <p class="text-sm text-white/80 md:text-base">
-                    Ubah karya seni dan kreativitas Anda menjadi peluang usaha
-                    yang nyata melalui sistem pembelajaran mandiri, interaktif,
-                    dan kolaboratif.
                 </p>
             </div>
             <div
@@ -100,7 +93,7 @@
                 <Link href="/login">
                     <Button
                         size="lg"
-                        class="h-13 gap-2 rounded-full bg-amber-400 px-8 text-base font-semibold text-slate-900 shadow-xl shadow-amber-400/30 hover:bg-amber-300"
+                        class="h-13 gap-2 rounded-full bg-amber-500 px-8 text-base font-semibold text-white hover:bg-amber-600"
                     >
                         Masuk Ke LMS
                         <ArrowRight class="size-5" />
@@ -110,7 +103,7 @@
                     <Button
                         size="lg"
                         variant="outline"
-                        class="h-13 rounded-full border-white/40 bg-white/10 px-6 text-base font-medium text-white backdrop-blur-sm hover:bg-white/20 hover:text-white"
+                        class="h-13 rounded-full border-slate-300 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50"
                     >
                         Pelajari Lebih Lanjut
                     </Button>
@@ -250,7 +243,7 @@
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md shadow-amber-500/20"
                         >
                             <Icon class="size-6" />
                         </div>
@@ -273,10 +266,10 @@
     <section class="pb-16">
         <div class="mx-auto w-full max-w-5xl px-4">
             <div
-                class="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 px-6 py-12 text-center text-white shadow-xl md:px-12"
+                class="relative overflow-hidden rounded-3xl bg-slate-900 px-6 py-12 text-center text-white shadow-xl md:px-12"
             >
                 <div
-                    class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent_50%)]"
+                    class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(245,158,11,0.15),transparent_50%)]"
                 ></div>
                 <h2 class="text-2xl font-bold md:text-3xl">
                     Siap memulai perjalanan bisnis kreatif Anda?

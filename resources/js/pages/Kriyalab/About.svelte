@@ -35,15 +35,15 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section
-        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
-    >
+    <section class="relative overflow-hidden border-b border-slate-200 bg-white">
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <h1 class="text-3xl font-bold md:text-5xl">Tentang KRIYALAB</h1>
-            <p class="mx-auto mt-4 max-w-2xl text-sm text-white/80 md:text-base">
+            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl">
+                Tentang <span class="text-amber-600">KRIYALAB</span>
+            </h1>
+            <p class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
                 Inkubator Bisnis & Kewirausahaan Kreatif untuk mahasiswa
                 Pendidikan Kriya.
             </p>
@@ -121,7 +121,7 @@
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md shadow-amber-500/20"
                         >
                             <Icon class="size-6" />
                         </div>

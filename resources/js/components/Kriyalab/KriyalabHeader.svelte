@@ -2,6 +2,7 @@
     import { Link } from '@inertiajs/svelte';
     import Home from 'lucide-svelte/icons/home';
     import Info from 'lucide-svelte/icons/info';
+    import Mail from 'lucide-svelte/icons/mail';
     import Palette from 'lucide-svelte/icons/palette';
     import { Button } from '@/components/ui/button';
     import { currentUrlState } from '@/lib/currentUrl.svelte';
@@ -16,7 +17,7 @@
     }[] = [
         { label: 'Beranda', href: '/kriyalab', icon: Home },
         { label: 'Tentang', href: '/kriyalab/tentang', icon: Info },
-        { label: 'Kontak', href: '/kriyalab/kontak', icon: Info },
+        { label: 'Kontak', href: '/kriyalab/kontak', icon: Mail },
     ];
 
     function isActive(href: string): boolean {
@@ -29,18 +30,18 @@
 </script>
 
 <header
-    class="sticky top-0 z-40 border-b border-white/10 bg-linear-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20"
+    class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 backdrop-blur-md"
 >
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/kriyalab" class="flex items-center gap-3 outline-none">
             <div
-                class="flex size-11 items-center justify-center rounded-lg bg-white/20 text-white backdrop-blur-sm"
+                class="flex size-11 items-center justify-center rounded-lg bg-amber-500 text-white"
             >
                 <Palette class="size-5" />
             </div>
             <div class="leading-tight">
                 <p class="text-lg font-bold tracking-tight">KRIYALAB</p>
-                <p class="text-[11px] text-white/70">
+                <p class="text-[11px] text-slate-500">
                     Bisnis & Kewirausahaan Kreatif
                 </p>
             </div>
@@ -54,8 +55,8 @@
                     class={[
                         'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                         isActive(item.href)
-                            ? 'text-white underline decoration-white/80 underline-offset-4'
-                            : 'text-white/80 hover:text-white',
+                            ? 'text-amber-600'
+                            : 'text-slate-600 hover:text-slate-900',
                     ]}
                 >
                     {item.label}
@@ -67,7 +68,7 @@
             <Link href="/login">
                 <Button
                     size="sm"
-                    class="bg-white text-indigo-700 hover:bg-white/90"
+                    class="bg-amber-500 text-white hover:bg-amber-600"
                 >
                     Masuk Ke LMS
                 </Button>
@@ -78,7 +79,7 @@
 
 <!-- Mobile bottom nav -->
 <nav
-    class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-linear-to-r from-amber-600 to-yellow-500 text-white shadow-lg md:hidden"
+    class="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 text-slate-700 backdrop-blur-md md:hidden"
 >
     <div class="mx-auto flex max-w-7xl">
         {#each navItems as item (item.href)}
@@ -88,8 +89,8 @@
                 class={[
                     'flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center transition-colors',
                     isActive(item.href)
-                        ? 'text-white'
-                        : 'text-white/60 hover:text-white/90',
+                        ? 'text-amber-600'
+                        : 'text-slate-500 hover:text-slate-900',
                 ]}
             >
                 <Icon class="size-5" />
@@ -98,7 +99,7 @@
         {/each}
         <Link
             href="/login"
-            class="flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center text-white/60 transition-colors hover:text-white/90"
+            class="flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center text-slate-500 transition-colors hover:text-slate-900"
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
