@@ -3,6 +3,7 @@
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\KriyalabController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -110,6 +111,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [InstructorController::class, 'index'])->name('index');
         Route::get('courses', [InstructorController::class, 'courses'])->name('courses');
     });
+});
+
+Route::prefix('kriyalab')->name('kriyalab.')->group(function () {
+    Route::get('/', [KriyalabController::class, 'welcome'])->name('welcome');
+    Route::get('tentang', [KriyalabController::class, 'about'])->name('about');
+    Route::get('kontak', [KriyalabController::class, 'contact'])->name('contact');
+    Route::post('kontak', [KriyalabController::class, 'sendContact'])->name('contact.send');
 });
 
 require __DIR__.'/settings.php';
