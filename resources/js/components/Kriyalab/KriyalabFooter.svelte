@@ -8,7 +8,7 @@
         <div class="md:col-span-2">
             <div class="flex items-center gap-3">
                 <div
-                    class="flex size-10 items-center justify-center rounded-full bg-indigo-500/20 text-indigo-300"
+                    class="flex size-10 items-center justify-center rounded-full bg-amber-500/20 text-amber-300"
                 >
                     <Palette class="size-5" />
                 </div>

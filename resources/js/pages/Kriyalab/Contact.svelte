@@ -84,7 +84,7 @@
 
     <!-- Hero -->
     <section
-        class="relative overflow-hidden bg-linear-to-br from-indigo-700 via-indigo-600 to-purple-600 text-white"
+        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
     >
         <div
             class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%)]"
@@ -102,11 +102,11 @@
     <section class="pb-8">
         <div class="mx-auto w-full max-w-6xl px-4">
             <div
-                class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-indigo-500/5 md:p-8"
+                class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-amber-500/5 md:p-8"
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-indigo-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
                     >
                         <Mail class="size-5" />
                         Informasi Kontak
@@ -122,7 +122,7 @@
                             class="flex flex-col items-center rounded-xl border border-slate-200 bg-slate-50 p-5 text-center"
                         >
                             <div
-                                class="flex size-11 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600"
+                                class="flex size-11 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
                             >
                                 <info.icon class="size-5" />
                             </div>
@@ -154,7 +154,7 @@
                     >
                         <div class="flex items-start gap-4">
                             <div
-                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-purple-600 text-xl font-bold text-white"
+                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-amber-500 to-orange-500 text-xl font-bold text-white"
                             >
                                 {person.name
                                     .split(' ')
@@ -166,7 +166,7 @@
                                 <h3 class="truncate text-base font-bold">
                                     {person.name}
                                 </h3>
-                                <p class="text-xs font-medium text-indigo-600">
+                                <p class="text-xs font-medium text-amber-600">
                                     {person.role}
                                 </p>
                             </div>
@@ -174,7 +174,7 @@
                         <div class="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm">
                             <div class="flex items-start gap-2">
                                 <Building2
-                                    class="mt-0.5 size-4 shrink-0 text-indigo-500"
+                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
                                 />
                                 <div>
                                     <p
@@ -187,7 +187,7 @@
                             </div>
                             <div class="flex items-start gap-2">
                                 <GraduationCap
-                                    class="mt-0.5 size-4 shrink-0 text-indigo-500"
+                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
                                 />
                                 <div>
                                     <p
@@ -200,7 +200,7 @@
                             </div>
                             <div class="flex items-start gap-2">
                                 <Mail
-                                    class="mt-0.5 size-4 shrink-0 text-indigo-500"
+                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
                                 />
                                 <div class="min-w-0">
                                     <p
@@ -210,7 +210,7 @@
                                     </p>
                                     <a
                                         href={`mailto:${person.email}`}
-                                        class="block truncate text-indigo-600 hover:underline"
+                                        class="block truncate text-amber-600 hover:underline"
                                     >
                                         {person.email}
                                     </a>
@@ -218,9 +218,9 @@
                             </div>
                         </div>
                         <div
-                            class="mt-4 rounded-lg border-l-4 border-indigo-500 bg-indigo-50 p-3"
+                            class="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3"
                         >
-                            <p class="flex items-center gap-1 text-xs font-semibold text-indigo-700">
+                            <p class="flex items-center gap-1 text-xs font-semibold text-amber-700">
                                 <MapPin class="size-3.5" />
                                 Bidang Keahlian
                             </p>
@@ -242,7 +242,7 @@
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-indigo-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
                     >
                         <Lightbulb class="size-5" />
                         Informasi Tambahan
@@ -282,7 +282,7 @@
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-indigo-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
                     >
                         <Send class="size-5" />
                         Kirim Pesan
@@ -366,7 +366,7 @@
                         <Button
                             type="submit"
                             disabled={processing}
-                            class="w-full gap-2 rounded-full bg-linear-to-r from-indigo-600 to-purple-600 py-6 text-base font-semibold text-white hover:opacity-95"
+                            class="w-full gap-2 rounded-full bg-linear-to-r from-amber-500 to-orange-500 py-6 text-base font-semibold text-white hover:opacity-95"
                         >
                             {#if processing}<Spinner />{/if}
                             <Send class="size-4" />

@@ -29,12 +29,12 @@
 </script>
 
 <header
-    class="sticky top-0 z-40 border-b border-white/10 bg-linear-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-900/20"
+    class="sticky top-0 z-40 border-b border-white/10 bg-linear-to-r from-amber-600 to-yellow-500 text-white shadow-lg shadow-amber-500/20"
 >
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/kriyalab" class="flex items-center gap-3 outline-none">
             <div
-                class="flex size-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm"
+                class="flex size-11 items-center justify-center rounded-lg bg-white/20 text-white backdrop-blur-sm"
             >
                 <Palette class="size-5" />
             </div>
@@ -78,7 +78,7 @@
 
 <!-- Mobile bottom nav -->
 <nav
-    class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-linear-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white shadow-lg md:hidden"
+    class="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-linear-to-r from-amber-600 to-yellow-500 text-white shadow-lg md:hidden"
 >
     <div class="mx-auto flex max-w-7xl">
         {#each navItems as item (item.href)}

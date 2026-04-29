@@ -36,7 +36,7 @@
 
     <!-- Hero -->
     <section
-        class="relative overflow-hidden bg-linear-to-br from-indigo-700 via-indigo-600 to-purple-600 text-white"
+        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
     >
         <div
             class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.15),transparent_40%)]"
@@ -54,7 +54,7 @@
     <section class="py-16 md:py-20">
         <div class="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
             <div>
-                <p class="text-sm font-semibold text-indigo-600">Visi Kami</p>
+                <p class="text-sm font-semibold text-amber-600">Visi Kami</p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Mengubah karya seni menjadi peluang usaha nyata
                 </h2>
@@ -82,7 +82,7 @@
                         class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                     >
                         <div
-                            class="flex size-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600"
+                            class="flex size-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
                         >
                             <item.icon class="size-5" />
                         </div>
@@ -98,7 +98,7 @@
     <section class="bg-white py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-indigo-600">
+                <p class="text-sm font-semibold text-amber-600">
                     Pendekatan Pembelajaran
                 </p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
@@ -113,22 +113,22 @@
                 {#each learningModel as phase, idx (phase.phase)}
                     {@const Icon = iconMap[phase.icon] ?? BookOpen}
                     <div
-                        class="relative overflow-hidden rounded-2xl border border-indigo-100 bg-linear-to-br from-indigo-50 to-white p-6"
+                        class="relative overflow-hidden rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-6"
                     >
                         <span
-                            class="absolute top-4 right-5 text-5xl font-black text-indigo-100 select-none"
+                            class="absolute top-4 right-5 text-5xl font-black text-amber-100 select-none"
                         >
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20"
                         >
                             <Icon class="size-6" />
                         </div>
                         <h3 class="relative mt-5 text-lg font-bold">
                             {phase.phase}
                         </h3>
-                        <p class="relative text-xs font-medium text-indigo-600">
+                        <p class="relative text-xs font-medium text-amber-600">
                             {phase.subtitle}
                         </p>
                         <p class="relative mt-3 text-sm leading-relaxed text-slate-600">
@@ -148,12 +148,12 @@
             >
                 <div class="flex flex-col items-start gap-6 md:flex-row md:items-center">
                     <div
-                        class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-indigo-100 text-indigo-600"
+                        class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600"
                     >
                         <FlaskConical class="size-8" />
                     </div>
                     <div>
-                        <p class="text-sm font-semibold text-indigo-600">
+                        <p class="text-sm font-semibold text-amber-600">
                             Metodologi Penelitian
                         </p>
                         <h3 class="mt-1 text-2xl font-bold">
@@ -189,7 +189,7 @@
                 <Link href="/kriyalab/kontak">
                     <Button
                         size="lg"
-                        class="h-12 rounded-full bg-indigo-600 px-8 text-base font-semibold text-white hover:bg-indigo-700"
+                        class="h-12 rounded-full bg-amber-500 px-8 text-base font-semibold text-white hover:bg-amber-600"
                     >
                         Hubungi Kami
                     </Button>

@@ -59,10 +59,10 @@
 
     <!-- Hero -->
     <section
-        class="relative overflow-hidden bg-linear-to-br from-indigo-700 via-indigo-600 to-purple-600 text-white"
+        class="relative overflow-hidden bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 text-white"
     >
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.15),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.25),transparent_50%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.15),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(251,146,60,0.25),transparent_50%)]"
         ></div>
         <div
             class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-16 text-center md:py-24 lg:py-32"
@@ -123,7 +123,7 @@
     <section class="py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-indigo-600">
+                <p class="text-sm font-semibold text-amber-600">
                     Katalog Materi
                 </p>
                 <h2
@@ -141,7 +141,7 @@
                 {#each modules as mod, idx (mod.number)}
                     {@const Icon = iconMap[mod.icon] ?? BookOpen}
                     <article
-                        class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-indigo-200 hover:shadow-lg hover:shadow-indigo-500/5"
+                        class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-amber-200 hover:shadow-lg hover:shadow-amber-500/5"
                     >
                         <div
                             class="absolute top-0 right-0 text-[120px] font-black leading-none text-slate-100 opacity-50 select-none"
@@ -151,13 +151,13 @@
                         <div class="relative">
                             <div class="flex items-start gap-3">
                                 <div
-                                    class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-indigo-600"
+                                    class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600"
                                 >
                                     <Icon class="size-5" />
                                 </div>
                                 <div>
                                     <p
-                                        class="text-xs font-semibold uppercase tracking-wider text-indigo-600"
+                                        class="text-xs font-semibold uppercase tracking-wider text-amber-600"
                                     >
                                         {mod.number}
                                     </p>
@@ -172,7 +172,7 @@
                                         class="flex items-start gap-2 text-sm text-slate-700"
                                     >
                                         <CheckCircle2
-                                            class="mt-0.5 size-4 shrink-0 text-indigo-500"
+                                            class="mt-0.5 size-4 shrink-0 text-amber-500"
                                         />
                                         <span>{item}</span>
                                     </li>
@@ -189,12 +189,12 @@
             >
                 <div class="mb-5 flex items-center gap-3">
                     <div
-                        class="flex size-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600"
+                        class="flex size-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
                     >
                         <Award class="size-5" />
                     </div>
                     <div>
-                        <p class="text-xs font-semibold uppercase text-indigo-600">
+                        <p class="text-xs font-semibold uppercase text-amber-600">
                             Bobot Penilaian
                         </p>
                         <p class="text-sm font-semibold">
@@ -207,7 +207,7 @@
                         <div
                             class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center"
                         >
-                            <p class="text-2xl font-bold text-indigo-600">
+                            <p class="text-2xl font-bold text-amber-600">
                                 {item.value}%
                             </p>
                             <p class="mt-1 text-xs text-slate-600">
@@ -224,7 +224,7 @@
     <section class="bg-white py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-indigo-600">
+                <p class="text-sm font-semibold text-amber-600">
                     Model Pembelajaran
                 </p>
                 <h2
@@ -242,22 +242,22 @@
                 {#each learningModel as phase, idx (phase.phase)}
                     {@const Icon = iconMap[phase.icon] ?? BookOpen}
                     <div
-                        class="relative overflow-hidden rounded-2xl border border-indigo-100 bg-linear-to-br from-indigo-50 to-white p-6"
+                        class="relative overflow-hidden rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-6"
                     >
                         <span
-                            class="absolute top-4 right-5 text-5xl font-black text-indigo-100 select-none"
+                            class="absolute top-4 right-5 text-5xl font-black text-amber-100 select-none"
                         >
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-linear-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/20"
                         >
                             <Icon class="size-6" />
                         </div>
                         <h3 class="relative mt-5 text-lg font-bold">
                             {phase.phase}
                         </h3>
-                        <p class="relative text-xs font-medium text-indigo-600">
+                        <p class="relative text-xs font-medium text-amber-600">
                             {phase.subtitle}
                         </p>
                         <p class="relative mt-3 text-sm leading-relaxed text-slate-600">
@@ -273,7 +273,7 @@
     <section class="pb-16">
         <div class="mx-auto w-full max-w-5xl px-4">
             <div
-                class="relative overflow-hidden rounded-3xl bg-linear-to-br from-indigo-700 via-indigo-600 to-purple-600 px-6 py-12 text-center text-white shadow-xl md:px-12"
+                class="relative overflow-hidden rounded-3xl bg-linear-to-br from-amber-500 via-yellow-500 to-orange-500 px-6 py-12 text-center text-white shadow-xl md:px-12"
             >
                 <div
                     class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.15),transparent_50%)]"
