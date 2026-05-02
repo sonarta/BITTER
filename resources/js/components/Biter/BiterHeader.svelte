@@ -15,14 +15,14 @@
         href: string;
         icon: typeof Home;
     }[] = [
-        { label: 'Beranda', href: '/kriyalab', icon: Home },
-        { label: 'Tentang', href: '/kriyalab/tentang', icon: Info },
-        { label: 'Kontak', href: '/kriyalab/kontak', icon: Mail },
+        { label: 'Beranda', href: '/biter', icon: Home },
+        { label: 'Tentang', href: '/biter/tentang', icon: Info },
+        { label: 'Kontak', href: '/biter/kontak', icon: Mail },
     ];
 
     function isActive(href: string): boolean {
-        if (href === '/kriyalab') {
-            return currentPath === '/kriyalab' || currentPath === '/kriyalab/';
+        if (href === '/biter') {
+            return currentPath === '/biter' || currentPath === '/biter/';
         }
 
         return currentPath.startsWith(href);
@@ -33,14 +33,14 @@
     class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 backdrop-blur-md"
 >
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4">
-        <Link href="/kriyalab" class="flex items-center gap-3 outline-none">
+        <Link href="/biter" class="flex items-center gap-3 outline-none">
             <div
                 class="flex size-11 items-center justify-center rounded-lg bg-[#1964af] text-white"
             >
                 <Palette class="size-5" />
             </div>
             <div class="leading-tight">
-                <p class="text-lg font-bold tracking-tight">KRIYALAB</p>
+                <p class="text-lg font-bold tracking-tight">BITER</p>
                 <p class="text-[11px] text-slate-500">
                     Bisnis & Kewirausahaan Kreatif
                 </p>

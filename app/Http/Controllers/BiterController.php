@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class KriyalabController extends Controller
+class BiterController extends Controller
 {
     public function welcome(): Response
     {
-        return Inertia::render('Kriyalab/Welcome', [
+        return Inertia::render('Biter/Welcome', [
             'modules' => $this->modules(),
             'assessment' => $this->assessment(),
             'learningModel' => $this->learningModel(),
@@ -20,14 +20,14 @@ class KriyalabController extends Controller
 
     public function about(): Response
     {
-        return Inertia::render('Kriyalab/About', [
+        return Inertia::render('Biter/About', [
             'learningModel' => $this->learningModel(),
         ]);
     }
 
     public function contact(): Response
     {
-        return Inertia::render('Kriyalab/Contact', [
+        return Inertia::render('Biter/Contact', [
             'researchers' => $this->researchers(),
             'subjects' => [
                 'Informasi Umum',

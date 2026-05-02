@@ -3,10 +3,10 @@
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstructorController;
-use App\Http\Controllers\KriyalabController;
+use App\Http\Controllers\BiterController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [KriyalabController::class, 'welcome'])->name('home');
+Route::get('/', [BiterController::class, 'welcome'])->name('home');
 
 Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
@@ -23,11 +23,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 });
 
-Route::prefix('kriyalab')->name('kriyalab.')->group(function () {
-    Route::get('/', [KriyalabController::class, 'welcome'])->name('welcome');
-    Route::get('tentang', [KriyalabController::class, 'about'])->name('about');
-    Route::get('kontak', [KriyalabController::class, 'contact'])->name('contact');
-    Route::post('kontak', [KriyalabController::class, 'sendContact'])->name('contact.send');
+Route::prefix('biter')->name('biter.')->group(function () {
+    Route::get('/', [BiterController::class, 'welcome'])->name('welcome');
+    Route::get('tentang', [BiterController::class, 'about'])->name('about');
+    Route::get('kontak', [BiterController::class, 'contact'])->name('contact');
+    Route::post('kontak', [BiterController::class, 'sendContact'])->name('contact.send');
 });
 
 require __DIR__.'/settings.php';

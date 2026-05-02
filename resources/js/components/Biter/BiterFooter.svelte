@@ -13,7 +13,7 @@
                     <Palette class="size-5" />
                 </div>
                 <div>
-                    <p class="text-lg font-bold text-white">KRIYALAB</p>
+                    <p class="text-lg font-bold text-white">BITER</p>
                     <p class="text-xs text-slate-400">
                         Bisnis & Kewirausahaan Kreatif Pendidikan Kriya
                     </p>
@@ -48,14 +48,14 @@
             class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-slate-500 md:flex-row"
         >
             <p>
-                &copy; {new Date().getFullYear()} KRIYALAB. Dikembangkan untuk keperluan
+                &copy; {new Date().getFullYear()} BITER. Dikembangkan untuk keperluan
                 penelitian R&D.
             </p>
             <div class="flex gap-4">
-                <Link href="/kriyalab/tentang" class="hover:text-slate-300">
+                <Link href="/biter/tentang" class="hover:text-slate-300">
                     Tentang
                 </Link>
-                <Link href="/kriyalab/kontak" class="hover:text-slate-300">
+                <Link href="/biter/kontak" class="hover:text-slate-300">
                     Kontak
                 </Link>
             </div>

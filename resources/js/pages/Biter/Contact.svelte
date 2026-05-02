@@ -11,8 +11,8 @@
     import Send from 'lucide-svelte/icons/send';
     import AppHead from '@/components/AppHead.svelte';
     import InputError from '@/components/InputError.svelte';
-    import KriyalabFooter from '@/components/Kriyalab/KriyalabFooter.svelte';
-    import KriyalabHeader from '@/components/Kriyalab/KriyalabHeader.svelte';
+    import BiterFooter from '@/components/Biter/BiterFooter.svelte';
+    import BiterHeader from '@/components/Biter/BiterHeader.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
@@ -49,7 +49,7 @@
         {
             icon: Globe,
             label: 'Sistem',
-            value: 'KRIYALAB – Inkubator Bisnis Kreatif',
+            value: 'BITER – Inkubator Bisnis Kreatif',
         },
         {
             icon: Lightbulb,
@@ -77,10 +77,10 @@
     ];
 </script>
 
-<AppHead title="Kontak Kami - KRIYALAB" />
+<AppHead title="Kontak Kami - BITER" />
 
 <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-    <KriyalabHeader />
+    <BiterHeader />
 
     <!-- Hero -->
     <section
@@ -97,7 +97,7 @@
                 class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base md:text-white/85"
             >
                 Hubungi tim peneliti untuk informasi lebih lanjut tentang
-                pengembangan KRIYALAB.
+                pengembangan BITER.
             </p>
         </div>
     </section>
@@ -117,7 +117,7 @@
                     </p>
                     <p class="mt-2 text-sm text-slate-600">
                         Untuk pertanyaan, saran, atau peluang kolaborasi terkait
-                        sistem KRIYALAB, silakan hubungi tim peneliti kami.
+                        sistem BITER, silakan hubungi tim peneliti kami.
                     </p>
                 </div>
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -147,7 +147,7 @@
                     Profil Tim Peneliti
                 </h2>
                 <p class="mt-2 text-sm text-slate-600">
-                    Akademisi yang mengembangkan ekosistem KRIYALAB.
+                    Akademisi yang mengembangkan ekosistem BITER.
                 </p>
             </div>
 
@@ -297,7 +297,7 @@
                 </div>
 
                 <Form
-                    action="/kriyalab/kontak"
+                    action="/biter/kontak"
                     method="post"
                     resetOnSuccess
                     class="space-y-5"
@@ -385,5 +385,5 @@
     <!-- Spacer for mobile bottom nav -->
     <div class="h-16 md:hidden"></div>
 
-    <KriyalabFooter />
+    <BiterFooter />
 </div>

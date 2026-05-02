@@ -11,8 +11,8 @@
     import Users from 'lucide-svelte/icons/users';
     import type { ComponentType, SvelteComponent } from 'svelte';
     import AppHead from '@/components/AppHead.svelte';
-    import KriyalabFooter from '@/components/Kriyalab/KriyalabFooter.svelte';
-    import KriyalabHeader from '@/components/Kriyalab/KriyalabHeader.svelte';
+    import BiterFooter from '@/components/Biter/BiterFooter.svelte';
+    import BiterHeader from '@/components/Biter/BiterHeader.svelte';
     import { Button } from '@/components/ui/button';
 
     type Module = {
@@ -52,10 +52,10 @@
     };
 </script>
 
-<AppHead title="KRIYALAB - Inkubator Bisnis Kreatif" />
+<AppHead title="BITER - Inkubator Bisnis Kreatif" />
 
 <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-    <KriyalabHeader />
+    <BiterHeader />
 
     <!-- Hero -->
     <section
@@ -78,7 +78,7 @@
             >
                 Bangun Masa Depan
                 <span class="block text-[#1964af] md:text-[#cbe4f8]">
-                    Bisnis Kreatif Anda di KRIYALAB
+                    Bisnis Kreatif Anda di BITER
                 </span>
             </h1>
             <div class="mt-6 max-w-2xl space-y-3">
@@ -101,7 +101,7 @@
                         <ArrowRight class="size-5" />
                     </Button>
                 </Link>
-                <Link href="/kriyalab/tentang">
+                <Link href="/biter/tentang">
                     <Button
                         size="lg"
                         variant="outline"
@@ -277,7 +277,7 @@
                     Siap memulai perjalanan bisnis kreatif Anda?
                 </h2>
                 <p class="mx-auto mt-3 max-w-xl text-sm text-white/80 md:text-base">
-                    Akses seluruh materi pembelajaran melalui LMS KRIYALAB.
+                    Akses seluruh materi pembelajaran melalui LMS BITER.
                 </p>
                 <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                     <Link href="/login">
@@ -289,7 +289,7 @@
                             <ArrowRight class="size-4" />
                         </Button>
                     </Link>
-                    <Link href="/kriyalab/kontak">
+                    <Link href="/biter/kontak">
                         <Button
                             size="lg"
                             variant="outline"
@@ -306,5 +306,5 @@
     <!-- Spacer for mobile bottom nav -->
     <div class="h-16 md:hidden"></div>
 
-    <KriyalabFooter />
+    <BiterFooter />
 </div>
