@@ -35,7 +35,7 @@
     <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4">
         <Link href="/kriyalab" class="flex items-center gap-3 outline-none">
             <div
-                class="flex size-11 items-center justify-center rounded-lg bg-amber-500 text-white"
+                class="flex size-11 items-center justify-center rounded-lg bg-[#1964af] text-white"
             >
                 <Palette class="size-5" />
             </div>
@@ -55,7 +55,7 @@
                     class={[
                         'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                         isActive(item.href)
-                            ? 'text-amber-600'
+                            ? 'text-[#1964af]'
                             : 'text-slate-600 hover:text-slate-900',
                     ]}
                 >
@@ -68,7 +68,7 @@
             <Link href="/login">
                 <Button
                     size="sm"
-                    class="bg-amber-500 text-white hover:bg-amber-600"
+                    class="bg-[#1964af] text-white hover:bg-[#1964af]"
                 >
                     Masuk Ke LMS
                 </Button>
@@ -89,7 +89,7 @@
                 class={[
                     'flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center transition-colors',
                     isActive(item.href)
-                        ? 'text-amber-600'
+                        ? 'text-[#1964af]'
                         : 'text-slate-500 hover:text-slate-900',
                 ]}
             >

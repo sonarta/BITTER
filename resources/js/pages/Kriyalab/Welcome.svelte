@@ -58,30 +58,32 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section class="relative overflow-hidden bg-white">
+    <section
+        class="relative overflow-hidden bg-white md:bg-linear-to-br md:from-[#1964af] md:to-[#175a93]"
+    >
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(25,100,175,0.08),transparent_60%)] md:bg-[radial-gradient(circle_at_20%_30%,rgba(255,255,255,0.18),transparent_50%),radial-gradient(circle_at_80%_70%,rgba(125,176,219,0.25),transparent_50%)]"
         ></div>
         <div
             class="mx-auto flex w-full max-w-6xl flex-col items-center px-4 py-16 text-center md:py-24 lg:py-32"
         >
             <span
-                class="mb-6 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-700"
+                class="mb-6 inline-flex items-center gap-2 rounded-full border border-[#cbe4f8] bg-[#f0f7ff] px-4 py-1.5 text-xs font-semibold text-[#14508f] md:border-white/20 md:bg-white/10 md:text-white md:backdrop-blur-sm"
             >
                 <Sparkles class="size-4" />
                 Model Pembelajaran FLIS-FREAN
             </span>
             <h1
-                class="max-w-4xl text-3xl font-bold leading-tight text-slate-900 md:text-4xl lg:text-5xl xl:text-6xl"
+                class="max-w-4xl text-3xl font-bold leading-tight text-slate-900 md:text-4xl md:text-white lg:text-5xl xl:text-6xl"
             >
                 Bangun Masa Depan
-                <span class="block text-amber-600">
+                <span class="block text-[#1964af] md:text-[#cbe4f8]">
                     Bisnis Kreatif Anda di KRIYALAB
                 </span>
             </h1>
             <div class="mt-6 max-w-2xl space-y-3">
                 <p
-                    class="text-sm font-medium text-slate-700 md:text-base lg:text-lg"
+                    class="text-sm font-medium text-slate-700 md:text-base md:text-white/90 lg:text-lg"
                 >
                     Platform Inkubator Bisnis Digital Mahasiswa Pendidikan Kriya
                     berbasis Model Pembelajaran FLIS-FREAN.
@@ -93,7 +95,7 @@
                 <Link href="/login">
                     <Button
                         size="lg"
-                        class="h-13 gap-2 rounded-full bg-amber-500 px-8 text-base font-semibold text-white hover:bg-amber-600"
+                        class="h-13 gap-2 rounded-full bg-[#1964af] px-8 text-base font-semibold text-white hover:bg-[#1964af] md:bg-white md:text-[#14508f] md:hover:bg-white/90"
                     >
                         Masuk Ke LMS
                         <ArrowRight class="size-5" />
@@ -103,7 +105,7 @@
                     <Button
                         size="lg"
                         variant="outline"
-                        class="h-13 rounded-full border-slate-300 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50"
+                        class="h-13 rounded-full border-slate-300 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50 md:border-white/40 md:bg-white/10 md:text-white md:backdrop-blur-sm md:hover:bg-white/20 md:hover:text-white"
                     >
                         Pelajari Lebih Lanjut
                     </Button>
@@ -116,7 +118,7 @@
     <section class="py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-amber-600">
+                <p class="text-sm font-semibold text-[#1964af]">
                     Katalog Materi
                 </p>
                 <h2
@@ -134,7 +136,7 @@
                 {#each modules as mod, idx (mod.number)}
                     {@const Icon = iconMap[mod.icon] ?? BookOpen}
                     <article
-                        class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-amber-200 hover:shadow-lg hover:shadow-amber-500/5"
+                        class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-[#cbe4f8] hover:shadow-lg hover:shadow-[#1964af]/5"
                     >
                         <div
                             class="absolute top-0 right-0 text-[120px] font-black leading-none text-slate-100 opacity-50 select-none"
@@ -144,13 +146,13 @@
                         <div class="relative">
                             <div class="flex items-start gap-3">
                                 <div
-                                    class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600"
+                                    class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#e8f2fc] text-[#1964af]"
                                 >
                                     <Icon class="size-5" />
                                 </div>
                                 <div>
                                     <p
-                                        class="text-xs font-semibold uppercase tracking-wider text-amber-600"
+                                        class="text-xs font-semibold uppercase tracking-wider text-[#1964af]"
                                     >
                                         {mod.number}
                                     </p>
@@ -165,7 +167,7 @@
                                         class="flex items-start gap-2 text-sm text-slate-700"
                                     >
                                         <CheckCircle2
-                                            class="mt-0.5 size-4 shrink-0 text-amber-500"
+                                            class="mt-0.5 size-4 shrink-0 text-[#1964af]"
                                         />
                                         <span>{item}</span>
                                     </li>
@@ -182,12 +184,12 @@
             >
                 <div class="mb-5 flex items-center gap-3">
                     <div
-                        class="flex size-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
+                        class="flex size-10 items-center justify-center rounded-lg bg-[#e8f2fc] text-[#1964af]"
                     >
                         <Award class="size-5" />
                     </div>
                     <div>
-                        <p class="text-xs font-semibold uppercase text-amber-600">
+                        <p class="text-xs font-semibold uppercase text-[#1964af]">
                             Bobot Penilaian
                         </p>
                         <p class="text-sm font-semibold">
@@ -200,7 +202,7 @@
                         <div
                             class="rounded-xl border border-slate-200 bg-slate-50 p-4 text-center"
                         >
-                            <p class="text-2xl font-bold text-amber-600">
+                            <p class="text-2xl font-bold text-[#1964af]">
                                 {item.value}%
                             </p>
                             <p class="mt-1 text-xs text-slate-600">
@@ -217,7 +219,7 @@
     <section class="bg-white py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-amber-600">
+                <p class="text-sm font-semibold text-[#1964af]">
                     Model Pembelajaran
                 </p>
                 <h2
@@ -235,22 +237,22 @@
                 {#each learningModel as phase, idx (phase.phase)}
                     {@const Icon = iconMap[phase.icon] ?? BookOpen}
                     <div
-                        class="relative overflow-hidden rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-6"
+                        class="relative overflow-hidden rounded-2xl border border-[#e8f2fc] bg-linear-to-br from-[#f0f7ff] to-white p-6"
                     >
                         <span
-                            class="absolute top-4 right-5 text-5xl font-black text-amber-100 select-none"
+                            class="absolute top-4 right-5 text-5xl font-black text-[#e8f2fc] select-none"
                         >
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md shadow-amber-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-[#1964af] text-white shadow-md shadow-[#1964af]/20"
                         >
                             <Icon class="size-6" />
                         </div>
                         <h3 class="relative mt-5 text-lg font-bold">
                             {phase.phase}
                         </h3>
-                        <p class="relative text-xs font-medium text-amber-600">
+                        <p class="relative text-xs font-medium text-[#1964af]">
                             {phase.subtitle}
                         </p>
                         <p class="relative mt-3 text-sm leading-relaxed text-slate-600">
@@ -269,7 +271,7 @@
                 class="relative overflow-hidden rounded-3xl bg-slate-900 px-6 py-12 text-center text-white shadow-xl md:px-12"
             >
                 <div
-                    class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(245,158,11,0.15),transparent_50%)]"
+                    class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(25,100,175,0.15),transparent_50%)]"
                 ></div>
                 <h2 class="text-2xl font-bold md:text-3xl">
                     Siap memulai perjalanan bisnis kreatif Anda?
@@ -281,7 +283,7 @@
                     <Link href="/login">
                         <Button
                             size="lg"
-                            class="h-12 gap-2 rounded-full bg-amber-400 px-8 text-base font-semibold text-slate-900 hover:bg-amber-300"
+                            class="h-12 gap-2 rounded-full bg-white px-8 text-base font-semibold text-[#1964af] hover:bg-white/90"
                         >
                             Masuk Ke LMS
                             <ArrowRight class="size-4" />

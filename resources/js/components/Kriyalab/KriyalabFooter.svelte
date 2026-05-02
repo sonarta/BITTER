@@ -8,7 +8,7 @@
         <div class="md:col-span-2">
             <div class="flex items-center gap-3">
                 <div
-                    class="flex size-10 items-center justify-center rounded-full bg-amber-500/20 text-amber-300"
+                    class="flex size-10 items-center justify-center rounded-full bg-[#1964af]/20 text-[#1964af]/70"
                 >
                     <Palette class="size-5" />
                 </div>
@@ -27,7 +27,7 @@
         </div>
 
         <div>
-            <h4 class="text-sm font-semibold text-indigo-300">Tim Peneliti</h4>
+            <h4 class="text-sm font-semibold text-[#cbe4f8]">Tim Peneliti</h4>
             <ul class="mt-3 space-y-1.5 text-sm">
                 <li>Andra Saputra, M.Pd.</li>
                 <li class="text-xs text-slate-400">Ketua Tim Peneliti</li>
@@ -35,7 +35,7 @@
         </div>
 
         <div>
-            <h4 class="text-sm font-semibold text-indigo-300">Institusi</h4>
+            <h4 class="text-sm font-semibold text-[#cbe4f8]">Institusi</h4>
             <ul class="mt-3 space-y-1.5 text-sm">
                 <li>Program Studi Pendidikan Kriya</li>
                 <li class="text-xs text-slate-400">FSRD, ISI Padangpanjang</li>

@@ -35,15 +35,19 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section class="relative overflow-hidden border-b border-slate-200 bg-white">
+    <section
+        class="relative overflow-hidden border-b border-slate-200 bg-white md:border-b-0 md:bg-linear-to-br md:from-[#1964af] md:to-[#175a93]"
+    >
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(25,100,175,0.08),transparent_60%)] md:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl">
-                Tentang <span class="text-amber-600">KRIYALAB</span>
+            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl md:text-white">
+                Tentang <span class="text-[#1964af] md:text-[#cbe4f8]">KRIYALAB</span>
             </h1>
-            <p class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
+            <p
+                class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base md:text-white/85"
+            >
                 Inkubator Bisnis & Kewirausahaan Kreatif untuk mahasiswa
                 Pendidikan Kriya.
             </p>
@@ -54,7 +58,7 @@
     <section class="py-16 md:py-20">
         <div class="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
             <div>
-                <p class="text-sm font-semibold text-amber-600">Visi Kami</p>
+                <p class="text-sm font-semibold text-[#1964af]">Visi Kami</p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Mengubah karya seni menjadi peluang usaha nyata
                 </h2>
@@ -82,7 +86,7 @@
                         class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                     >
                         <div
-                            class="flex size-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
+                            class="flex size-10 items-center justify-center rounded-lg bg-[#e8f2fc] text-[#1964af]"
                         >
                             <item.icon class="size-5" />
                         </div>
@@ -98,7 +102,7 @@
     <section class="bg-white py-16 md:py-20">
         <div class="mx-auto w-full max-w-7xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-amber-600">
+                <p class="text-sm font-semibold text-[#1964af]">
                     Pendekatan Pembelajaran
                 </p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
@@ -113,22 +117,22 @@
                 {#each learningModel as phase, idx (phase.phase)}
                     {@const Icon = iconMap[phase.icon] ?? BookOpen}
                     <div
-                        class="relative overflow-hidden rounded-2xl border border-amber-100 bg-linear-to-br from-amber-50 to-white p-6"
+                        class="relative overflow-hidden rounded-2xl border border-[#e8f2fc] bg-linear-to-br from-[#f0f7ff] to-white p-6"
                     >
                         <span
-                            class="absolute top-4 right-5 text-5xl font-black text-amber-100 select-none"
+                            class="absolute top-4 right-5 text-5xl font-black text-[#e8f2fc] select-none"
                         >
                             0{idx + 1}
                         </span>
                         <div
-                            class="relative flex size-12 items-center justify-center rounded-xl bg-amber-500 text-white shadow-md shadow-amber-500/20"
+                            class="relative flex size-12 items-center justify-center rounded-xl bg-[#1964af] text-white shadow-md shadow-[#1964af]/20"
                         >
                             <Icon class="size-6" />
                         </div>
                         <h3 class="relative mt-5 text-lg font-bold">
                             {phase.phase}
                         </h3>
-                        <p class="relative text-xs font-medium text-amber-600">
+                        <p class="relative text-xs font-medium text-[#1964af]">
                             {phase.subtitle}
                         </p>
                         <p class="relative mt-3 text-sm leading-relaxed text-slate-600">
@@ -148,12 +152,12 @@
             >
                 <div class="flex flex-col items-start gap-6 md:flex-row md:items-center">
                     <div
-                        class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600"
+                        class="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-[#e8f2fc] text-[#1964af]"
                     >
                         <FlaskConical class="size-8" />
                     </div>
                     <div>
-                        <p class="text-sm font-semibold text-amber-600">
+                        <p class="text-sm font-semibold text-[#1964af]">
                             Metodologi Penelitian
                         </p>
                         <h3 class="mt-1 text-2xl font-bold">
@@ -189,7 +193,7 @@
                 <Link href="/kriyalab/kontak">
                     <Button
                         size="lg"
-                        class="h-12 rounded-full bg-amber-500 px-8 text-base font-semibold text-white hover:bg-amber-600"
+                        class="h-12 rounded-full bg-[#1964af] px-8 text-base font-semibold text-white hover:bg-[#1964af]"
                     >
                         Hubungi Kami
                     </Button>

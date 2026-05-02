@@ -83,15 +83,19 @@
     <KriyalabHeader />
 
     <!-- Hero -->
-    <section class="relative overflow-hidden border-b border-slate-200 bg-white">
+    <section
+        class="relative overflow-hidden border-b border-slate-200 bg-white md:border-b-0 md:bg-linear-to-br md:from-[#1964af] md:to-[#175a93]"
+    >
         <div
-            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(245,158,11,0.08),transparent_60%)]"
+            class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(25,100,175,0.08),transparent_60%)] md:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl">
-                Kontak <span class="text-amber-600">Kami</span>
+            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl md:text-white">
+                Kontak <span class="text-[#1964af] md:text-[#cbe4f8]">Kami</span>
             </h1>
-            <p class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base">
+            <p
+                class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base md:text-white/85"
+            >
                 Hubungi tim peneliti untuk informasi lebih lanjut tentang
                 pengembangan KRIYALAB.
             </p>
@@ -102,11 +106,11 @@
     <section class="pb-8">
         <div class="mx-auto w-full max-w-6xl px-4">
             <div
-                class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-amber-500/5 md:p-8"
+                class="rounded-2xl border border-slate-200 bg-white p-6 shadow-xl shadow-[#1964af]/5 md:p-8"
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-[#1964af]"
                     >
                         <Mail class="size-5" />
                         Informasi Kontak
@@ -122,7 +126,7 @@
                             class="flex flex-col items-center rounded-xl border border-slate-200 bg-slate-50 p-5 text-center"
                         >
                             <div
-                                class="flex size-11 items-center justify-center rounded-lg bg-amber-100 text-amber-600"
+                                class="flex size-11 items-center justify-center rounded-lg bg-[#e8f2fc] text-[#1964af]"
                             >
                                 <info.icon class="size-5" />
                             </div>
@@ -154,7 +158,7 @@
                     >
                         <div class="flex items-start gap-4">
                             <div
-                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-amber-500 text-xl font-bold text-white"
+                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-[#1964af] text-xl font-bold text-white"
                             >
                                 {person.name
                                     .split(' ')
@@ -166,7 +170,7 @@
                                 <h3 class="truncate text-base font-bold">
                                     {person.name}
                                 </h3>
-                                <p class="text-xs font-medium text-amber-600">
+                                <p class="text-xs font-medium text-[#1964af]">
                                     {person.role}
                                 </p>
                             </div>
@@ -174,7 +178,7 @@
                         <div class="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm">
                             <div class="flex items-start gap-2">
                                 <Building2
-                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
+                                    class="mt-0.5 size-4 shrink-0 text-[#1964af]"
                                 />
                                 <div>
                                     <p
@@ -187,7 +191,7 @@
                             </div>
                             <div class="flex items-start gap-2">
                                 <GraduationCap
-                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
+                                    class="mt-0.5 size-4 shrink-0 text-[#1964af]"
                                 />
                                 <div>
                                     <p
@@ -200,7 +204,7 @@
                             </div>
                             <div class="flex items-start gap-2">
                                 <Mail
-                                    class="mt-0.5 size-4 shrink-0 text-amber-500"
+                                    class="mt-0.5 size-4 shrink-0 text-[#1964af]"
                                 />
                                 <div class="min-w-0">
                                     <p
@@ -210,7 +214,7 @@
                                     </p>
                                     <a
                                         href={`mailto:${person.email}`}
-                                        class="block truncate text-amber-600 hover:underline"
+                                        class="block truncate text-[#1964af] hover:underline"
                                     >
                                         {person.email}
                                     </a>
@@ -218,9 +222,9 @@
                             </div>
                         </div>
                         <div
-                            class="mt-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3"
+                            class="mt-4 rounded-lg border-l-4 border-[#1964af] bg-[#f0f7ff] p-3"
                         >
-                            <p class="flex items-center gap-1 text-xs font-semibold text-amber-700">
+                            <p class="flex items-center gap-1 text-xs font-semibold text-[#14508f]">
                                 <MapPin class="size-3.5" />
                                 Bidang Keahlian
                             </p>
@@ -242,7 +246,7 @@
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-[#1964af]"
                     >
                         <Lightbulb class="size-5" />
                         Informasi Tambahan
@@ -259,7 +263,7 @@
                             class="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center"
                         >
                             <div
-                                class="mx-auto flex size-11 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600"
+                                class="mx-auto flex size-11 items-center justify-center rounded-lg bg-[#e8f2fc] text-[#1964af]"
                             >
                                 <item.icon class="size-5" />
                             </div>
@@ -282,7 +286,7 @@
             >
                 <div class="mb-6 text-center">
                     <p
-                        class="inline-flex items-center gap-2 text-lg font-bold text-amber-600"
+                        class="inline-flex items-center gap-2 text-lg font-bold text-[#1964af]"
                     >
                         <Send class="size-5" />
                         Kirim Pesan
@@ -366,7 +370,7 @@
                         <Button
                             type="submit"
                             disabled={processing}
-                            class="w-full gap-2 rounded-full bg-amber-500 py-6 text-base font-semibold text-white hover:bg-amber-600"
+                            class="w-full gap-2 rounded-full bg-[#1964af] py-6 text-base font-semibold text-white hover:bg-[#1964af]"
                         >
                             {#if processing}<Spinner />{/if}
                             <Send class="size-4" />
