@@ -54,10 +54,9 @@
     );
 
     function toggleComplete(): void {
-        const url = `/lessons/${current.slug}/progress`;
-        const method = completed ? 'delete' : 'post';
-        
-        router[method](url, {}, {
+        const url = `/lessons/${current.slug}/${completed ? 'incomplete' : 'complete'}`;
+
+        router.post(url, {}, {
             preserveScroll: true,
             preserveState: true,
         });

@@ -18,10 +18,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('my-learning', [CourseController::class, 'myLearning'])->name('my-learning');
     Route::post('courses/{slug}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
-    Route::get('learn/{course}', [CourseController::class, 'learn'])->name('learn.start');
-    Route::get('learn/{course}/{lesson}', [CourseController::class, 'learn'])->name('learn.lesson');
-    Route::post('lessons/{lesson}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
-    Route::post('lessons/{lesson}/incomplete', [ProgressController::class, 'markIncomplete'])->name('lessons.incomplete');
+    Route::get('learn/{courseSlug}', [CourseController::class, 'learn'])->name('learn.start');
+    Route::get('learn/{courseSlug}/{lessonSlug}', [CourseController::class, 'learn'])->name('learn.lesson');
+    Route::post('lessons/{slug}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
+    Route::post('lessons/{slug}/incomplete', [ProgressController::class, 'markIncomplete'])->name('lessons.incomplete');
 
     Route::prefix('instructor')->middleware('instructor')->name('instructor.')->group(function () {
         Route::get('/', [InstructorController::class, 'index'])->name('index');
