@@ -92,10 +92,12 @@
                 Track performance and manage your courses.
             </p>
         </div>
-        <Button size="lg" class="gap-2">
-            <Plus class="size-4" />
-            Create new course
-        </Button>
+        <Link href="/instructor/courses/create">
+            <Button size="lg" class="gap-2">
+                <Plus class="size-4" />
+                Create new course
+            </Button>
+        </Link>
     </section>
 
     <!-- Stats -->

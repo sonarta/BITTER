@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, router } from '@inertiajs/svelte';
     import BookOpen from 'lucide-svelte/icons/book-open';
     import CheckCircle2 from 'lucide-svelte/icons/check-circle-2';
     import ChevronRight from 'lucide-svelte/icons/chevron-right';
@@ -33,10 +33,12 @@
         course,
         modules = [],
         related = [],
+        is_enrolled = false,
     }: {
         course: Course;
         modules: CourseModule[];
         related: Course[];
+        is_enrolled?: boolean;
     } = $props();
 
     const totalLessons = $derived(
@@ -210,11 +212,21 @@
                             {/if}
                         </div>
 
-                        <Link href={`/learn/${course.slug}`} class="block">
-                            <Button size="lg" class="w-full">
+                        {#if is_enrolled}
+                            <Link href={`/learn/${course.slug}`} class="block">
+                                <Button size="lg" class="w-full">
+                                    Continue Learning
+                                </Button>
+                            </Link>
+                        {:else}
+                            <Button
+                                size="lg"
+                                class="w-full"
+                                onclick={() => router.post(`/courses/${course.slug}/enroll`)}
+                            >
                                 Enroll & Start Learning
                             </Button>
-                        </Link>
+                        {/if}
 
                         <Separator />
 

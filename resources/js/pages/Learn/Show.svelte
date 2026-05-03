@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, router } from '@inertiajs/svelte';
     import ArrowLeft from 'lucide-svelte/icons/arrow-left';
     import Check from 'lucide-svelte/icons/check';
     import CheckCircle2 from 'lucide-svelte/icons/check-circle-2';
@@ -54,7 +54,13 @@
     );
 
     function toggleComplete(): void {
-        completed = !completed;
+        const url = `/lessons/${current.slug}/progress`;
+        const method = completed ? 'delete' : 'post';
+        
+        router[method](url, {}, {
+            preserveScroll: true,
+            preserveState: true,
+        });
     }
 
     function iconForResource(type: string) {

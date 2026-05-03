@@ -57,4 +57,24 @@ class UserFactory extends Factory
             'two_factor_confirmed_at' => now(),
         ]);
     }
+
+    /**
+     * Indicate that the user is an instructor.
+     */
+    public function instructor(): static
+    {
+        return $this->state(fn () => [
+            'role' => 'instructor',
+        ]);
+    }
+
+    /**
+     * Indicate that the user is an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn () => [
+            'role' => 'admin',
+        ]);
+    }
 }

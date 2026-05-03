@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Collection;
+use App\Http\Requests\CourseRequest;
+use App\Models\Course;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -10,112 +14,213 @@ class InstructorController extends Controller
 {
     public function index(): Response
     {
+        $user = auth()->user();
+
+        Gate::authorize('viewAny', Course::class);
+
+        $courses = $user->taughtCourses()
+            ->withCount('enrollments')
+            ->get();
+
+        $totalStudents = $courses->sum('enrollments_count');
+
         return Inertia::render('Instructor/Index', [
             'stats' => [
-                ['label' => 'Total students', 'value' => '12,430', 'delta' => '+8.2%', 'trend' => 'up', 'icon' => 'Users'],
-                ['label' => 'Revenue (30d)', 'value' => '$4,280', 'delta' => '+12.4%', 'trend' => 'up', 'icon' => 'DollarSign'],
-                ['label' => 'Avg rating', 'value' => '4.8', 'delta' => '+0.1', 'trend' => 'up', 'icon' => 'Star'],
-                ['label' => 'Published courses', 'value' => '4', 'delta' => '2 drafts', 'trend' => 'neutral', 'icon' => 'Library'],
+                ['label' => 'Total students', 'value' => number_format($totalStudents), 'delta' => '', 'trend' => 'neutral', 'icon' => 'Users'],
+                ['label' => 'Revenue (30d)', 'value' => 'Rp 0', 'delta' => '', 'trend' => 'neutral', 'icon' => 'DollarSign'],
+                ['label' => 'Avg rating', 'value' => '—', 'delta' => '', 'trend' => 'neutral', 'icon' => 'Star'],
+                ['label' => 'Published courses', 'value' => (string) $courses->where('status', 'published')->count(), 'delta' => $courses->where('status', 'draft')->count().' drafts', 'trend' => 'neutral', 'icon' => 'Library'],
             ],
             'revenue_series' => [
-                ['label' => 'Mon', 'value' => 420],
-                ['label' => 'Tue', 'value' => 560],
-                ['label' => 'Wed', 'value' => 380],
-                ['label' => 'Thu', 'value' => 720],
-                ['label' => 'Fri', 'value' => 890],
-                ['label' => 'Sat', 'value' => 1040],
-                ['label' => 'Sun', 'value' => 270],
+                ['label' => 'Mon', 'value' => 0],
+                ['label' => 'Tue', 'value' => 0],
+                ['label' => 'Wed', 'value' => 0],
+                ['label' => 'Thu', 'value' => 0],
+                ['label' => 'Fri', 'value' => 0],
+                ['label' => 'Sat', 'value' => 0],
+                ['label' => 'Sun', 'value' => 0],
             ],
-            'recent_enrollments' => [
-                ['name' => 'Rina Wulandari', 'course' => 'Laravel from Scratch', 'when' => '2 min ago'],
-                ['name' => 'Bima Saputra', 'course' => 'Svelte 5 Runes Deep Dive', 'when' => '14 min ago'],
-                ['name' => 'Citra Lestari', 'course' => 'Tailwind CSS Mastery', 'when' => '1 h ago'],
-                ['name' => 'Dimas Prayoga', 'course' => 'Laravel from Scratch', 'when' => '3 h ago'],
-                ['name' => 'Eka Permata', 'course' => 'Pest Testing Bootcamp', 'when' => 'Yesterday'],
-            ],
-            'top_courses' => $this->myCourses()->take(3)->values(),
+            'recent_enrollments' => $this->recentEnrollments($user),
+            'top_courses' => $courses
+                ->sortByDesc('enrollments_count')
+                ->take(3)
+                ->map(fn (Course $course) => [
+                    'slug' => $course->slug,
+                    'title' => $course->title,
+                    'students' => $course->enrollments_count,
+                    'rating' => 0,
+                    'revenue' => 0,
+                    'price' => $course->price,
+                    'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
+                ])
+                ->values(),
         ]);
     }
 
     public function courses(): Response
     {
+        $user = auth()->user();
+
+        Gate::authorize('viewAny', Course::class);
+
+        $courses = $user->taughtCourses()
+            ->withCount('enrollments')
+            ->orderByDesc('updated_at')
+            ->get()
+            ->map(fn (Course $course) => [
+                'id' => $course->id,
+                'slug' => $course->slug,
+                'title' => $course->title,
+                'status' => $course->status,
+                'students' => $course->enrollments_count,
+                'rating' => 0,
+                'revenue' => 0,
+                'price' => $course->price,
+                'updated_at' => $course->updated_at->diffForHumans(),
+                'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
+            ]);
+
         return Inertia::render('Instructor/Courses', [
-            'courses' => $this->myCourses()->values(),
+            'courses' => $courses,
+        ]);
+    }
+
+    public function create(): Response
+    {
+        Gate::authorize('create', Course::class);
+
+        return Inertia::render('Instructor/CourseForm', [
+            'course' => null,
+            'categories' => $this->categories(),
+        ]);
+    }
+
+    public function store(CourseRequest $request): RedirectResponse
+    {
+        Gate::authorize('create', Course::class);
+
+        $data = $request->validated();
+        $data['slug'] = Str::slug($data['title']);
+        $data['instructor_id'] = auth()->id();
+
+        Course::create($data);
+
+        return redirect()->route('instructor.courses')
+            ->with('success', 'Course created successfully.');
+    }
+
+    public function edit(Course $course): Response
+    {
+        Gate::authorize('update', $course);
+
+        return Inertia::render('Instructor/CourseForm', [
+            'course' => $course,
+            'categories' => $this->categories(),
+        ]);
+    }
+
+    public function update(CourseRequest $request, Course $course): RedirectResponse
+    {
+        Gate::authorize('update', $course);
+
+        $data = $request->validated();
+        $data['slug'] = Str::slug($data['title']);
+
+        $course->update($data);
+
+        return redirect()->route('instructor.courses')
+            ->with('success', 'Course updated successfully.');
+    }
+
+    public function destroy(Course $course): RedirectResponse
+    {
+        Gate::authorize('delete', $course);
+
+        $course->delete();
+
+        return redirect()->route('instructor.courses')
+            ->with('success', 'Course deleted successfully.');
+    }
+
+    public function publish(Course $course): RedirectResponse
+    {
+        Gate::authorize('update', $course);
+
+        $course->update([
+            'status' => 'published',
+            'published_at' => now(),
+        ]);
+
+        return back()->with('success', 'Course published successfully.');
+    }
+
+    public function unpublish(Course $course): RedirectResponse
+    {
+        Gate::authorize('update', $course);
+
+        $course->update([
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
+
+        return back()->with('success', 'Course unpublished.');
+    }
+
+    public function curriculum(Course $course): Response
+    {
+        Gate::authorize('update', $course);
+
+        $course->load(['modules' => fn ($q) => $q->orderBy('sort_order'), 'modules.lessons' => fn ($q) => $q->orderBy('sort_order')]);
+
+        return Inertia::render('Instructor/Curriculum', [
+            'course' => [
+                'id' => $course->id,
+                'title' => $course->title,
+                'slug' => $course->slug,
+                'status' => $course->status,
+                'modules' => $course->modules->map(fn ($module) => [
+                    'id' => $module->id,
+                    'title' => $module->title,
+                    'sort_order' => $module->sort_order,
+                    'lessons' => $module->lessons->map(fn ($lesson) => [
+                        'id' => $lesson->id,
+                        'title' => $lesson->title,
+                        'slug' => $lesson->slug,
+                        'duration_seconds' => $lesson->duration_seconds,
+                        'is_preview' => $lesson->is_preview,
+                        'video_url' => $lesson->video_url,
+                        'content' => $lesson->content,
+                        'sort_order' => $lesson->sort_order,
+                    ]),
+                ]),
+            ],
         ]);
     }
 
     /**
-     * @return Collection<int, array<string, mixed>>
+     * @return array<int, array<string, string>>
      */
-    private function myCourses(): Collection
+    private function recentEnrollments(mixed $user): array
     {
-        return collect([
-            [
-                'slug' => 'laravel-from-scratch',
-                'title' => 'Laravel from Scratch',
-                'status' => 'published',
-                'students' => 8430,
-                'rating' => 4.8,
-                'revenue' => 0,
-                'price' => 0,
-                'updated_at' => '2 days ago',
-                'cover' => 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
-            ],
-            [
-                'slug' => 'svelte-5-runes-deep-dive',
-                'title' => 'Svelte 5 Runes Deep Dive',
-                'status' => 'published',
-                'students' => 2100,
-                'rating' => 4.9,
-                'revenue' => 1824,
-                'price' => 29,
-                'updated_at' => '5 days ago',
-                'cover' => 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=400&q=80',
-            ],
-            [
-                'slug' => 'tailwind-mastery',
-                'title' => 'Tailwind CSS Mastery',
-                'status' => 'published',
-                'students' => 1700,
-                'rating' => 4.7,
-                'revenue' => 960,
-                'price' => 19,
-                'updated_at' => '1 week ago',
-                'cover' => 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&q=80',
-            ],
-            [
-                'slug' => 'pest-testing-bootcamp',
-                'title' => 'Pest Testing Bootcamp',
-                'status' => 'published',
-                'students' => 200,
-                'rating' => 4.9,
-                'revenue' => 300,
-                'price' => 15,
-                'updated_at' => '3 weeks ago',
-                'cover' => 'https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=400&q=80',
-            ],
-            [
-                'slug' => 'inertia-v3-workshop',
-                'title' => 'Inertia.js v3 Workshop',
-                'status' => 'draft',
-                'students' => 0,
-                'rating' => 0,
-                'revenue' => 0,
-                'price' => 35,
-                'updated_at' => '1 day ago',
-                'cover' => 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&q=80',
-            ],
-            [
-                'slug' => 'fortify-deep-dive',
-                'title' => 'Fortify Deep Dive',
-                'status' => 'draft',
-                'students' => 0,
-                'rating' => 0,
-                'revenue' => 0,
-                'price' => 25,
-                'updated_at' => '4 days ago',
-                'cover' => 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=400&q=80',
-            ],
-        ]);
+        return $user->taughtCourses()
+            ->with(['enrollments' => fn ($q) => $q->with('user')->latest('enrolled_at')->take(5)])
+            ->get()
+            ->flatMap(fn (Course $course) => $course->enrollments->map(fn ($enrollment) => [
+                'name' => $enrollment->user->name,
+                'course' => $course->title,
+                'when' => $enrollment->enrolled_at->diffForHumans(),
+            ]))
+            ->sortByDesc('when')
+            ->take(5)
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function categories(): array
+    {
+        return ['Kewirausahaan', 'Bisnis', 'Praktik', 'Desain', 'Teknologi'];
     }
 }

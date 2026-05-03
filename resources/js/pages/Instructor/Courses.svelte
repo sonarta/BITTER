@@ -8,7 +8,8 @@
 </script>
 
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, router } from '@inertiajs/svelte';
+    import BookOpen from 'lucide-svelte/icons/book-open';
     import Eye from 'lucide-svelte/icons/eye';
     import MoreHorizontal from 'lucide-svelte/icons/more-horizontal';
     import Pencil from 'lucide-svelte/icons/pencil';
@@ -33,6 +34,7 @@
     import { cn } from '@/lib/utils';
 
     type Course = {
+        id: string;
         slug: string;
         title: string;
         status: 'published' | 'draft';
@@ -84,10 +86,12 @@
                 Manage and publish your courses.
             </p>
         </div>
-        <Button size="lg" class="gap-2">
-            <Plus class="size-4" />
-            Create new course
-        </Button>
+        <Link href="/instructor/courses/create">
+            <Button size="lg" class="gap-2">
+                <Plus class="size-4" />
+                Create new course
+            </Button>
+        </Link>
     </section>
 
     <Card>
@@ -211,7 +215,15 @@
                                             <DropdownMenuContent align="end" class="w-44">
                                                 <DropdownMenuItem>
                                                     <Pencil class="mr-2 size-4" />
-                                                    Edit
+                                                    <Link href={`/instructor/courses/${course.id}/edit`}>
+                                                        Edit
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    <BookOpen class="mr-2 size-4" />
+                                                    <Link href={`/instructor/courses/${course.id}/curriculum`}>
+                                                        Curriculum
+                                                    </Link>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem>
                                                     <Eye class="mr-2 size-4" />
@@ -221,12 +233,16 @@
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {#if course.status === 'draft'}
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onclick={() => router.post(`/instructor/courses/${course.id}/publish`)}
+                                                    >
                                                         <Upload class="mr-2 size-4" />
                                                         Publish
                                                     </DropdownMenuItem>
                                                 {:else}
-                                                    <DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onclick={() => router.post(`/instructor/courses/${course.id}/unpublish`)}
+                                                    >
                                                         Unpublish
                                                     </DropdownMenuItem>
                                                 {/if}
