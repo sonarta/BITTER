@@ -15,7 +15,7 @@
     import { Button } from '@/components/ui/button';
     import { Separator } from '@/components/ui/separator';
     import { getInitials } from '@/lib/initials';
-    import { cn } from '@/lib/utils';
+    import { cn, getYouTubeEmbedUrl } from '@/lib/utils';
     import type {
         LessonRef,
         PlayerCourse,
@@ -133,14 +133,24 @@
         <main class="min-w-0 overflow-y-auto">
             <div class="bg-black">
                 <div class="mx-auto aspect-video w-full max-w-5xl">
-                    <video
-                        src={current.video_url}
-                        controls
-                        poster="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1200&q=80"
-                        class="h-full w-full"
-                    >
-                        <track kind="captions" />
-                    </video>
+                    {#if getYouTubeEmbedUrl(current.video_url)}
+                        <iframe
+                            src={getYouTubeEmbedUrl(current.video_url)}
+                            title="Lesson video"
+                            class="h-full w-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                        ></iframe>
+                    {:else}
+                        <video
+                            src={current.video_url}
+                            controls
+                            poster="https://images.unsplash.com/photo-1587620962725-abab7fe55159?w=1200&q=80"
+                            class="h-full w-full"
+                        >
+                            <track kind="captions" />
+                        </video>
+                    {/if}
                 </div>
             </div>
 

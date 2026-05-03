@@ -52,7 +52,7 @@
 {#if open()}
     <div
         class={cn(
-            'absolute z-50 min-w-48 rounded-md border bg-popover p-2 text-popover-foreground shadow-md',
+            'absolute z-50 min-w-48 max-h-96 overflow-y-auto rounded-md border bg-popover p-2 text-popover-foreground shadow-md',
             alignClasses[align] ?? alignClasses.start,
             sideClasses[side] ?? sideClasses.bottom,
             className,

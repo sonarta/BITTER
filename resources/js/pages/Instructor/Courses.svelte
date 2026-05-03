@@ -130,7 +130,7 @@
                     <p class="text-sm font-medium">No courses match your filters</p>
                 </div>
             {:else}
-                <div class="overflow-x-auto">
+                <div>
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="border-b text-left text-xs font-medium text-muted-foreground">
