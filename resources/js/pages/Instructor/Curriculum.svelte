@@ -19,8 +19,8 @@
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import X from 'lucide-svelte/icons/x';
     import AppHead from '@/components/AppHead.svelte';
-    import InstructorNav from '@/components/InstructorNav.svelte';
     import InputError from '@/components/InputError.svelte';
+    import InstructorNav from '@/components/InstructorNav.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
@@ -33,6 +33,13 @@
     import { Label } from '@/components/ui/label';
     import { Textarea } from '@/components/ui/textarea';
 
+    type Resource = {
+        id: string;
+        title: string;
+        url: string;
+        type: string;
+    };
+
     type Lesson = {
         id: string;
         title: string;
@@ -41,6 +48,8 @@
         is_preview: boolean;
         video_url: string | null;
         content: string | null;
+        transcript: string | null;
+        resources: Resource[];
         sort_order: number;
     };
 
@@ -87,7 +96,11 @@
 
     function saveEditModule(e: SubmitEvent) {
         e.preventDefault();
-        if (!editingModuleId) return;
+
+        if (!editingModuleId) {
+            return;
+        }
+
         editModuleForm.put(
             `/instructor/courses/${course.id}/modules/${editingModuleId}`,
             {
@@ -100,7 +113,10 @@
     }
 
     function deleteModule(moduleId: string) {
-        if (!confirm('Delete this module and all its lessons?')) return;
+        if (!confirm('Delete this module and all its lessons?')) {
+            return;
+        }
+
         router.delete(
             `/instructor/courses/${course.id}/modules/${moduleId}`,
             { preserveScroll: true },
@@ -112,9 +128,11 @@
     const lessonForm = useForm({
         title: '',
         content: '',
+        transcript: '',
         video_url: '',
         duration_seconds: 600,
         is_preview: false,
+        resources: [] as { title: string; url: string; type: string }[],
     });
 
     function startAddLesson(moduleId: string) {
@@ -124,7 +142,11 @@
 
     function addLesson(e: SubmitEvent) {
         e.preventDefault();
-        if (!addingLessonModuleId) return;
+
+        if (!addingLessonModuleId) {
+            return;
+        }
+
         lessonForm.post(
             `/instructor/courses/${course.id}/modules/${addingLessonModuleId}/lessons`,
             {
@@ -143,9 +165,11 @@
     const editLessonForm = useForm({
         title: '',
         content: '',
+        transcript: '',
         video_url: '',
         duration_seconds: 0,
         is_preview: false,
+        resources: [] as { id?: string; title: string; url: string; type: string }[],
     });
 
     function startEditLesson(mod: Module, lesson: Lesson) {
@@ -153,14 +177,25 @@
         editingLessonModuleId = mod.id;
         editLessonForm.title = lesson.title;
         editLessonForm.content = lesson.content ?? '';
+        editLessonForm.transcript = lesson.transcript ?? '';
         editLessonForm.video_url = lesson.video_url ?? '';
         editLessonForm.duration_seconds = lesson.duration_seconds;
         editLessonForm.is_preview = lesson.is_preview;
+        editLessonForm.resources = lesson.resources.map((r) => ({
+            id: r.id,
+            title: r.title,
+            url: r.url,
+            type: r.type,
+        }));
     }
 
     function saveEditLesson(e: SubmitEvent) {
         e.preventDefault();
-        if (!editingLessonId || !editingLessonModuleId) return;
+
+        if (!editingLessonId || !editingLessonModuleId) {
+            return;
+        }
+
         editLessonForm.put(
             `/instructor/courses/${course.id}/modules/${editingLessonModuleId}/lessons/${editingLessonId}`,
             {
@@ -174,7 +209,10 @@
     }
 
     function deleteLesson(moduleId: string, lessonId: string) {
-        if (!confirm('Delete this lesson?')) return;
+        if (!confirm('Delete this lesson?')) {
+            return;
+        }
+
         router.delete(
             `/instructor/courses/${course.id}/modules/${moduleId}/lessons/${lessonId}`,
             { preserveScroll: true },
@@ -184,6 +222,7 @@
     function formatDuration(seconds: number): string {
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
+
         return `${m}:${s.toString().padStart(2, '0')}`;
     }
 
@@ -375,6 +414,65 @@
                                         rows={3}
                                     />
                                 </div>
+                                <div class="space-y-1.5">
+                                    <Label>Transcript</Label>
+                                    <Textarea
+                                        bind:value={editLessonForm.transcript}
+                                        rows={3}
+                                        placeholder="Lesson transcript (optional)"
+                                    />
+                                </div>
+                                <div class="space-y-1.5">
+                                    <Label>Resources</Label>
+                                    {#each editLessonForm.resources as resource, i (i)}
+                                        <div class="flex items-start gap-2">
+                                            <Input
+                                                bind:value={resource.title}
+                                                placeholder="Resource title"
+                                                class="flex-1"
+                                            />
+                                            <Input
+                                                bind:value={resource.url}
+                                                placeholder="https://..."
+                                                class="flex-1"
+                                            />
+                                            <select
+                                                bind:value={resource.type}
+                                                class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
+                                            >
+                                                <option value="Link">Link</option>
+                                                <option value="PDF">PDF</option>
+                                                <option value="File">File</option>
+                                            </select>
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                type="button"
+                                                class="size-9 text-destructive hover:text-destructive"
+                                                onclick={() => {
+                                                    editLessonForm.resources = editLessonForm.resources.filter((_, idx) => idx !== i);
+                                                }}
+                                            >
+                                                <X class="size-4" />
+                                            </Button>
+                                        </div>
+                                    {/each}
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        type="button"
+                                        class="mt-1 gap-1"
+                                        onclick={() => {
+                                            editLessonForm.resources = [
+                                                ...editLessonForm.resources,
+                                                { title: '', url: '', type: 'Link' },
+                                            ];
+                                        }}
+                                    >
+                                        <Plus class="size-3.5" />
+                                        Add resource
+                                    </Button>
+                                </div>
                                 <div class="flex items-center gap-4">
                                     <label
                                         class="flex items-center gap-2 text-sm"
@@ -501,6 +599,65 @@
                                     rows={3}
                                     placeholder="Lesson content..."
                                 />
+                            </div>
+                            <div class="space-y-1.5">
+                                <Label>Transcript</Label>
+                                <Textarea
+                                    bind:value={lessonForm.transcript}
+                                    rows={3}
+                                    placeholder="Lesson transcript (optional)"
+                                />
+                            </div>
+                            <div class="space-y-1.5">
+                                <Label>Resources</Label>
+                                {#each lessonForm.resources as resource, i (i)}
+                                    <div class="flex items-start gap-2">
+                                        <Input
+                                            bind:value={resource.title}
+                                            placeholder="Resource title"
+                                            class="flex-1"
+                                        />
+                                        <Input
+                                            bind:value={resource.url}
+                                            placeholder="https://..."
+                                            class="flex-1"
+                                        />
+                                        <select
+                                            bind:value={resource.type}
+                                            class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
+                                        >
+                                            <option value="Link">Link</option>
+                                            <option value="PDF">PDF</option>
+                                            <option value="File">File</option>
+                                        </select>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            type="button"
+                                            class="size-9 text-destructive hover:text-destructive"
+                                            onclick={() => {
+                                                lessonForm.resources = lessonForm.resources.filter((_, idx) => idx !== i);
+                                            }}
+                                        >
+                                            <X class="size-4" />
+                                        </Button>
+                                    </div>
+                                {/each}
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    type="button"
+                                    class="mt-1 gap-1"
+                                    onclick={() => {
+                                        lessonForm.resources = [
+                                            ...lessonForm.resources,
+                                            { title: '', url: '', type: 'Link' },
+                                        ];
+                                    }}
+                                >
+                                    <Plus class="size-3.5" />
+                                    Add resource
+                                </Button>
                             </div>
                             <div class="flex items-center gap-4">
                                 <label

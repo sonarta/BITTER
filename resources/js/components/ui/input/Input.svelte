@@ -1,7 +1,7 @@
 <script lang="ts">
     import { cn } from '@/lib/utils';
 
-    let { class: className = '', type = 'text', value = $bindable(''), ...rest } = $props();
+    let { class: className = '', type = 'text', value = $bindable(''), ...rest }: { class?: string; type?: string; value?: string | number } & Record<string, unknown> = $props();
 </script>
 
 <input

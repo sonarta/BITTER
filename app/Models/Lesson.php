@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
-    'title', 'slug', 'content', 'video_url',
+    'title', 'slug', 'content', 'transcript', 'video_url',
     'duration_seconds', 'is_preview', 'sort_order',
 ])]
 class Lesson extends Model
@@ -36,6 +37,14 @@ class Lesson extends Model
     public function module(): BelongsTo
     {
         return $this->belongsTo(Module::class);
+    }
+
+    /**
+     * @return HasMany<LessonResource, $this>
+     */
+    public function resources(): HasMany
+    {
+        return $this->hasMany(LessonResource::class)->orderBy('sort_order');
     }
 
     /**

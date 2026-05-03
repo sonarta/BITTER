@@ -170,7 +170,11 @@ class InstructorController extends Controller
     {
         Gate::authorize('update', $course);
 
-        $course->load(['modules' => fn ($q) => $q->orderBy('sort_order'), 'modules.lessons' => fn ($q) => $q->orderBy('sort_order')]);
+        $course->load([
+            'modules' => fn ($q) => $q->orderBy('sort_order'),
+            'modules.lessons' => fn ($q) => $q->orderBy('sort_order'),
+            'modules.lessons.resources',
+        ]);
 
         return Inertia::render('Instructor/Curriculum', [
             'course' => [
@@ -190,6 +194,13 @@ class InstructorController extends Controller
                         'is_preview' => $lesson->is_preview,
                         'video_url' => $lesson->video_url,
                         'content' => $lesson->content,
+                        'transcript' => $lesson->transcript,
+                        'resources' => $lesson->resources->map(fn ($r) => [
+                            'id' => $r->id,
+                            'title' => $r->title,
+                            'url' => $r->url,
+                            'type' => $r->type,
+                        ])->toArray(),
                         'sort_order' => $lesson->sort_order,
                     ]),
                 ]),

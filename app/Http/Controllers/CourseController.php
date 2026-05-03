@@ -159,8 +159,12 @@ class CourseController extends Controller
             'current' => array_merge($currentFlat, [
                 'description' => $lessonModel?->content ?? '',
                 'video_url' => $lessonModel?->video_url ?? '',
-                'resources' => [],
-                'transcript' => '',
+                'transcript' => $lessonModel?->transcript ?? '',
+                'resources' => $lessonModel?->resources->map(fn ($r) => [
+                    'title' => $r->title,
+                    'url' => $r->url,
+                    'type' => $r->type,
+                ])->toArray() ?? [],
             ]),
             'previous' => $index > 0 ? [
                 'slug' => $flat[$index - 1]['slug'],

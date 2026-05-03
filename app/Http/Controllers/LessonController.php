@@ -23,7 +23,9 @@ class LessonController extends Controller
         $maxOrder = $module->lessons()->max('sort_order') ?? -1;
         $data['sort_order'] = $maxOrder + 1;
 
-        $module->lessons()->create($data);
+        $lesson = $module->lessons()->create($data);
+
+        $this->syncResources($lesson, $data['resources'] ?? []);
 
         return back()->with('success', 'Lesson added successfully.');
     }
@@ -37,7 +39,35 @@ class LessonController extends Controller
 
         $lesson->update($data);
 
+        $this->syncResources($lesson, $data['resources'] ?? []);
+
         return back()->with('success', 'Lesson updated successfully.');
+    }
+
+    /**
+     * Sync lesson resources.
+     *
+     * @param  array<int, array<string, string>>  $resources
+     */
+    private function syncResources(Lesson $lesson, array $resources): void
+    {
+        $existingIds = [];
+
+        foreach ($resources as $index => $resource) {
+            $model = $lesson->resources()->updateOrCreate(
+                ['id' => $resource['id'] ?? null],
+                [
+                    'title' => $resource['title'],
+                    'url' => $resource['url'],
+                    'type' => $resource['type'] ?? 'Link',
+                    'sort_order' => $index,
+                ],
+            );
+
+            $existingIds[] = $model->id;
+        }
+
+        $lesson->resources()->whereNotIn('id', $existingIds)->delete();
     }
 
     public function destroy(Course $course, Module $module, Lesson $lesson): RedirectResponse
