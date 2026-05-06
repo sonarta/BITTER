@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Inertia\Middleware;
+use Symfony\Component\HttpFoundation\Response;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -43,5 +44,18 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
+    }
+
+    /**
+     * Handle an incoming request.
+     */
+    public function handle(Request $request, \Closure $next): Response
+    {
+        // Skip Inertia for files routes (PDF serving)
+        if ($request->is('files/*')) {
+            return $next($request);
+        }
+
+        return parent::handle($request, $next);
     }
 }

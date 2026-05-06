@@ -208,6 +208,7 @@
         );
     }
 
+
     function deleteLesson(moduleId: string, lessonId: string) {
         if (!confirm('Delete this lesson?')) {
             return;
@@ -431,18 +432,18 @@
                                                 placeholder="Resource title"
                                                 class="flex-1"
                                             />
-                                            <Input
-                                                bind:value={resource.url}
-                                                placeholder="https://..."
-                                                class="flex-1"
-                                            />
+                                            <div class="flex flex-1 items-center gap-1">
+                                                <Input
+                                                    bind:value={resource.url}
+                                                    placeholder='https://...'
+                                                    class="flex-1"
+                                                />
+                                            </div>
                                             <select
                                                 bind:value={resource.type}
                                                 class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
                                             >
                                                 <option value="Link">Link</option>
-                                                <option value="PDF">PDF</option>
-                                                <option value="File">File</option>
                                             </select>
                                             <Button
                                                 variant="ghost"
@@ -617,11 +618,13 @@
                                             placeholder="Resource title"
                                             class="flex-1"
                                         />
-                                        <Input
-                                            bind:value={resource.url}
-                                            placeholder="https://..."
-                                            class="flex-1"
-                                        />
+                                        <div class="flex flex-1 items-center gap-1">
+                                            <Input
+                                                bind:value={resource.url}
+                                                placeholder='https://...'
+                                                class="flex-1"
+                                            />
+                                        </div>
                                         <select
                                             bind:value={resource.type}
                                             class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"

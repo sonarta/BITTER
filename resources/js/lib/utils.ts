@@ -29,3 +29,13 @@ export function getYouTubeEmbedUrl(url: string): string | null {
 
     return null;
 }
+
+export function getGoogleDrivePdfUrl(url: string): string | null {
+    const match = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+
+    if (match) {
+        return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+    }
+
+    return null;
+}

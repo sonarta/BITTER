@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+fetch("/storage/resources/lkm-mahasiswa-20260503-121500.pdf", {
+  cache: 'reload',
+  credentials: 'same-origin',
+  headers: { 'Cache-Control': 'no-cache', Pragma: 'no-cache' }
+}).then(res => {
+  document.body.innerHTML += "Status: " + res.status;
+}).catch(err => document.body.innerHTML += "Error: " + err);
+</script>
+</body>
+</html>

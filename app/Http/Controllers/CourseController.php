@@ -96,7 +96,7 @@ class CourseController extends Controller
     {
         $course = Course::where('slug', $courseSlug)
             ->where('status', 'published')
-            ->with(['instructor', 'modules.lessons'])
+            ->with(['instructor', 'modules.lessons.resources'])
             ->firstOrFail();
 
         $user = auth()->user();
@@ -144,7 +144,7 @@ class CourseController extends Controller
 
         $currentFlat = $flat[$index];
 
-        $lessonModel = $course->lessons()->where('lessons.slug', $lessonSlug)->first();
+        $lessonModel = $course->modules->flatMap(fn ($m) => $m->lessons)->firstWhere('slug', $lessonSlug);
 
         return Inertia::render('Learn/Show', [
             'course' => [
@@ -162,7 +162,9 @@ class CourseController extends Controller
                 'transcript' => $lessonModel?->transcript ?? '',
                 'resources' => $lessonModel?->resources->map(fn ($r) => [
                     'title' => $r->title,
-                    'url' => $r->url,
+                    'url' => $r->type === 'PDF' && ($r->file_path !== null || str_contains($r->url, '/storage/'))
+                        ? route('lesson-resources.file', $r)
+                        : $r->url,
                     'type' => $r->type,
                 ])->toArray() ?? [],
             ]),
@@ -246,4 +248,3 @@ class CourseController extends Controller
         ];
     }
 }
-

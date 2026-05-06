@@ -20,4 +20,6 @@
     setContext(DIALOG_CONTEXT, context);
 </script>
 
-{@render children?.()}
+{#if children}
+    {@render children()}
+{/if}

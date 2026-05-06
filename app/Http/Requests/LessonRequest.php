@@ -28,7 +28,7 @@ class LessonRequest extends FormRequest
             'resources' => ['nullable', 'array'],
             'resources.*.id' => ['sometimes', 'string'],
             'resources.*.title' => ['required_with:resources', 'string', 'max:255'],
-            'resources.*.url' => ['required_with:resources', 'url', 'max:2048'],
+            'resources.*.url' => ['required_with:resources', 'string', 'max:2048'],
             'resources.*.type' => ['required_with:resources', 'string', 'max:50'],
         ];
     }

@@ -10,6 +10,7 @@
     import Link2 from 'lucide-svelte/icons/link-2';
     import PlayCircle from 'lucide-svelte/icons/play-circle';
     import AppHead from '@/components/AppHead.svelte';
+    import PdfViewerModal from '@/components/PdfViewerModal.svelte';
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -41,6 +42,8 @@
 
     let activeTab = $state<'overview' | 'transcript' | 'resources'>('overview');
     let sidebarOpen = $state(true);
+    let pdfModalOpen = $state(false);
+    let pdfModalUrl = $state('');
     // svelte-ignore state_referenced_locally
     // eslint-disable-next-line
     let completed = $state(current.completed);
@@ -60,6 +63,11 @@
             preserveScroll: true,
             preserveState: true,
         });
+    }
+
+    function openPdfModal(url: string) {
+        pdfModalUrl = url;
+        pdfModalOpen = true;
     }
 
     function iconForResource(type: string) {
@@ -239,25 +247,50 @@
                         <ul class="space-y-2">
                             {#each current.resources as resource (resource.title)}
                                 {@const Icon = iconForResource(resource.type)}
+                                {@const isPdf = resource.type === 'PDF'}
                                 <li>
-                                    <a
-                                        href={resource.url}
-                                        class="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/40"
-                                    >
-                                        <span
-                                            class="flex size-9 items-center justify-center rounded-md bg-primary/15 text-primary"
+                                    {#if isPdf}
+                                        <button
+                                            type="button"
+                                            onclick={() => openPdfModal(resource.url)}
+                                            class="flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent/40"
                                         >
-                                            <Icon class="size-4" />
-                                        </span>
-                                        <div class="min-w-0 flex-1">
-                                            <p class="truncate text-sm font-medium">
-                                                {resource.title}
-                                            </p>
-                                            <p class="text-xs text-muted-foreground">
-                                                {resource.type}
-                                            </p>
-                                        </div>
-                                    </a>
+                                            <span
+                                                class="flex size-9 items-center justify-center rounded-md bg-primary/15 text-primary"
+                                            >
+                                                <Icon class="size-4" />
+                                            </span>
+                                            <div class="min-w-0 flex-1">
+                                                <p class="truncate text-sm font-medium">
+                                                    {resource.title}
+                                                </p>
+                                                <p class="text-xs text-muted-foreground">
+                                                    {resource.type}
+                                                </p>
+                                            </div>
+                                        </button>
+                                    {:else}
+                                        <a
+                                            href={resource.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-accent/40"
+                                        >
+                                            <span
+                                                class="flex size-9 items-center justify-center rounded-md bg-primary/15 text-primary"
+                                            >
+                                                <Icon class="size-4" />
+                                            </span>
+                                            <div class="min-w-0 flex-1">
+                                                <p class="truncate text-sm font-medium">
+                                                    {resource.title}
+                                                </p>
+                                                <p class="text-xs text-muted-foreground">
+                                                    {resource.type}
+                                                </p>
+                                            </div>
+                                        </a>
+                                    {/if}
                                 </li>
                             {/each}
                         </ul>
@@ -374,3 +407,5 @@
         {/if}
     </div>
 </div>
+
+<PdfViewerModal bind:open={pdfModalOpen} url={pdfModalUrl} />

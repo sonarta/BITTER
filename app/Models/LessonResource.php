@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
-    'lesson_id', 'title', 'url', 'type', 'sort_order',
+    'lesson_id', 'title', 'url', 'file_path', 'type', 'sort_order',
 ])]
 class LessonResource extends Model
 {

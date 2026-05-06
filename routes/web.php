@@ -5,6 +5,7 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InstructorController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\LessonResourceFileController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProgressController;
 use Illuminate\Support\Facades\Route;
@@ -20,6 +21,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('courses/{slug}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::get('learn/{courseSlug}', [CourseController::class, 'learn'])->name('learn.start');
     Route::get('learn/{courseSlug}/{lessonSlug}', [CourseController::class, 'learn'])->name('learn.lesson');
+    Route::get('files/lesson-resources/{lessonResource}', LessonResourceFileController::class)
+        ->name('lesson-resources.file');
     Route::post('lessons/{slug}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
     Route::post('lessons/{slug}/incomplete', [ProgressController::class, 'markIncomplete'])->name('lessons.incomplete');
 
@@ -48,6 +51,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('courses/{course}/modules/{module}/lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('courses/{course}/modules/{module}/lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
         Route::post('courses/{course}/modules/{module}/lessons/reorder', [LessonController::class, 'reorder'])->name('lessons.reorder');
+
     });
 });
 
