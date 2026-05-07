@@ -3,7 +3,9 @@
 use App\Http\Controllers\BiterController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExamController;
 use App\Http\Controllers\InstructorController;
+use App\Http\Controllers\InstructorExamController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LessonResourceFileController;
 use App\Http\Controllers\ModuleController;
@@ -21,6 +23,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('courses/{slug}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
     Route::get('learn/{courseSlug}', [CourseController::class, 'learn'])->name('learn.start');
     Route::get('learn/{courseSlug}/{lessonSlug}', [CourseController::class, 'learn'])->name('learn.lesson');
+    Route::get('courses/{slug}/exam', [ExamController::class, 'show'])->name('courses.exam.show');
+    Route::post('courses/{slug}/exam/start', [ExamController::class, 'start'])->name('courses.exam.start');
+    Route::get('courses/{slug}/exam/attempts/{attempt}', [ExamController::class, 'take'])->name('courses.exam.take');
+    Route::post('courses/{slug}/exam/attempts/{attempt}/submit', [ExamController::class, 'submit'])->name('courses.exam.submit');
     Route::get('files/lesson-resources/{lessonResource}', LessonResourceFileController::class)
         ->name('lesson-resources.file');
     Route::post('lessons/{slug}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
@@ -39,6 +45,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Curriculum editor
         Route::get('courses/{course}/curriculum', [InstructorController::class, 'curriculum'])->name('courses.curriculum');
+
+        // Exam editor
+        Route::get('courses/{course}/exam', [InstructorExamController::class, 'edit'])->name('courses.exam.edit');
+        Route::post('courses/{course}/exam', [InstructorExamController::class, 'upsert'])->name('courses.exam.upsert');
+        Route::post('courses/{course}/exam/questions', [InstructorExamController::class, 'storeQuestion'])->name('courses.exam.questions.store');
+        Route::put('courses/{course}/exam/questions/{question}', [InstructorExamController::class, 'updateQuestion'])->name('courses.exam.questions.update');
+        Route::delete('courses/{course}/exam/questions/{question}', [InstructorExamController::class, 'destroyQuestion'])->name('courses.exam.questions.destroy');
+        Route::post('courses/{course}/exam/questions/reorder', [InstructorExamController::class, 'reorderQuestions'])->name('courses.exam.questions.reorder');
+        Route::get('courses/{course}/exam/attempts/{attempt}', [InstructorExamController::class, 'showAttempt'])->name('courses.exam.attempts.show');
+        Route::post('courses/{course}/exam/attempts/{attempt}/grade', [InstructorExamController::class, 'gradeAttempt'])->name('courses.exam.attempts.grade');
 
         // Module CRUD
         Route::post('courses/{course}/modules', [ModuleController::class, 'store'])->name('modules.store');

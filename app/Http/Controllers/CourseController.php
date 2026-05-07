@@ -39,7 +39,7 @@ class CourseController extends Controller
     {
         $course = Course::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['instructor', 'modules.lessons'])
+            ->with(['instructor', 'modules.lessons', 'exam'])
             ->withCount('enrollments')
             ->firstOrFail();
 
@@ -69,6 +69,13 @@ class CourseController extends Controller
             'modules' => $modules,
             'related' => $related,
             'is_enrolled' => $isEnrolled,
+            'exam' => $course->exam ? [
+                'title' => $course->exam->title,
+                'is_published' => $course->exam->is_published,
+                'duration_minutes' => $course->exam->duration_minutes,
+                'max_attempts' => $course->exam->max_attempts,
+                'pass_score' => $course->exam->pass_score,
+            ] : null,
         ]);
     }
 

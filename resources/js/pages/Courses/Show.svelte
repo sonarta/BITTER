@@ -35,11 +35,19 @@
         modules = [],
         related = [],
         is_enrolled = false,
+        exam = null,
     }: {
         course: Course;
         modules: CourseModule[];
         related: Course[];
         is_enrolled?: boolean;
+        exam?: {
+            title: string;
+            is_published: boolean;
+            duration_minutes: number;
+            max_attempts: number;
+            pass_score: number;
+        } | null;
     } = $props();
 
     const totalLessons = $derived(
@@ -238,6 +246,31 @@
                             >
                                 Enroll & Start Learning
                             </Button>
+                        {/if}
+
+                        {#if exam}
+                            <Link
+                                href={`/courses/${course.slug}/exam`}
+                                class="block"
+                                aria-disabled={!is_enrolled || !exam.is_published}
+                            >
+                                <Button
+                                    variant="secondary"
+                                    class="w-full"
+                                    disabled={!is_enrolled || !exam.is_published}
+                                >
+                                    Take Final Exam
+                                </Button>
+                            </Link>
+                            {#if !exam.is_published}
+                                <p class="-mt-2 text-xs text-muted-foreground">
+                                    Exam belum dipublish oleh instructor.
+                                </p>
+                            {:else if !is_enrolled}
+                                <p class="-mt-2 text-xs text-muted-foreground">
+                                    Enroll dulu untuk mengikuti exam.
+                                </p>
+                            {/if}
                         {/if}
 
                         <Separator />

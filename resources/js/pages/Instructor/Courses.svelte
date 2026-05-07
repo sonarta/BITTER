@@ -11,6 +11,7 @@
     import { Link, router } from '@inertiajs/svelte';
     import BookOpen from 'lucide-svelte/icons/book-open';
     import Eye from 'lucide-svelte/icons/eye';
+    import FileText from 'lucide-svelte/icons/file-text';
     import MoreHorizontal from 'lucide-svelte/icons/more-horizontal';
     import Pencil from 'lucide-svelte/icons/pencil';
     import Plus from 'lucide-svelte/icons/plus';
@@ -231,6 +232,12 @@
                                                     </Link>
                                                 </DropdownMenuItem>
                                                 <DropdownMenuItem>
+                                                    <FileText class="mr-2 size-4" />
+                                                    <Link href={`/instructor/courses/${course.id}/exam`}>
+                                                        Exam
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
                                                     <Eye class="mr-2 size-4" />
                                                     <Link href={`/courses/${course.slug}`}>
                                                         View public page
@@ -238,17 +245,35 @@
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {#if course.status === 'draft'}
-                                                    <DropdownMenuItem
-                                                        onclick={() => router.post(`/instructor/courses/${course.id}/publish`)}
-                                                    >
-                                                        <Upload class="mr-2 size-4" />
-                                                        Publish
+                                                    <DropdownMenuItem asChild>
+                                                        {#snippet children(props)}
+                                                            <button
+                                                                type="button"
+                                                                class={props.class}
+                                                                onclick={() => {
+                                                                    props.onClick?.();
+                                                                    router.post(`/instructor/courses/${course.id}/publish`);
+                                                                }}
+                                                            >
+                                                                <Upload class="mr-2 size-4" />
+                                                                Publish
+                                                            </button>
+                                                        {/snippet}
                                                     </DropdownMenuItem>
                                                 {:else}
-                                                    <DropdownMenuItem
-                                                        onclick={() => router.post(`/instructor/courses/${course.id}/unpublish`)}
-                                                    >
-                                                        Unpublish
+                                                    <DropdownMenuItem asChild>
+                                                        {#snippet children(props)}
+                                                            <button
+                                                                type="button"
+                                                                class={props.class}
+                                                                onclick={() => {
+                                                                    props.onClick?.();
+                                                                    router.post(`/instructor/courses/${course.id}/unpublish`);
+                                                                }}
+                                                            >
+                                                                Unpublish
+                                                            </button>
+                                                        {/snippet}
                                                     </DropdownMenuItem>
                                                 {/if}
                                             </DropdownMenuContent>
