@@ -6,7 +6,9 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,7 +16,8 @@ class DashboardController extends Controller
 {
     public function index(): Response
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         $enrollments = $user->enrollments()
             ->with(['course' => fn ($q) => $q->with(['instructor', 'modules.lessons'])->withCount('enrollments')])

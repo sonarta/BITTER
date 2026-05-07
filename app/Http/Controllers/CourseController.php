@@ -6,8 +6,10 @@ use App\Models\Course;
 use App\Models\Enrollment;
 use App\Models\Lesson;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\User;
 
 class CourseController extends Controller
 {
@@ -41,8 +43,8 @@ class CourseController extends Controller
             ->withCount('enrollments')
             ->firstOrFail();
 
-        $user = auth()->user();
-        $isEnrolled = $user ? $user->isEnrolledIn($course) : false;
+        $user = Auth::user();
+        $isEnrolled = $user instanceof User ? $user->isEnrolledIn($course) : false;
 
         $modules = $course->modules->map(fn ($module) => [
             'title' => $module->title,
@@ -76,7 +78,8 @@ class CourseController extends Controller
             ->where('status', 'published')
             ->firstOrFail();
 
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         if ($user->isEnrolledIn($course)) {
             return redirect()->route('learn.start', $course->slug);
@@ -99,7 +102,8 @@ class CourseController extends Controller
             ->with(['instructor', 'modules.lessons.resources'])
             ->firstOrFail();
 
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         if (! $user->isEnrolledIn($course)) {
             return Inertia::render('Courses/Show', [
@@ -185,7 +189,8 @@ class CourseController extends Controller
 
     public function myLearning(): Response
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         $enrolled = $user->enrollments()
             ->with(['course' => fn ($q) => $q->with(['instructor', 'modules.lessons'])->withCount('enrollments')])

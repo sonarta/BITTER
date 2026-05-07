@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -14,7 +16,8 @@ class InstructorController extends Controller
 {
     public function index(): Response
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         Gate::authorize('viewAny', Course::class);
 
@@ -60,7 +63,8 @@ class InstructorController extends Controller
 
     public function courses(): Response
     {
-        $user = auth()->user();
+        $user = Auth::user();
+        assert($user instanceof User);
 
         Gate::authorize('viewAny', Course::class);
 
@@ -103,7 +107,7 @@ class InstructorController extends Controller
 
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
-        $data['instructor_id'] = auth()->id();
+        $data['instructor_id'] = Auth::id();
 
         Course::create($data);
 
@@ -213,7 +217,7 @@ class InstructorController extends Controller
     /**
      * @return array<int, array<string, string>>
      */
-    private function recentEnrollments(mixed $user): array
+    private function recentEnrollments(User $user): array
     {
         return $user->taughtCourses()
             ->with(['enrollments' => fn ($q) => $q->with('user')->latest('enrolled_at')->take(5)])
