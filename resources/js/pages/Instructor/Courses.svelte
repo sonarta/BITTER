@@ -11,6 +11,7 @@
     import { Link, router } from '@inertiajs/svelte';
     import BookOpen from 'lucide-svelte/icons/book-open';
     import Eye from 'lucide-svelte/icons/eye';
+    import EyeOff from 'lucide-svelte/icons/eye-off';
     import FileText from 'lucide-svelte/icons/file-text';
     import MoreHorizontal from 'lucide-svelte/icons/more-horizontal';
     import Pencil from 'lucide-svelte/icons/pencil';
@@ -219,29 +220,37 @@
                                                 {/snippet}
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end" class="w-44">
-                                                <DropdownMenuItem>
-                                                    <Pencil class="mr-2 size-4" />
-                                                    <Link href={`/instructor/courses/${course.id}/edit`}>
-                                                        Edit
-                                                    </Link>
+                                                <DropdownMenuItem asChild>
+                                                    {#snippet children(props)}
+                                                        <Link href={`/instructor/courses/${course.id}/edit`} class={props.class} onclick={() => props.onClick?.()}>
+                                                            <Pencil class="mr-2 size-4" />
+                                                            Edit
+                                                        </Link>
+                                                    {/snippet}
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    <BookOpen class="mr-2 size-4" />
-                                                    <Link href={`/instructor/courses/${course.id}/curriculum`}>
-                                                        Curriculum
-                                                    </Link>
+                                                <DropdownMenuItem asChild>
+                                                    {#snippet children(props)}
+                                                        <Link href={`/instructor/courses/${course.id}/curriculum`} class={props.class} onclick={() => props.onClick?.()}>
+                                                            <BookOpen class="mr-2 size-4" />
+                                                            Curriculum
+                                                        </Link>
+                                                    {/snippet}
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    <FileText class="mr-2 size-4" />
-                                                    <Link href={`/instructor/courses/${course.id}/exam`}>
-                                                        Exam
-                                                    </Link>
+                                                <DropdownMenuItem asChild>
+                                                    {#snippet children(props)}
+                                                        <Link href={`/instructor/courses/${course.id}/exam`} class={props.class} onclick={() => props.onClick?.()}>
+                                                            <FileText class="mr-2 size-4" />
+                                                            Exam
+                                                        </Link>
+                                                    {/snippet}
                                                 </DropdownMenuItem>
-                                                <DropdownMenuItem>
-                                                    <Eye class="mr-2 size-4" />
-                                                    <Link href={`/courses/${course.slug}`}>
-                                                        View public page
-                                                    </Link>
+                                                <DropdownMenuItem asChild>
+                                                    {#snippet children(props)}
+                                                        <Link href={`/courses/${course.slug}`} class={props.class} onclick={() => props.onClick?.()}>
+                                                            <Eye class="mr-2 size-4" />
+                                                            View public page
+                                                        </Link>
+                                                    {/snippet}
                                                 </DropdownMenuItem>
                                                 <DropdownMenuSeparator />
                                                 {#if course.status === 'draft'}
@@ -271,6 +280,7 @@
                                                                     router.post(`/instructor/courses/${course.id}/unpublish`);
                                                                 }}
                                                             >
+                                                                <EyeOff class="mr-2 size-4" />
                                                                 Unpublish
                                                             </button>
                                                         {/snippet}
