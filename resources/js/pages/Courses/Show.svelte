@@ -16,6 +16,7 @@
     import Star from 'lucide-svelte/icons/star';
     import Users from 'lucide-svelte/icons/users';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -89,10 +90,12 @@
             </div>
 
             <div class="aspect-video overflow-hidden rounded-xl border bg-muted">
-                <img
+                <CourseCover
                     src={course.cover}
-                    alt={course.title}
-                    class="h-full w-full object-cover"
+                    source={course.cover_source}
+                    title={course.title}
+                    loading="lazy"
+                    class="h-full w-full"
                 />
             </div>
 
@@ -171,10 +174,13 @@
                             >
                                 <Card class="h-full transition-shadow hover:shadow-md">
                                     <CardContent class="flex gap-3 p-3">
-                                        <img
+                                        <CourseCover
                                             src={item.cover}
-                                            alt={item.title}
-                                            class="size-20 shrink-0 rounded-md object-cover"
+                                            source={item.cover_source}
+                                            title={item.title}
+                                            loading="lazy"
+                                            showBadge={false}
+                                            class="size-20 shrink-0 overflow-hidden rounded-md"
                                         />
                                         <div class="min-w-0 flex-1">
                                             <p class="truncate text-sm font-medium group-hover:text-primary">
@@ -186,6 +192,12 @@
                                             <div class="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                                                 <Star class="size-3 fill-primary text-primary" />
                                                 {item.rating.toFixed(1)}
+                                                <span class="px-1">·</span>
+                                                <span>
+                                                    {item.cover_source === 'manual'
+                                                        ? 'Manual cover'
+                                                        : 'Default cover'}
+                                                </span>
                                             </div>
                                         </div>
                                     </CardContent>

@@ -227,6 +227,7 @@ class CourseController extends Controller
         $lessons = $course->modules->flatMap->lessons;
         $totalSeconds = $lessons->sum('duration_seconds');
         $durationHours = round($totalSeconds / 3600, 1);
+        $cover = $course->coverMeta();
 
         return [
             'slug' => $course->slug,
@@ -240,7 +241,8 @@ class CourseController extends Controller
             'students' => $course->enrollments_count ?? $course->enrollments()->count(),
             'rating' => 0,
             'price' => $course->price,
-            'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+            'cover' => $cover['url'],
+            'cover_source' => $cover['source'],
             'instructor' => [
                 'name' => $course->instructor->name ?? 'Unknown',
                 'title' => 'Instructor',

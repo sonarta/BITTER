@@ -82,7 +82,8 @@ class DashboardController extends Controller
                     'lesson_slug' => $nextLesson?->slug ?? '',
                     'lesson_title' => $nextLesson?->title ?? 'Completed',
                     'progress' => $progress,
-                    'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+                    'cover' => $course->coverMeta()['url'],
+                    'cover_source' => $course->coverMeta()['source'],
                     'remaining' => "{$remainingHours}h {$remainingMinutes}m left",
                 ];
             })
@@ -105,7 +106,8 @@ class DashboardController extends Controller
                     'level' => $course->level,
                     'duration_hours' => round($totalSeconds / 3600, 1),
                     'rating' => 0,
-                    'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+                    'cover' => $course->coverMeta()['url'],
+                    'cover_source' => $course->coverMeta()['source'],
                 ];
             });
 

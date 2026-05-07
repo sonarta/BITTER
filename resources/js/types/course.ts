@@ -16,6 +16,7 @@ export type Course = {
     rating: number;
     price: number;
     cover: string;
+    cover_source: 'manual' | 'placeholder';
     instructor: Instructor;
 };
 

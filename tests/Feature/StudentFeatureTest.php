@@ -120,7 +120,7 @@ test('student can mark a lesson as complete', function () {
     $lesson = Lesson::factory()->for($module)->create();
 
     $this->actingAs($student)
-        ->post("/lessons/{$lesson->id}/complete")
+        ->post("/lessons/{$lesson->slug}/complete")
         ->assertRedirect();
 
     expect(
@@ -145,7 +145,7 @@ test('student can mark a lesson as incomplete', function () {
     ]);
 
     $this->actingAs($student)
-        ->post("/lessons/{$lesson->id}/incomplete")
+        ->post("/lessons/{$lesson->slug}/incomplete")
         ->assertRedirect();
 
     expect(

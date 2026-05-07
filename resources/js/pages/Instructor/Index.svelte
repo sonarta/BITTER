@@ -15,6 +15,7 @@
     import TrendingUp from 'lucide-svelte/icons/trending-up';
     import Users from 'lucide-svelte/icons/users';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import InstructorNav from '@/components/InstructorNav.svelte';
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Badge } from '@/components/ui/badge';
@@ -50,6 +51,7 @@
         revenue: number;
         price: number;
         cover: string;
+        cover_source: 'manual' | 'placeholder';
     };
 
     let {
@@ -189,10 +191,13 @@
             <CardContent class="space-y-3">
                 {#each top_courses as course (course.slug)}
                     <div class="flex items-center gap-3">
-                        <img
+                        <CourseCover
                             src={course.cover}
-                            alt={course.title}
-                            class="size-12 shrink-0 rounded-md object-cover"
+                            source={course.cover_source}
+                            title={course.title}
+                            loading="lazy"
+                            showBadge={false}
+                            class="size-12 shrink-0 overflow-hidden rounded-md"
                         />
                         <div class="min-w-0 flex-1">
                             <p class="truncate text-sm font-medium">
@@ -206,6 +211,11 @@
                                 <span class="inline-flex items-center gap-1">
                                     <Star class="size-3 fill-primary text-primary" />
                                     {course.rating.toFixed(1)}
+                                </span>
+                                <span>
+                                    {course.cover_source === 'manual'
+                                        ? 'Manual cover'
+                                        : 'Default cover'}
                                 </span>
                             </div>
                         </div>

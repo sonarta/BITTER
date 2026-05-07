@@ -23,6 +23,7 @@
     import Star from 'lucide-svelte/icons/star';
     import Trophy from 'lucide-svelte/icons/trophy';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
@@ -40,6 +41,7 @@
         lesson_title: string;
         progress: number;
         cover: string;
+        cover_source: 'manual' | 'placeholder';
         remaining: string;
     };
     type Recommended = {
@@ -50,6 +52,7 @@
         duration_hours: number;
         rating: number;
         cover: string;
+        cover_source: 'manual' | 'placeholder';
     };
     type Activity = {
         label: string;
@@ -198,10 +201,13 @@
                     <Card class="overflow-hidden">
                         <div class="flex gap-4">
                             <div class="relative w-40 shrink-0">
-                                <img
+                                <CourseCover
                                     src={item.cover}
-                                    alt={item.title}
-                                    class="h-full w-full object-cover"
+                                    source={item.cover_source}
+                                    title={item.title}
+                                    loading="lazy"
+                                    showBadge={false}
+                                    class="h-full w-full"
                                 />
                                 <div
                                     class="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 transition-opacity hover:opacity-100"
@@ -213,6 +219,12 @@
                                 <div class="min-w-0">
                                     <p class="truncate text-xs text-muted-foreground">
                                         {item.module_title}
+                                        <span class="px-1">·</span>
+                                        <span>
+                                            {item.cover_source === 'manual'
+                                                ? 'Manual cover'
+                                                : 'Default cover'}
+                                        </span>
                                     </p>
                                     <h3 class="truncate font-semibold">
                                         {item.title}
@@ -276,10 +288,13 @@
                     >
                         <Card class="h-full overflow-hidden pt-0 pb-4 transition-shadow hover:shadow-md">
                             <div class="aspect-video w-full overflow-hidden bg-muted">
-                                <img
+                                <CourseCover
                                     src={course.cover}
-                                    alt={course.title}
-                                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    source={course.cover_source}
+                                    title={course.title}
+                                    loading="lazy"
+                                    class="h-full w-full"
+                                    imgClass="transition-transform duration-300 group-hover:scale-105"
                                 />
                             </div>
                             <CardContent class="space-y-2">

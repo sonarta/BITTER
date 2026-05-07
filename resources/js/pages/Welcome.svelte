@@ -19,6 +19,7 @@
     import Zap from 'lucide-svelte/icons/zap';
     import AppHead from '@/components/AppHead.svelte';
     import AppLogo from '@/components/AppLogo.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -38,6 +39,7 @@
         students: number;
         price: number;
         cover: string;
+        cover_source: 'manual' | 'placeholder';
     };
 
     type CategoryIcon =
@@ -232,10 +234,12 @@
                                 class="overflow-hidden rounded-2xl bg-card shadow-2xl shadow-primary/10 rotate-[-1.5deg] border border-primary/10"
                             >
                                 <div class="aspect-16/10 overflow-hidden bg-muted">
-                                    <img
+                                    <CourseCover
                                         src={featured[0].cover}
-                                        alt={featured[0].title}
-                                        class="h-full w-full object-cover"
+                                        source={featured[0].cover_source}
+                                        title={featured[0].title}
+                                        loading="lazy"
+                                        class="h-full w-full"
                                     />
                                 </div>
                                 <div class="p-5 space-y-3">
@@ -276,10 +280,12 @@
                                 class="absolute -right-8 -bottom-8 w-72 overflow-hidden rounded-xl bg-card shadow-xl shadow-primary/10 rotate-2 border border-primary/10"
                             >
                                 <div class="aspect-video overflow-hidden bg-muted">
-                                    <img
+                                    <CourseCover
                                         src={featured[1].cover}
-                                        alt={featured[1].title}
-                                        class="h-full w-full object-cover"
+                                        source={featured[1].cover_source}
+                                        title={featured[1].title}
+                                        loading="lazy"
+                                        class="h-full w-full"
                                     />
                                 </div>
                                 <div class="p-4 space-y-2">
@@ -422,10 +428,13 @@
                             class="flex h-full flex-col overflow-hidden border-transparent bg-card/50 backdrop-blur-sm transition-all hover:bg-card hover:shadow-lg hover:shadow-primary/5"
                         >
                             <div class="relative aspect-video w-full overflow-hidden bg-muted">
-                                <img
+                                <CourseCover
                                     src={course.cover}
-                                    alt={course.title}
-                                    class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    source={course.cover_source}
+                                    title={course.title}
+                                    loading="lazy"
+                                    class="h-full w-full"
+                                    imgClass="transition-transform duration-300 group-hover:scale-105"
                                 />
                                 {#if course.price === 0}
                                     <span

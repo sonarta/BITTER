@@ -13,6 +13,7 @@
     import PlayCircle from 'lucide-svelte/icons/play-circle';
     import Trophy from 'lucide-svelte/icons/trophy';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
@@ -121,16 +122,24 @@
             {#each visible as course (course.slug)}
                 <Card class="overflow-hidden">
                     <div class="flex gap-4">
-                        <img
+                        <CourseCover
                             src={course.cover}
-                            alt={course.title}
-                            class="aspect-square w-32 shrink-0 object-cover sm:w-40"
+                            source={course.cover_source}
+                            title={course.title}
+                            loading="lazy"
+                            showBadge={false}
+                            class="aspect-square w-32 shrink-0 overflow-hidden sm:w-40"
                         />
                         <div class="flex min-w-0 flex-1 flex-col justify-between py-4 pr-4">
                             <div>
                                 <Badge variant="secondary" class="mb-2 font-normal">
                                     {course.category}
                                 </Badge>
+                                {#if course.cover_source !== 'manual'}
+                                    <Badge variant="outline" class="mb-2 ml-2 font-normal">
+                                        Default cover
+                                    </Badge>
+                                {/if}
                                 <h3 class="truncate font-semibold">
                                     {course.title}
                                 </h3>

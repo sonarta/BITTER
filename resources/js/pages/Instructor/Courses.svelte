@@ -19,6 +19,7 @@
     import Upload from 'lucide-svelte/icons/upload';
     import Users from 'lucide-svelte/icons/users';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import InstructorNav from '@/components/InstructorNav.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -44,6 +45,7 @@
         price: number;
         updated_at: string;
         cover: string;
+        cover_source: 'manual' | 'placeholder';
     };
 
     let {
@@ -149,10 +151,13 @@
                                 <tr class="border-b transition-colors hover:bg-accent/30">
                                     <td class="px-3 py-3">
                                         <div class="flex items-center gap-3">
-                                            <img
+                                            <CourseCover
                                                 src={course.cover}
-                                                alt={course.title}
-                                                class="size-10 shrink-0 rounded-md object-cover"
+                                                source={course.cover_source}
+                                                title={course.title}
+                                                loading="lazy"
+                                                showBadge={false}
+                                                class="size-10 shrink-0 overflow-hidden rounded-md"
                                             />
                                             <span class="font-medium">
                                                 {course.title}
@@ -205,7 +210,7 @@
                                                         variant="ghost"
                                                         size="icon"
                                                         class="size-8"
-                                                        onclick={props.onclick}
+                                                        onclick={(props as any).onclick}
                                                         aria-expanded={props['aria-expanded']}
                                                     >
                                                         <MoreHorizontal class="size-4" />

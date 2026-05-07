@@ -12,8 +12,10 @@
     import { useForm } from '@inertiajs/svelte';
     import Save from 'lucide-svelte/icons/save';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import InstructorNav from '@/components/InstructorNav.svelte';
     import InputError from '@/components/InputError.svelte';
+    import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
         Card,
@@ -57,6 +59,11 @@
     const isEditing = $derived(!!course?.id);
     const pageTitle = $derived(isEditing ? 'Edit Course' : 'Create Course');
 
+    const LEGACY_DEFAULT_COVER_MARKER =
+        'images.unsplash.com/photo-1555066931-4365d14bab8c';
+    const PLACEHOLDER_COVER =
+        'data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc4MDAnIGhlaWdodD0nNDUwJyB2aWV3Qm94PScwIDAgODAwIDQ1MCc+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSdnJyB4MT0nMCcgeTE9JzAnIHgyPScxJyB5Mj0nMSc+PHN0b3Agb2Zmc2V0PScwJyBzdG9wLWNvbG9yPScjMGYxNzJhJy8+PHN0b3Agb2Zmc2V0PScxJyBzdG9wLWNvbG9yPScjMWQ0ZWQ4Jy8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3Qgd2lkdGg9JzgwMCcgaGVpZ2h0PSc0NTAnIGZpbGw9J3VybCgjZyknLz48dGV4dCB4PSc1MCUnIHk9JzUwJScgZG9taW5hbnQtYmFzZWxpbmU9J21pZGRsZScgdGV4dC1hbmNob3I9J21pZGRsZScgZm9udC1mYW1pbHk9J3N5c3RlbS11aSwgLWFwcGxlLXN5c3RlbSwgU2Vnb2UgVUksIFJvYm90bywgQXJpYWwnIGZvbnQtc2l6ZT0nNDgnIGZpbGw9JyNmZmZmZmYnIG9wYWNpdHk9JzAuOTInPk5vIENvdmVyPC90ZXh0Pjwvc3ZnPg==';
+
     const form = useForm(untrack(() => ({
         title: course?.title ?? '',
         slug: course?.slug ?? '',
@@ -67,6 +74,16 @@
         cover_url: course?.cover_url ?? '',
         price: course?.price ?? 0,
     })));
+
+    const coverSource = $derived(
+        form.cover_url.trim() === '' ||
+            form.cover_url.includes(LEGACY_DEFAULT_COVER_MARKER)
+            ? 'placeholder'
+            : 'manual',
+    );
+    const coverPreviewSrc = $derived(
+        coverSource === 'manual' ? form.cover_url : PLACEHOLDER_COVER,
+    );
 
     function generateSlug(title: string): string {
         return title
@@ -220,6 +237,34 @@
                             placeholder="https://..."
                         />
                         <InputError message={form.errors.cover_url} />
+                        <div class="mt-3">
+                            <div class="mb-2 flex items-center justify-between">
+                                <p class="text-xs font-medium text-muted-foreground">
+                                    Cover preview
+                                </p>
+                                <Badge
+                                    variant={coverSource === 'manual' ? 'outline' : 'secondary'}
+                                    class="font-normal"
+                                >
+                                    {coverSource === 'manual'
+                                        ? 'Manual cover'
+                                        : 'Default cover'}
+                                </Badge>
+                            </div>
+                            <div class="aspect-video overflow-hidden rounded-lg border bg-muted">
+                                <CourseCover
+                                    src={coverPreviewSrc}
+                                    source={coverSource}
+                                    title={form.title || 'Course cover'}
+                                    loading="lazy"
+                                    showBadge={false}
+                                    class="h-full w-full"
+                                />
+                            </div>
+                            <p class="mt-2 text-xs text-muted-foreground">
+                                Leave empty to use the system default cover.
+                            </p>
+                        </div>
                     </div>
 
                     <div class="space-y-2">

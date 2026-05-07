@@ -51,7 +51,8 @@ class InstructorController extends Controller
                     'rating' => 0,
                     'revenue' => 0,
                     'price' => $course->price,
-                    'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
+                    'cover' => $course->coverMeta()['url'],
+                    'cover_source' => $course->coverMeta()['source'],
                 ])
                 ->values(),
         ]);
@@ -77,7 +78,8 @@ class InstructorController extends Controller
                 'revenue' => 0,
                 'price' => $course->price,
                 'updated_at' => $course->updated_at->diffForHumans(),
-                'cover' => $course->cover_url ?? 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
+                'cover' => $course->coverMeta()['url'],
+                'cover_source' => $course->coverMeta()['source'],
             ]);
 
         return Inertia::render('Instructor/Courses', [

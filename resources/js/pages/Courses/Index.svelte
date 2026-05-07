@@ -13,6 +13,7 @@
     import Star from 'lucide-svelte/icons/star';
     import Users from 'lucide-svelte/icons/users';
     import AppHead from '@/components/AppHead.svelte';
+    import CourseCover from '@/components/CourseCover.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
@@ -144,11 +145,13 @@
                         <div
                             class="relative aspect-video w-full overflow-hidden bg-muted"
                         >
-                            <img
+                            <CourseCover
                                 src={course.cover}
-                                alt={course.title}
+                                source={course.cover_source}
+                                title={course.title}
                                 loading="lazy"
-                                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                class="h-full w-full"
+                                imgClass="transition-transform duration-300 group-hover:scale-105"
                             />
                             {#if course.price === 0}
                                 <Badge

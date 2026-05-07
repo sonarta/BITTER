@@ -27,7 +27,7 @@ class CourseFactory extends Factory
             'description' => fake()->paragraphs(3, true),
             'category' => fake()->randomElement(['Backend', 'Frontend', 'Full-stack', 'Testing', 'DevOps']),
             'level' => fake()->randomElement(['Beginner', 'Intermediate', 'Advanced']),
-            'cover_url' => 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=800&q=80',
+            'cover_url' => null,
             'price' => 0,
             'status' => 'draft',
             'published_at' => null,
