@@ -93,6 +93,10 @@ class ExamController extends Controller
             abort(404);
         }
 
+        if ($exam->questions->isEmpty()) {
+            abort(404);
+        }
+
         $existingInProgress = $exam->attempts()
             ->where('user_id', $user->id)
             ->where('status', 'in_progress')
@@ -279,6 +283,7 @@ class ExamController extends Controller
                     'points_awarded' => null,
                 ]);
                 $answer->selectedOptions()->sync([]);
+
                 continue;
             }
 

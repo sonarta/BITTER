@@ -444,6 +444,8 @@
                                                 class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
                                             >
                                                 <option value="Link">Link</option>
+                                                <option value="PDF">PDF</option>
+                                                <option value="File">File</option>
                                             </select>
                                             <Button
                                                 variant="ghost"

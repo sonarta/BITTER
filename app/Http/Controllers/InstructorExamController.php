@@ -11,6 +11,7 @@ use App\Models\ExamQuestionOption;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -94,6 +95,18 @@ class InstructorExamController extends Controller
             'is_published' => ['required', 'boolean'],
         ]);
 
+        if ($data['is_published']) {
+            $exam = $course->exam()->with('questions.options')->first();
+
+            if (! ($exam instanceof CourseExam)) {
+                throw ValidationException::withMessages([
+                    'is_published' => 'Add at least one valid question before publishing the exam.',
+                ]);
+            }
+
+            $this->ensureExamCanBePublished($exam);
+        }
+
         CourseExam::updateOrCreate(
             ['course_id' => $course->id],
             $data,
@@ -170,6 +183,7 @@ class InstructorExamController extends Controller
 
         if ($data['type'] === 'essay') {
             $question->options()->delete();
+
             return back()->with('success', 'Question saved.');
         }
 
@@ -195,6 +209,7 @@ class InstructorExamController extends Controller
                     'sort_order' => $opt['sort_order'],
                 ]);
                 $keepIds[] = $id;
+
                 continue;
             }
 
@@ -329,6 +344,10 @@ class InstructorExamController extends Controller
             abort(404);
         }
 
+        if ($attempt->status !== 'submitted') {
+            abort(404);
+        }
+
         $data = $request->validate([
             'grades' => ['required', 'array'],
             'grades.*.answer_id' => ['required', 'string'],
@@ -381,5 +400,41 @@ class InstructorExamController extends Controller
 
         return back()->with('success', 'Graded.');
     }
-}
 
+    private function ensureExamCanBePublished(CourseExam $exam): void
+    {
+        $exam->loadMissing('questions.options');
+
+        if ($exam->questions->isEmpty()) {
+            throw ValidationException::withMessages([
+                'is_published' => 'Add at least one valid question before publishing the exam.',
+            ]);
+        }
+
+        foreach ($exam->questions as $question) {
+            if ($question->type === 'essay') {
+                continue;
+            }
+
+            if ($question->options->isEmpty()) {
+                throw ValidationException::withMessages([
+                    'is_published' => 'Every objective question must have options before publishing the exam.',
+                ]);
+            }
+
+            $correctOptionsCount = $question->options->where('is_correct', true)->count();
+
+            if (in_array($question->type, ['single', 'true_false'], true) && $correctOptionsCount !== 1) {
+                throw ValidationException::withMessages([
+                    'is_published' => 'Single choice and true/false questions must have exactly one correct option.',
+                ]);
+            }
+
+            if ($question->type === 'multiple' && $correctOptionsCount < 1) {
+                throw ValidationException::withMessages([
+                    'is_published' => 'Multiple choice questions must have at least one correct option.',
+                ]);
+            }
+        }
+    }
+}

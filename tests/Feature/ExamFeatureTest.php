@@ -44,6 +44,13 @@ test('student can start exam and attempt limit is enforced', function () {
         'pass_score' => 70,
         'is_published' => true,
     ]);
+    ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'essay',
+        'prompt' => 'Explain one concept from this course.',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
 
     Enrollment::create([
         'user_id' => $student->id,
@@ -242,6 +249,90 @@ test('expired attempt is blocked on submit', function () {
     expect($attempt->fresh()->status)->toBe('expired');
 });
 
+test('instructor cannot publish an exam without questions', function () {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->for($instructor, 'instructor')->create();
+
+    $this->actingAs($instructor)
+        ->from("/instructor/courses/{$course->id}/exam")
+        ->post("/instructor/courses/{$course->id}/exam", [
+            'title' => 'Final Exam',
+            'description' => null,
+            'duration_minutes' => 10,
+            'max_attempts' => 1,
+            'pass_score' => 70,
+            'is_published' => true,
+        ])
+        ->assertRedirect("/instructor/courses/{$course->id}/exam")
+        ->assertSessionHasErrors('is_published');
+});
+
+test('instructor cannot publish single choice question without exactly one correct option', function () {
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->for($instructor, 'instructor')->create();
+    $exam = CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 1,
+        'pass_score' => 70,
+        'is_published' => false,
+    ]);
+    $question = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'single',
+        'prompt' => 'Pick one.',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
+    ExamQuestionOption::create([
+        'question_id' => $question->id,
+        'text' => 'A',
+        'is_correct' => false,
+        'sort_order' => 0,
+    ]);
+
+    $this->actingAs($instructor)
+        ->from("/instructor/courses/{$course->id}/exam")
+        ->post("/instructor/courses/{$course->id}/exam", [
+            'title' => 'Final Exam',
+            'description' => null,
+            'duration_minutes' => 10,
+            'max_attempts' => 1,
+            'pass_score' => 70,
+            'is_published' => true,
+        ])
+        ->assertRedirect("/instructor/courses/{$course->id}/exam")
+        ->assertSessionHasErrors('is_published');
+});
+
+test('student cannot start a published exam without questions', function () {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->create();
+
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 1,
+        'pass_score' => 70,
+        'is_published' => true,
+    ]);
+
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($student)
+        ->post("/courses/{$course->slug}/exam/start")
+        ->assertNotFound();
+});
+
 test('instructor can grade essay answers and finalize pass', function () {
     $instructor = User::factory()->instructor()->create();
     $student = User::factory()->create();
@@ -304,4 +395,57 @@ test('instructor can grade essay answers and finalize pass', function () {
         ->and($attempt->max_points)->toBe(10)
         ->and($attempt->score_points)->toBe(8)
         ->and($attempt->passed)->toBeTrue();
+});
+
+test('instructor cannot grade an attempt before it is submitted', function () {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->create();
+
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $exam = CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 1,
+        'pass_score' => 70,
+        'is_published' => true,
+    ]);
+    $question = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'essay',
+        'prompt' => 'Explain SOLID.',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
+    $attempt = ExamAttempt::create([
+        'exam_id' => $exam->id,
+        'user_id' => $student->id,
+        'attempt_number' => 1,
+        'started_at' => now(),
+        'expires_at' => now()->addMinutes(10),
+        'status' => 'in_progress',
+        'score_points' => null,
+        'max_points' => 0,
+        'needs_manual_review' => true,
+        'passed' => null,
+    ]);
+    $answer = ExamAnswer::create([
+        'attempt_id' => $attempt->id,
+        'question_id' => $question->id,
+        'answer_text' => '...',
+        'points_awarded' => null,
+        'is_correct' => null,
+    ]);
+
+    $this->actingAs($instructor)
+        ->post("/instructor/courses/{$course->id}/exam/attempts/{$attempt->id}/grade", [
+            'grades' => [
+                [
+                    'answer_id' => $answer->id,
+                    'points_awarded' => 8,
+                ],
+            ],
+        ])
+        ->assertNotFound();
 });

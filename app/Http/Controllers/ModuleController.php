@@ -29,6 +29,10 @@ class ModuleController extends Controller
     {
         Gate::authorize('update', $course);
 
+        if ($module->course_id !== $course->id) {
+            abort(404);
+        }
+
         $module->update($request->validated());
 
         return back()->with('success', 'Module updated successfully.');
@@ -37,6 +41,10 @@ class ModuleController extends Controller
     public function destroy(Course $course, Module $module): RedirectResponse
     {
         Gate::authorize('update', $course);
+
+        if ($module->course_id !== $course->id) {
+            abort(404);
+        }
 
         $module->delete();
 

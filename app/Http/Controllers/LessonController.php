@@ -17,6 +17,10 @@ class LessonController extends Controller
     {
         Gate::authorize('update', $course);
 
+        if ($module->course_id !== $course->id) {
+            abort(404);
+        }
+
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
 
@@ -33,6 +37,10 @@ class LessonController extends Controller
     public function update(LessonRequest $request, Course $course, Module $module, Lesson $lesson): RedirectResponse
     {
         Gate::authorize('update', $course);
+
+        if ($module->course_id !== $course->id || $lesson->module_id !== $module->id) {
+            abort(404);
+        }
 
         $data = $request->validated();
         $data['slug'] = Str::slug($data['title']);
@@ -51,11 +59,18 @@ class LessonController extends Controller
      */
     private function syncResources(Lesson $lesson, array $resources): void
     {
+        $currentResourceIds = $lesson->resources()->pluck('id')->all();
         $existingIds = [];
 
         foreach ($resources as $index => $resource) {
+            $resourceId = $resource['id'] ?? null;
+
+            if ($resourceId !== null && ! in_array($resourceId, $currentResourceIds, true)) {
+                abort(404);
+            }
+
             $model = $lesson->resources()->updateOrCreate(
-                ['id' => $resource['id'] ?? null],
+                ['id' => $resourceId],
                 [
                     'title' => $resource['title'],
                     'url' => $resource['url'],
@@ -74,6 +89,10 @@ class LessonController extends Controller
     {
         Gate::authorize('update', $course);
 
+        if ($module->course_id !== $course->id || $lesson->module_id !== $module->id) {
+            abort(404);
+        }
+
         $lesson->delete();
 
         return back()->with('success', 'Lesson deleted successfully.');
@@ -85,6 +104,10 @@ class LessonController extends Controller
     public function reorder(Course $course, Module $module): JsonResponse
     {
         Gate::authorize('update', $course);
+
+        if ($module->course_id !== $course->id) {
+            abort(404);
+        }
 
         $validated = request()->validate([
             'order' => ['required', 'array'],
