@@ -2,16 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Lesson;
+use App\Models\Course;
 use App\Models\LessonProgress;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ProgressController extends Controller
 {
-    public function markComplete(string $slug): RedirectResponse
+    public function markComplete(string $courseSlug, string $lessonSlug): RedirectResponse
     {
-        $user = auth()->user();
-        $lesson = Lesson::where('slug', $slug)->firstOrFail();
+        $course = Course::where('slug', $courseSlug)
+            ->where('status', 'published')
+            ->with('modules.lessons')
+            ->firstOrFail();
+
+        $user = Auth::user();
+
+        if (! $user?->isEnrolledIn($course)) {
+            abort(403);
+        }
+
+        $lesson = $course->modules
+            ->flatMap->lessons
+            ->firstWhere('slug', $lessonSlug);
+
+        if ($lesson === null) {
+            abort(404);
+        }
 
         LessonProgress::updateOrCreate(
             ['user_id' => $user->id, 'lesson_id' => $lesson->id],
@@ -21,10 +38,26 @@ class ProgressController extends Controller
         return back()->with('success', 'Lesson completed!');
     }
 
-    public function markIncomplete(string $slug): RedirectResponse
+    public function markIncomplete(string $courseSlug, string $lessonSlug): RedirectResponse
     {
-        $user = auth()->user();
-        $lesson = Lesson::where('slug', $slug)->firstOrFail();
+        $course = Course::where('slug', $courseSlug)
+            ->where('status', 'published')
+            ->with('modules.lessons')
+            ->firstOrFail();
+
+        $user = Auth::user();
+
+        if (! $user?->isEnrolledIn($course)) {
+            abort(403);
+        }
+
+        $lesson = $course->modules
+            ->flatMap->lessons
+            ->firstWhere('slug', $lessonSlug);
+
+        if ($lesson === null) {
+            abort(404);
+        }
 
         LessonProgress::where('user_id', $user->id)
             ->where('lesson_id', $lesson->id)

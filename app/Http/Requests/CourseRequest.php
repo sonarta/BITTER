@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class CourseRequest extends FormRequest
@@ -29,5 +30,12 @@ class CourseRequest extends FormRequest
             'cover_url' => ['nullable', 'url', 'max:2048'],
             'price' => ['required', 'integer', 'min:0'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'slug' => Str::slug((string) $this->input('slug', $this->input('title'))),
+        ]);
     }
 }

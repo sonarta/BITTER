@@ -119,8 +119,14 @@ test('student can mark a lesson as complete', function () {
     $module = Module::factory()->for($course)->create();
     $lesson = Lesson::factory()->for($module)->create();
 
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
     $this->actingAs($student)
-        ->post("/lessons/{$lesson->slug}/complete")
+        ->post("/learn/{$course->slug}/{$lesson->slug}/complete")
         ->assertRedirect();
 
     expect(
@@ -138,6 +144,12 @@ test('student can mark a lesson as incomplete', function () {
     $module = Module::factory()->for($course)->create();
     $lesson = Lesson::factory()->for($module)->create();
 
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
     LessonProgress::create([
         'user_id' => $student->id,
         'lesson_id' => $lesson->id,
@@ -145,7 +157,7 @@ test('student can mark a lesson as incomplete', function () {
     ]);
 
     $this->actingAs($student)
-        ->post("/lessons/{$lesson->slug}/incomplete")
+        ->post("/learn/{$course->slug}/{$lesson->slug}/incomplete")
         ->assertRedirect();
 
     expect(
@@ -154,6 +166,58 @@ test('student can mark a lesson as incomplete', function () {
             ->first()
             ->completed_at
     )->toBeNull();
+});
+
+test('student cannot mark lesson complete without course enrollment', function () {
+    $student = User::factory()->create();
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $module = Module::factory()->for($course)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+
+    $this->actingAs($student)
+        ->post("/learn/{$course->slug}/{$lesson->slug}/complete")
+        ->assertForbidden();
+
+    expect(
+        LessonProgress::where('user_id', $student->id)
+            ->where('lesson_id', $lesson->id)
+            ->exists()
+    )->toBeFalse();
+});
+
+test('student cannot mark lesson complete through another course route', function () {
+    $student = User::factory()->create();
+    $instructor = User::factory()->instructor()->create();
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $otherCourse = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $module = Module::factory()->for($course)->create();
+    $otherModule = Module::factory()->for($otherCourse)->create();
+    $lesson = Lesson::factory()->for($module)->create();
+    $otherLesson = Lesson::factory()->for($otherModule)->create(['slug' => $lesson->slug]);
+
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($student)
+        ->post("/learn/{$course->slug}/{$lesson->slug}/complete")
+        ->assertRedirect();
+
+    expect(
+        LessonProgress::where('user_id', $student->id)
+            ->where('lesson_id', $lesson->id)
+            ->whereNotNull('completed_at')
+            ->exists()
+    )->toBeTrue();
+
+    expect(
+        LessonProgress::where('user_id', $student->id)
+            ->where('lesson_id', $otherLesson->id)
+            ->exists()
+    )->toBeFalse();
 });
 
 test('progress percentage calculates correctly', function () {

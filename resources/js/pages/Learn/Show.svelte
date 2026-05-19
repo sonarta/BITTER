@@ -57,7 +57,7 @@
     );
 
     function toggleComplete(): void {
-        const url = `/lessons/${current.slug}/${completed ? 'incomplete' : 'complete'}`;
+        const url = `/learn/${course.slug}/${current.slug}/${completed ? 'incomplete' : 'complete'}`;
 
         router.post(url, {}, {
             preserveScroll: true,

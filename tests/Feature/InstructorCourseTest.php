@@ -107,6 +107,28 @@ test('instructor can update own course', function () {
     expect($course->fresh()->title)->toBe('Updated Title');
 });
 
+test('instructor cannot store a course with duplicate normalized slug', function () {
+    $instructor = User::factory()->instructor()->create();
+
+    Course::factory()->for($instructor, 'instructor')->create([
+        'title' => 'Existing Course',
+        'slug' => 'test-course',
+    ]);
+
+    $this->actingAs($instructor)
+        ->post('/instructor/courses', [
+            'title' => 'Another Course',
+            'slug' => 'Test Course',
+            'tagline' => 'A test tagline',
+            'description' => 'A test description',
+            'category' => 'Kewirausahaan',
+            'level' => 'Beginner',
+            'cover_url' => 'https://example.com/cover.jpg',
+            'price' => 0,
+        ])
+        ->assertInvalid('slug');
+});
+
 test('instructor cannot edit another instructor course', function () {
     $instructor = User::factory()->instructor()->create();
     $other = User::factory()->instructor()->create();

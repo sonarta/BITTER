@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -106,7 +105,6 @@ class InstructorController extends Controller
         Gate::authorize('create', Course::class);
 
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['title']);
         $data['instructor_id'] = Auth::id();
 
         Course::create($data);
@@ -130,7 +128,6 @@ class InstructorController extends Controller
         Gate::authorize('update', $course);
 
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['title']);
 
         $course->update($data);
 

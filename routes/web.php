@@ -29,8 +29,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('courses/{slug}/exam/attempts/{attempt}/submit', [ExamController::class, 'submit'])->name('courses.exam.submit');
     Route::get('files/lesson-resources/{lessonResource}', LessonResourceFileController::class)
         ->name('lesson-resources.file');
-    Route::post('lessons/{slug}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
-    Route::post('lessons/{slug}/incomplete', [ProgressController::class, 'markIncomplete'])->name('lessons.incomplete');
+    Route::post('learn/{courseSlug}/{lessonSlug}/complete', [ProgressController::class, 'markComplete'])->name('lessons.complete');
+    Route::post('learn/{courseSlug}/{lessonSlug}/incomplete', [ProgressController::class, 'markIncomplete'])->name('lessons.incomplete');
 
     Route::prefix('instructor')->middleware('instructor')->name('instructor.')->group(function () {
         Route::get('/', [InstructorController::class, 'index'])->name('index');
