@@ -205,6 +205,63 @@ test('essay questions require manual review and do not set passed automatically'
         ->and($attempt->passed)->toBeNull();
 });
 
+test('student can open take exam page before answering any question', function () {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->create();
+
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $exam = CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 1,
+        'pass_score' => 70,
+        'is_published' => true,
+    ]);
+
+    $question = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'single',
+        'prompt' => '2 + 2 = ?',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
+
+    ExamQuestionOption::create([
+        'question_id' => $question->id,
+        'text' => '3',
+        'is_correct' => false,
+        'sort_order' => 0,
+    ]);
+
+    ExamQuestionOption::create([
+        'question_id' => $question->id,
+        'text' => '4',
+        'is_correct' => true,
+        'sort_order' => 1,
+    ]);
+
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($student)->post("/courses/{$course->slug}/exam/start");
+
+    $attempt = ExamAttempt::where('exam_id', $exam->id)->where('user_id', $student->id)->firstOrFail();
+
+    $this->actingAs($student)
+        ->get("/courses/{$course->slug}/exam/attempts/{$attempt->id}")
+        ->assertSuccessful()
+        ->assertInertia(fn ($page) => $page
+            ->component('Exams/Take')
+            ->where('questions.0.answer', null)
+            ->where('questions.0.options.0.text', '3')
+        );
+});
+
 test('expired attempt is blocked on submit', function () {
     $instructor = User::factory()->instructor()->create();
     $student = User::factory()->create();

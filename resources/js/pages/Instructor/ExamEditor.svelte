@@ -9,10 +9,11 @@
 </script>
 
 <script lang="ts">
-    import { Link, router } from '@inertiajs/svelte';
+    import { Link, router, useForm } from '@inertiajs/svelte';
     import Plus from 'lucide-svelte/icons/plus';
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import AppHead from '@/components/AppHead.svelte';
+    import InputError from '@/components/InputError.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +21,7 @@
     import { Label } from '@/components/ui/label';
     import { Separator } from '@/components/ui/separator';
     import { Textarea } from '@/components/ui/textarea';
+    import { untrack } from 'svelte';
 
     type Option = { id: string; text: string; is_correct: boolean; sort_order: number };
     type Question = {
@@ -57,26 +59,24 @@
         }[];
     } = $props();
 
-    let examForm = $state({
-        title: 'Final Exam',
-        description: '',
-        duration_minutes: 30,
-        max_attempts: 1,
-        pass_score: 70,
-        is_published: false,
-    });
+    const form = useForm(untrack(() => ({
+        title: exam?.title ?? 'Final Exam',
+        description: exam?.description ?? '',
+        duration_minutes: exam?.duration_minutes ?? 30,
+        max_attempts: exam?.max_attempts ?? 1,
+        pass_score: exam?.pass_score ?? 70,
+        is_published: exam?.is_published ?? false,
+    })));
 
     let questions = $state<Question[]>([]);
 
     $effect(() => {
-        examForm = {
-            title: exam?.title ?? 'Final Exam',
-            description: exam?.description ?? '',
-            duration_minutes: exam?.duration_minutes ?? 30,
-            max_attempts: exam?.max_attempts ?? 1,
-            pass_score: exam?.pass_score ?? 70,
-            is_published: exam?.is_published ?? false,
-        };
+        form.title = exam?.title ?? 'Final Exam';
+        form.description = exam?.description ?? '';
+        form.duration_minutes = exam?.duration_minutes ?? 30;
+        form.max_attempts = exam?.max_attempts ?? 1;
+        form.pass_score = exam?.pass_score ?? 70;
+        form.is_published = exam?.is_published ?? false;
 
         questions = exam?.questions ?? [];
     });
@@ -88,7 +88,9 @@
     });
 
     function saveExam(): void {
-        router.post(`/instructor/courses/${course.id}/exam`, examForm);
+        form.post(`/instructor/courses/${course.id}/exam`, {
+            preserveScroll: true,
+        });
     }
 
     function addQuestion(): void {
@@ -124,6 +126,13 @@
             ...q.options,
             { id: '', text: '', is_correct: false, sort_order: q.options.length },
         ];
+    }
+
+    function setSingleCorrectOption(q: Question, optionIndex: number): void {
+        q.options = q.options.map((opt, idx) => ({
+            ...opt,
+            is_correct: idx === optionIndex,
+        }));
     }
 
     function moveQuestion(qid: string, direction: -1 | 1): void {
@@ -168,29 +177,30 @@
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div class="space-y-1.5">
                     <Label>Title</Label>
-                    <Input bind:value={examForm.title} />
+                    <Input bind:value={form.title} />
                 </div>
                 <div class="space-y-1.5">
                     <Label>Duration (minutes)</Label>
-                    <Input type="number" bind:value={examForm.duration_minutes} />
+                    <Input type="number" bind:value={form.duration_minutes} />
                 </div>
                 <div class="space-y-1.5">
                     <Label>Max attempts</Label>
-                    <Input type="number" bind:value={examForm.max_attempts} />
+                    <Input type="number" bind:value={form.max_attempts} />
                 </div>
                 <div class="space-y-1.5">
                     <Label>Pass score (%)</Label>
-                    <Input type="number" bind:value={examForm.pass_score} />
+                    <Input type="number" bind:value={form.pass_score} />
                 </div>
             </div>
             <div class="space-y-1.5">
                 <Label>Description</Label>
-                <Textarea rows={3} bind:value={examForm.description} />
+                <Textarea rows={3} bind:value={form.description} />
             </div>
             <label class="flex items-center gap-2 text-sm">
-                <input type="checkbox" bind:checked={examForm.is_published} class="rounded border-input" />
+                <input type="checkbox" bind:checked={form.is_published} class="rounded border-input" />
                 Publish exam (students can take it)
             </label>
+            <InputError message={form.errors.is_published} />
             <Button onclick={saveExam}>Save exam</Button>
         </CardContent>
     </Card>
@@ -316,7 +326,21 @@
                                     </div>
                                     {#each q.options as opt, oi (oi)}
                                         <div class="flex items-start gap-2">
-                                            <input type="checkbox" bind:checked={opt.is_correct} class="mt-2 rounded border-input" />
+                                            {#if q.type === 'multiple'}
+                                                <input
+                                                    type="checkbox"
+                                                    bind:checked={opt.is_correct}
+                                                    class="mt-2 rounded border-input"
+                                                />
+                                            {:else}
+                                                <input
+                                                    type="radio"
+                                                    name={`correct-${q.id}`}
+                                                    checked={opt.is_correct}
+                                                    onchange={() => setSingleCorrectOption(q, oi)}
+                                                    class="mt-2 rounded border-input"
+                                                />
+                                            {/if}
                                             <Input bind:value={opt.text} placeholder="Option text" class="flex-1" />
                                         </div>
                                     {/each}

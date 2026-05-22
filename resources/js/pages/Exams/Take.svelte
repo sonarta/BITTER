@@ -37,6 +37,27 @@
     type AnswerDraft = { question_id: string; selected_option_ids: string[]; answer_text: string };
     let draft = $state<Record<string, AnswerDraft>>({});
 
+    function ensureDraft(questionId: string): AnswerDraft {
+        const existing = draft[questionId];
+
+        if (existing) {
+            return existing;
+        }
+
+        const next = {
+            question_id: questionId,
+            selected_option_ids: [],
+            answer_text: '',
+        };
+
+        draft = {
+            ...draft,
+            [questionId]: next,
+        };
+
+        return next;
+    }
+
     $effect(() => {
         remaining = attempt.remaining_seconds;
     });
@@ -65,7 +86,7 @@
     onDestroy(() => clearInterval(timer));
 
     function toggleOption(questionId: string, optionId: string): void {
-        const current = draft[questionId];
+        const current = ensureDraft(questionId);
         const next = new Set(current.selected_option_ids);
 
         if (next.has(optionId)) {
@@ -78,7 +99,19 @@
     }
 
     function setSingleOption(questionId: string, optionId: string): void {
-        draft[questionId].selected_option_ids = [optionId];
+        ensureDraft(questionId).selected_option_ids = [optionId];
+    }
+
+    function setEssayAnswer(questionId: string, value: string): void {
+        ensureDraft(questionId).answer_text = value;
+    }
+
+    function getSelectedOptionIds(questionId: string): string[] {
+        return draft[questionId]?.selected_option_ids ?? [];
+    }
+
+    function getAnswerText(questionId: string): string {
+        return draft[questionId]?.answer_text ?? '';
     }
 
     function submit(): void {
@@ -146,7 +179,8 @@
                             <Textarea
                                 id={`q-${q.id}`}
                                 rows={5}
-                                bind:value={draft[q.id].answer_text}
+                                value={getAnswerText(q.id)}
+                                oninput={(event) => setEssayAnswer(q.id, event.currentTarget.value)}
                             />
                         </div>
                     {:else}
@@ -157,7 +191,7 @@
                                         <input
                                             type="checkbox"
                                             class="mt-1 size-4 accent-primary"
-                                            checked={draft[q.id].selected_option_ids.includes(opt.id)}
+                                            checked={getSelectedOptionIds(q.id).includes(opt.id)}
                                             onchange={() => toggleOption(q.id, opt.id)}
                                         />
                                     {:else}
@@ -165,7 +199,7 @@
                                             type="radio"
                                             name={`q-${q.id}`}
                                             class="mt-1 size-4 accent-primary"
-                                            checked={draft[q.id].selected_option_ids[0] === opt.id}
+                                            checked={getSelectedOptionIds(q.id)[0] === opt.id}
                                             onchange={() => setSingleOption(q.id, opt.id)}
                                         />
                                     {/if}
