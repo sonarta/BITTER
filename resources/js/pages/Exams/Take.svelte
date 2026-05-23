@@ -1,7 +1,9 @@
 <script lang="ts">
     import { onDestroy } from 'svelte';
     import { router } from '@inertiajs/svelte';
+    import { submit as submitExam } from '@/routes/courses/exam';
     import AppHead from '@/components/AppHead.svelte';
+    import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
     import { Label } from '@/components/ui/label';
@@ -33,9 +35,11 @@
 
     let remaining = $state(0);
     let submitting = $state(false);
+    let lastSubmitReason = $state<'manual' | 'timeout' | null>(null);
 
     type AnswerDraft = { question_id: string; selected_option_ids: string[]; answer_text: string };
     let draft = $state<Record<string, AnswerDraft>>({});
+    let timer: ReturnType<typeof setInterval> | null = null;
 
     function ensureDraft(questionId: string): AnswerDraft {
         const existing = draft[questionId];
@@ -76,15 +80,6 @@
         draft = next;
     });
 
-    const timer = setInterval(() => {
-        remaining = Math.max(0, remaining - 1);
-        if (remaining === 0) {
-            submit();
-        }
-    }, 1000);
-
-    onDestroy(() => clearInterval(timer));
-
     function toggleOption(questionId: string, optionId: string): void {
         const current = ensureDraft(questionId);
         const next = new Set(current.selected_option_ids);
@@ -114,9 +109,29 @@
         return draft[questionId]?.answer_text ?? '';
     }
 
-    function submit(): void {
+    const answeredCount = $derived(
+        questions.filter((q) => {
+            if (q.type === 'essay') {
+                return getAnswerText(q.id).trim().length > 0;
+            }
+
+            return getSelectedOptionIds(q.id).length > 0;
+        }).length,
+    );
+
+    function submit(reason: 'manual' | 'timeout' = 'manual'): void {
         if (submitting) return;
+
+        if (reason === 'manual') {
+            const unanswered = questions.length - answeredCount;
+
+            if (unanswered > 0 && !confirm(`Masih ada ${unanswered} soal yang belum dijawab. Tetap submit?`)) {
+                return;
+            }
+        }
+
         submitting = true;
+        lastSubmitReason = reason;
 
         const answers = Object.values(draft).map((a) => ({
             question_id: a.question_id,
@@ -125,9 +140,14 @@
         }));
 
         router.post(
-            `/courses/${course.slug}/exam/attempts/${attempt.id}/submit`,
+            submitExam.url({ slug: course.slug, attempt: attempt.id }),
             { answers },
-            { preserveScroll: true },
+            {
+                preserveScroll: true,
+                onFinish: () => {
+                    submitting = false;
+                },
+            },
         );
     }
 
@@ -135,6 +155,51 @@
         const m = Math.floor(seconds / 60);
         const s = seconds % 60;
         return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    function onBeforeUnload(event: BeforeUnloadEvent) {
+        if (!submitting && remaining > 0) {
+            event.preventDefault();
+            event.returnValue = '';
+        }
+    }
+
+    $effect(() => {
+        if (timer) {
+            clearInterval(timer);
+        }
+
+        timer = setInterval(() => {
+            if (submitting) {
+                return;
+            }
+
+            remaining = Math.max(0, remaining - 1);
+
+            if (remaining === 0) {
+                if (timer) {
+                    clearInterval(timer);
+                    timer = null;
+                }
+
+                submit('timeout');
+            }
+        }, 1000);
+
+        return () => {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        };
+    });
+
+    if (typeof window !== 'undefined') {
+        window.addEventListener('beforeunload', onBeforeUnload);
+
+        onDestroy(() => {
+            window.removeEventListener('beforeunload', onBeforeUnload);
+        });
     }
 </script>
 
@@ -157,9 +222,16 @@
             </div>
         </CardHeader>
         <CardContent>
-            <p class="text-sm text-muted-foreground">
-                Pass score: {exam.pass_score}%
-            </p>
+            <div class="flex flex-wrap items-center gap-2">
+                <p class="text-sm text-muted-foreground">Pass score: {exam.pass_score}%</p>
+                <Badge variant="outline">Answered: {answeredCount}/{questions.length}</Badge>
+                {#if remaining <= 300}
+                    <Badge variant="destructive">Hampir habis</Badge>
+                {/if}
+                {#if lastSubmitReason === 'timeout'}
+                    <Badge variant="outline">Auto submit</Badge>
+                {/if}
+            </div>
         </CardContent>
     </Card>
 
@@ -180,13 +252,14 @@
                                 id={`q-${q.id}`}
                                 rows={5}
                                 value={getAnswerText(q.id)}
-                                oninput={(event) => setEssayAnswer(q.id, event.currentTarget.value)}
+                                oninput={(event: Event & { currentTarget: HTMLTextAreaElement }) =>
+                                    setEssayAnswer(q.id, event.currentTarget.value)}
                             />
                         </div>
                     {:else}
                         <div class="space-y-2">
                             {#each q.options as opt (opt.id)}
-                                <div class="flex items-start gap-2">
+                                <label class="flex cursor-pointer items-start gap-2 rounded-md px-2 py-1 hover:bg-accent/40">
                                     {#if q.type === 'multiple'}
                                         <input
                                             type="checkbox"
@@ -203,8 +276,8 @@
                                             onchange={() => setSingleOption(q.id, opt.id)}
                                         />
                                     {/if}
-                                    <Label class="leading-6">{opt.text}</Label>
-                                </div>
+                                    <span class="leading-6">{opt.text}</span>
+                                </label>
                             {/each}
                         </div>
                     {/if}
@@ -215,7 +288,7 @@
 
     <Separator class="my-6" />
 
-    <Button size="lg" class="w-full" disabled={submitting} onclick={submit}>
+    <Button size="lg" class="w-full" disabled={submitting} onclick={() => submit('manual')}>
         Submit exam
     </Button>
 </div>

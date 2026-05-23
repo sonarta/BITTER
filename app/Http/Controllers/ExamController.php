@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -20,7 +21,7 @@ class ExamController extends Controller
     {
         $course = Course::where('slug', $slug)
             ->where('status', 'published')
-            ->with(['exam.questions.options'])
+            ->with(['exam' => fn ($q) => $q->withCount('questions')])
             ->firstOrFail();
 
         $user = Auth::user();
@@ -66,7 +67,7 @@ class ExamController extends Controller
                 'max_attempts' => $exam->max_attempts,
                 'pass_score' => $exam->pass_score,
                 'is_published' => $exam->is_published,
-                'questions_count' => $exam->questions->count(),
+                'questions_count' => $exam->questions_count ?? $exam->questions()->count(),
             ] : null,
             'in_progress_attempt_id' => $inProgressAttemptId,
             'attempts' => $attempts,
@@ -97,46 +98,50 @@ class ExamController extends Controller
             abort(404);
         }
 
-        $existingInProgress = $exam->attempts()
-            ->where('user_id', $user->id)
-            ->where('status', 'in_progress')
-            ->latest('started_at')
-            ->first();
-
-        if ($existingInProgress instanceof ExamAttempt) {
-            return redirect()->route('courses.exam.take', [$course->slug, $existingInProgress]);
-        }
-
-        $attemptsCount = $exam->attempts()->where('user_id', $user->id)->count();
-
-        if ($attemptsCount >= $exam->max_attempts) {
-            return back()->with('error', 'Max attempts reached.');
-        }
-
-        $lastNumber = (int) $exam->attempts()
-            ->where('user_id', $user->id)
-            ->max('attempt_number');
-
         $objectiveMaxPoints = $exam->questions
             ->where('type', '!=', 'essay')
             ->sum('points');
 
         $needsManualReview = $exam->questions->contains(fn (ExamQuestion $q) => $q->type === 'essay');
 
-        $attempt = ExamAttempt::create([
-            'exam_id' => $exam->id,
-            'user_id' => $user->id,
-            'attempt_number' => $lastNumber + 1,
-            'started_at' => now(),
-            'expires_at' => now()->addMinutes($exam->duration_minutes),
-            'status' => 'in_progress',
-            'score_points' => null,
-            'max_points' => (int) $objectiveMaxPoints,
-            'needs_manual_review' => $needsManualReview,
-            'passed' => null,
-        ]);
+        return DB::transaction(function () use ($course, $exam, $needsManualReview, $objectiveMaxPoints, $user) {
+            CourseExam::whereKey($exam->id)->lockForUpdate()->first();
 
-        return redirect()->route('courses.exam.take', [$course->slug, $attempt]);
+            $existingInProgress = $exam->attempts()
+                ->where('user_id', $user->id)
+                ->where('status', 'in_progress')
+                ->latest('started_at')
+                ->first();
+
+            if ($existingInProgress instanceof ExamAttempt) {
+                return redirect()->route('courses.exam.take', [$course->slug, $existingInProgress]);
+            }
+
+            $attemptsCount = $exam->attempts()->where('user_id', $user->id)->count();
+
+            if ($attemptsCount >= $exam->max_attempts) {
+                return back()->with('error', 'Max attempts reached.');
+            }
+
+            $lastNumber = (int) $exam->attempts()
+                ->where('user_id', $user->id)
+                ->max('attempt_number');
+
+            $attempt = ExamAttempt::create([
+                'exam_id' => $exam->id,
+                'user_id' => $user->id,
+                'attempt_number' => $lastNumber + 1,
+                'started_at' => now(),
+                'expires_at' => now()->addMinutes($exam->duration_minutes),
+                'status' => 'in_progress',
+                'score_points' => null,
+                'max_points' => (int) $objectiveMaxPoints,
+                'needs_manual_review' => $needsManualReview,
+                'passed' => null,
+            ]);
+
+            return redirect()->route('courses.exam.take', [$course->slug, $attempt]);
+        });
     }
 
     public function take(string $slug, ExamAttempt $attempt): Response|RedirectResponse
@@ -250,11 +255,11 @@ class ExamController extends Controller
         }
 
         $data = $request->validate([
-            'answers' => ['array'],
-            'answers.*.question_id' => ['required', 'string'],
-            'answers.*.selected_option_ids' => ['array'],
-            'answers.*.selected_option_ids.*' => ['string'],
-            'answers.*.answer_text' => ['nullable', 'string'],
+            'answers' => ['array', 'max:500'],
+            'answers.*.question_id' => ['required', 'ulid'],
+            'answers.*.selected_option_ids' => ['array', 'max:100'],
+            'answers.*.selected_option_ids.*' => ['ulid'],
+            'answers.*.answer_text' => ['nullable', 'string', 'max:10000'],
         ]);
 
         $answers = collect($data['answers'] ?? [])->keyBy('question_id');
@@ -263,77 +268,79 @@ class ExamController extends Controller
         $scorePoints = 0;
         $objectiveMaxPoints = 0;
 
-        foreach ($exam->questions as $question) {
-            $payload = $answers->get($question->id, []);
+        DB::transaction(function () use ($answers, $attempt, $exam, &$needsManualReview, &$objectiveMaxPoints, &$scorePoints) {
+            foreach ($exam->questions as $question) {
+                $payload = $answers->get($question->id, []);
 
-            $answer = ExamAnswer::updateOrCreate(
-                [
-                    'attempt_id' => $attempt->id,
-                    'question_id' => $question->id,
-                ],
-                [
-                    'answer_text' => $question->type === 'essay' ? ($payload['answer_text'] ?? '') : null,
-                ],
-            );
+                $answer = ExamAnswer::updateOrCreate(
+                    [
+                        'attempt_id' => $attempt->id,
+                        'question_id' => $question->id,
+                    ],
+                    [
+                        'answer_text' => $question->type === 'essay' ? ($payload['answer_text'] ?? '') : null,
+                    ],
+                );
 
-            if ($question->type === 'essay') {
-                $needsManualReview = true;
+                if ($question->type === 'essay') {
+                    $needsManualReview = true;
+                    $answer->update([
+                        'is_correct' => null,
+                        'points_awarded' => null,
+                    ]);
+                    $answer->selectedOptions()->sync([]);
+
+                    continue;
+                }
+
+                $objectiveMaxPoints += $question->points;
+
+                $selectedIds = array_values(array_unique($payload['selected_option_ids'] ?? []));
+
+                $validSelectedIds = $question->options
+                    ->whereIn('id', $selectedIds)
+                    ->pluck('id')
+                    ->all();
+
+                $answer->selectedOptions()->sync($validSelectedIds);
+
+                $correctIds = $question->options
+                    ->where('is_correct', true)
+                    ->pluck('id')
+                    ->values()
+                    ->all();
+
+                sort($validSelectedIds);
+                sort($correctIds);
+
+                $isCorrect = $validSelectedIds === $correctIds;
+
+                $awarded = $isCorrect ? $question->points : 0;
+                $scorePoints += $awarded;
+
                 $answer->update([
-                    'is_correct' => null,
-                    'points_awarded' => null,
+                    'is_correct' => $isCorrect,
+                    'points_awarded' => $awarded,
                 ]);
-                $answer->selectedOptions()->sync([]);
-
-                continue;
             }
 
-            $objectiveMaxPoints += $question->points;
+            $attemptUpdate = [
+                'status' => 'submitted',
+                'submitted_at' => now(),
+                'score_points' => $scorePoints,
+                'max_points' => $objectiveMaxPoints,
+                'needs_manual_review' => $needsManualReview,
+            ];
 
-            $selectedIds = array_values(array_unique($payload['selected_option_ids'] ?? []));
+            if (! $needsManualReview && $objectiveMaxPoints > 0) {
+                $percent = (int) floor(($scorePoints / $objectiveMaxPoints) * 100);
+                $attemptUpdate['passed'] = $percent >= $exam->pass_score;
+            } else {
+                $attemptUpdate['passed'] = null;
+            }
 
-            $validSelectedIds = $question->options
-                ->whereIn('id', $selectedIds)
-                ->pluck('id')
-                ->all();
-
-            $answer->selectedOptions()->sync($validSelectedIds);
-
-            $correctIds = $question->options
-                ->where('is_correct', true)
-                ->pluck('id')
-                ->values()
-                ->all();
-
-            sort($validSelectedIds);
-            sort($correctIds);
-
-            $isCorrect = $validSelectedIds === $correctIds;
-
-            $awarded = $isCorrect ? $question->points : 0;
-            $scorePoints += $awarded;
-
-            $answer->update([
-                'is_correct' => $isCorrect,
-                'points_awarded' => $awarded,
-            ]);
-        }
-
-        $attemptUpdate = [
-            'status' => 'submitted',
-            'submitted_at' => now(),
-            'score_points' => $scorePoints,
-            'max_points' => $objectiveMaxPoints,
-            'needs_manual_review' => $needsManualReview,
-        ];
-
-        if (! $needsManualReview && $objectiveMaxPoints > 0) {
-            $percent = (int) floor(($scorePoints / $objectiveMaxPoints) * 100);
-            $attemptUpdate['passed'] = $percent >= $exam->pass_score;
-        } else {
-            $attemptUpdate['passed'] = null;
-        }
-
-        $attempt->update($attemptUpdate);
+            $attempt->update($attemptUpdate);
+        });
 
         return redirect()
             ->route('courses.exam.show', $course->slug)

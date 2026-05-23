@@ -262,6 +262,128 @@ test('student can open take exam page before answering any question', function (
         );
 });
 
+test('student tidak bisa mengambil attempt milik student lain', function () {
+    $instructor = User::factory()->instructor()->create();
+    $studentA = User::factory()->create();
+    $studentB = User::factory()->create();
+
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $exam = CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 2,
+        'pass_score' => 70,
+        'is_published' => true,
+    ]);
+
+    $question = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'essay',
+        'prompt' => 'Explain one concept.',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
+
+    Enrollment::create([
+        'user_id' => $studentA->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    Enrollment::create([
+        'user_id' => $studentB->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($studentA)->post("/courses/{$course->slug}/exam/start");
+
+    $attempt = ExamAttempt::where('exam_id', $exam->id)->where('user_id', $studentA->id)->firstOrFail();
+
+    $this->actingAs($studentB)
+        ->get("/courses/{$course->slug}/exam/attempts/{$attempt->id}")
+        ->assertForbidden();
+});
+
+test('submit mengabaikan option yang tidak termasuk question yang dijawab', function () {
+    $instructor = User::factory()->instructor()->create();
+    $student = User::factory()->create();
+
+    $course = Course::factory()->published()->for($instructor, 'instructor')->create();
+    $exam = CourseExam::create([
+        'course_id' => $course->id,
+        'title' => 'Final Exam',
+        'description' => null,
+        'duration_minutes' => 10,
+        'max_attempts' => 1,
+        'pass_score' => 70,
+        'is_published' => true,
+    ]);
+
+    $q1 = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'single',
+        'prompt' => '2 + 2 = ?',
+        'points' => 10,
+        'sort_order' => 0,
+    ]);
+
+    $q1Correct = ExamQuestionOption::create([
+        'question_id' => $q1->id,
+        'text' => '4',
+        'is_correct' => true,
+        'sort_order' => 0,
+    ]);
+
+    $q2 = ExamQuestion::create([
+        'exam_id' => $exam->id,
+        'type' => 'single',
+        'prompt' => '3 + 3 = ?',
+        'points' => 10,
+        'sort_order' => 1,
+    ]);
+
+    $q2Option = ExamQuestionOption::create([
+        'question_id' => $q2->id,
+        'text' => '6',
+        'is_correct' => true,
+        'sort_order' => 0,
+    ]);
+
+    Enrollment::create([
+        'user_id' => $student->id,
+        'course_id' => $course->id,
+        'enrolled_at' => now(),
+    ]);
+
+    $this->actingAs($student)->post("/courses/{$course->slug}/exam/start");
+
+    $attempt = ExamAttempt::where('exam_id', $exam->id)->where('user_id', $student->id)->firstOrFail();
+
+    $this->actingAs($student)
+        ->post("/courses/{$course->slug}/exam/attempts/{$attempt->id}/submit", [
+            'answers' => [
+                [
+                    'question_id' => $q1->id,
+                    'selected_option_ids' => [$q2Option->id],
+                    'answer_text' => null,
+                ],
+            ],
+        ])
+        ->assertRedirect("/courses/{$course->slug}/exam");
+
+    $answer = ExamAnswer::where('attempt_id', $attempt->id)->where('question_id', $q1->id)->firstOrFail();
+    $answer->load('selectedOptions');
+
+    expect($answer->selectedOptions)->toHaveCount(0)
+        ->and($answer->is_correct)->toBeFalse()
+        ->and($answer->points_awarded)->toBe(0);
+
+    expect($q1Correct->id)->not->toBe($q2Option->id);
+});
+
 test('expired attempt is blocked on submit', function () {
     $instructor = User::factory()->instructor()->create();
     $student = User::factory()->create();

@@ -1,7 +1,9 @@
 <script module lang="ts">
+    import { index as coursesIndex } from '@/routes/courses';
+
     export const layout = {
         breadcrumbs: [
-            { title: 'Courses', href: '/courses' },
+            { title: 'Courses', href: coursesIndex() },
             { title: 'Exam', href: '#' },
         ],
     };
@@ -9,6 +11,8 @@
 
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
+    import { show as courseShow } from '@/routes/courses';
+    import { start as examStart, take as examTake } from '@/routes/courses/exam';
     import AppHead from '@/components/AppHead.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -45,8 +49,18 @@
         }[];
     } = $props();
 
+    let starting = $state(false);
+
     function start(): void {
-        router.post(`/courses/${course.slug}/exam/start`);
+        router.post(examStart.url(course.slug), {}, {
+            preserveScroll: true,
+            onStart: () => {
+                starting = true;
+            },
+            onFinish: () => {
+                starting = false;
+            },
+        });
     }
 </script>
 
@@ -54,7 +68,7 @@
 
 <div class="mx-auto w-full max-w-3xl px-4 py-8">
     <div class="mb-6">
-        <Link href={`/courses/${course.slug}`} class="text-sm text-muted-foreground hover:text-foreground">
+        <Link href={courseShow.url(course.slug)} class="text-sm text-muted-foreground hover:text-foreground">
             ← Back to course
         </Link>
         <h1 class="mt-2 text-2xl font-bold">{course.title}</h1>
@@ -87,11 +101,11 @@
                 </div>
 
                 {#if in_progress_attempt_id}
-                    <Link href={`/courses/${course.slug}/exam/attempts/${in_progress_attempt_id}`} class="block">
+                    <Link href={examTake.url({ slug: course.slug, attempt: in_progress_attempt_id })} class="block">
                         <Button class="w-full">Continue attempt</Button>
                     </Link>
                 {:else}
-                    <Button class="w-full" onclick={start}>Start exam</Button>
+                    <Button class="w-full" onclick={start} disabled={starting}>Start exam</Button>
                 {/if}
             {/if}
         </CardContent>
@@ -135,7 +149,7 @@
                                     {/if}
                                 {/if}
                                 {#if a.status === 'in_progress'}
-                                    <Link href={`/courses/${course.slug}/exam/attempts/${a.id}`} class="text-primary hover:underline">
+                                    <Link href={examTake.url({ slug: course.slug, attempt: a.id })} class="text-primary hover:underline">
                                         Open
                                     </Link>
                                 {/if}
@@ -147,4 +161,3 @@
         </Card>
     {/if}
 </div>
-
