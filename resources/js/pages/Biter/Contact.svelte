@@ -10,9 +10,9 @@
     import Newspaper from 'lucide-svelte/icons/newspaper';
     import Send from 'lucide-svelte/icons/send';
     import AppHead from '@/components/AppHead.svelte';
-    import InputError from '@/components/InputError.svelte';
     import BiterFooter from '@/components/Biter/BiterFooter.svelte';
     import BiterHeader from '@/components/Biter/BiterHeader.svelte';
+    import InputError from '@/components/InputError.svelte';
     import { Button } from '@/components/ui/button';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
@@ -90,8 +90,11 @@
             class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(25,100,175,0.08),transparent_60%)] md:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <h1 class="text-3xl font-bold text-slate-900 md:text-5xl md:text-white">
-                Kontak <span class="text-[#1964af] md:text-[#cbe4f8]">Kami</span>
+            <h1
+                class="text-3xl font-bold text-slate-900 md:text-5xl md:text-white"
+            >
+                Kontak <span class="text-[#1964af] md:text-[#cbe4f8]">Kami</span
+                >
             </h1>
             <p
                 class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base md:text-white/85"
@@ -120,7 +123,9 @@
                         sistem BITER, silakan hubungi tim peneliti kami.
                     </p>
                 </div>
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div
+                    class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4"
+                >
                     {#each contactInfo as info (info.label)}
                         <div
                             class="flex flex-col items-center rounded-xl border border-slate-200 bg-slate-50 p-5 text-center"
@@ -131,7 +136,9 @@
                                 <info.icon class="size-5" />
                             </div>
                             <p class="mt-3 text-sm font-bold">{info.label}</p>
-                            <p class="mt-1 text-xs text-slate-600">{info.value}</p>
+                            <p class="mt-1 text-xs text-slate-600">
+                                {info.value}
+                            </p>
                         </div>
                     {/each}
                 </div>
@@ -158,13 +165,13 @@
                     >
                         <div class="flex items-start gap-4">
                             <div
-                                class="flex size-16 shrink-0 items-center justify-center rounded-full bg-[#1964af] text-xl font-bold text-white"
+                                class="size-20 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"
                             >
-                                {person.name
-                                    .split(' ')
-                                    .slice(0, 2)
-                                    .map((n) => n[0])
-                                    .join('')}
+                                <img
+                                    src="/ketua.jpeg"
+                                    alt={`Foto ${person.name}`}
+                                    class="h-full w-full object-cover"
+                                />
                             </div>
                             <div class="min-w-0">
                                 <h3 class="truncate text-base font-bold">
@@ -175,7 +182,9 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm">
+                        <div
+                            class="mt-5 space-y-3 border-t border-slate-100 pt-4 text-sm"
+                        >
                             <div class="flex items-start gap-2">
                                 <Building2
                                     class="mt-0.5 size-4 shrink-0 text-[#1964af]"
@@ -224,7 +233,9 @@
                         <div
                             class="mt-4 rounded-lg border-l-4 border-[#1964af] bg-[#f0f7ff] p-3"
                         >
-                            <p class="flex items-center gap-1 text-xs font-semibold text-[#14508f]">
+                            <p
+                                class="flex items-center gap-1 text-xs font-semibold text-[#14508f]"
+                            >
                                 <MapPin class="size-3.5" />
                                 Bidang Keahlian
                             </p>

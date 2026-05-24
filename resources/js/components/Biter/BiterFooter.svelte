@@ -1,24 +1,15 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
-    import Palette from 'lucide-svelte/icons/palette';
+    import BiterBrand from '@/components/Biter/BiterBrand.svelte';
 </script>
 
 <footer class="bg-slate-900 text-slate-300">
     <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 md:grid-cols-4">
         <div class="md:col-span-2">
-            <div class="flex items-center gap-3">
-                <div
-                    class="flex size-10 items-center justify-center rounded-full bg-[#1964af]/20 text-[#1964af]/70"
-                >
-                    <Palette class="size-5" />
-                </div>
-                <div>
-                    <p class="text-lg font-bold text-white">BITER</p>
-                    <p class="text-xs text-slate-400">
-                        Bisnis & Kewirausahaan Kreatif Pendidikan Kriya
-                    </p>
-                </div>
-            </div>
+            <BiterBrand
+                mode="dark"
+                subtitle="Bisnis & Kewirausahaan Kreatif Pendidikan Kriya"
+            />
             <p class="mt-4 max-w-md text-sm text-slate-400">
                 Platform Inkubator Bisnis Digital Mahasiswa Pendidikan Kriya
                 berbasis Model Pembelajaran FLIS-FREAN. Dikembangkan melalui

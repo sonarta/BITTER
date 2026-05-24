@@ -23,3 +23,26 @@ test('new users can register', function () {
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
 });
+
+test('new users can access the dashboard immediately when email verification is disabled', function () {
+    $fortifyFeatures = config('fortify.features', []);
+
+    config([
+        'fortify.email_verification_enabled' => false,
+        'fortify.features' => array_values(array_filter(
+            is_array($fortifyFeatures) ? $fortifyFeatures : [],
+            fn (string|array $feature): bool => $feature !== Features::emailVerification(),
+        )),
+    ]);
+
+    $response = $this->post(route('register.store'), [
+        'name' => 'Demo User',
+        'email' => 'demo@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ]);
+
+    $this->assertAuthenticated();
+    $response->assertRedirect(route('dashboard', absolute: false));
+    $this->get(route('dashboard'))->assertOk();
+});

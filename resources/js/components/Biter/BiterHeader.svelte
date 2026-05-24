@@ -3,7 +3,7 @@
     import Home from 'lucide-svelte/icons/home';
     import Info from 'lucide-svelte/icons/info';
     import Mail from 'lucide-svelte/icons/mail';
-    import Palette from 'lucide-svelte/icons/palette';
+    import BiterBrand from '@/components/Biter/BiterBrand.svelte';
     import { Button } from '@/components/ui/button';
     import { currentUrlState } from '@/lib/currentUrl.svelte';
 
@@ -32,19 +32,11 @@
 <header
     class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 text-slate-900 backdrop-blur-md"
 >
-    <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4">
+    <div
+        class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4"
+    >
         <Link href="/biter" class="flex items-center gap-3 outline-none">
-            <div
-                class="flex size-11 items-center justify-center rounded-lg bg-[#1964af] text-white"
-            >
-                <Palette class="size-5" />
-            </div>
-            <div class="leading-tight">
-                <p class="text-lg font-bold tracking-tight">BITER</p>
-                <p class="text-[11px] text-slate-500">
-                    Bisnis & Kewirausahaan Kreatif
-                </p>
-            </div>
+            <BiterBrand />
         </Link>
 
         <!-- Desktop nav -->

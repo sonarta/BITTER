@@ -3,7 +3,6 @@
     import BookOpen from 'lucide-svelte/icons/book-open';
     import CheckCircle2 from 'lucide-svelte/icons/check-circle-2';
     import FileText from 'lucide-svelte/icons/file-text';
-    import FlaskConical from 'lucide-svelte/icons/flask-conical';
     import GraduationCap from 'lucide-svelte/icons/graduation-cap';
     import Lightbulb from 'lucide-svelte/icons/lightbulb';
     import Rocket from 'lucide-svelte/icons/rocket';
@@ -58,7 +57,8 @@
         {
             icon: Rocket,
             title: 'Sistem BITER',
-            description: 'Platform web-learning yang valid dan efektif untuk pembelajaran kewirausahaan seni.',
+            description:
+                'Platform web-learning yang valid dan efektif untuk pembelajaran kewirausahaan seni.',
         },
         {
             icon: BookOpen,
@@ -94,45 +94,50 @@
             class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_0%,rgba(25,100,175,0.08),transparent_60%)] md:bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_45%)]"
         ></div>
         <div class="mx-auto w-full max-w-5xl px-4 py-16 text-center md:py-20">
-            <p
-                class="text-sm font-semibold text-[#1964af] md:text-white/70"
-            >
+            <p class="text-sm font-semibold text-[#1964af] md:text-white/70">
                 Tentang Kami
             </p>
-            <h1 class="mt-2 text-3xl font-bold text-slate-900 md:text-5xl md:text-white">
-                Mengenal Lebih Dekat <span class="text-[#1964af] md:text-[#cbe4f8]">BITER</span>
+            <h1
+                class="mt-2 text-3xl font-bold text-slate-900 md:text-5xl md:text-white"
+            >
+                Mengenal Lebih Dekat <span
+                    class="text-[#1964af] md:text-[#cbe4f8]">BITER</span
+                >
             </h1>
             <p
                 class="mx-auto mt-4 max-w-2xl text-sm text-slate-600 md:text-base md:text-white/85"
             >
-                Mengenal lebih dekat tentang penelitian dan pengembangan sistem BITER.
+                Mengenal lebih dekat tentang penelitian dan pengembangan sistem
+                BITER.
             </p>
         </div>
     </section>
 
     <!-- Tujuan Penelitian -->
     <section class="py-16 md:py-20">
-        <div class="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center">
+        <div
+            class="mx-auto grid w-full max-w-6xl gap-10 px-4 md:grid-cols-2 md:items-center"
+        >
             <div>
-                <p class="text-sm font-semibold text-[#1964af]">Tujuan Penelitian</p>
+                <p class="text-sm font-semibold text-[#1964af]">
+                    Tujuan Penelitian
+                </p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Mengembangkan Kompetensi Bisnis Kreatif Mahasiswa
                 </h2>
-                <p class="mt-4 text-sm leading-relaxed text-slate-600 md:text-base">
-                    Penelitian ini bertujuan untuk mengembangkan sistem pembelajaran kewirausahaan
-                    berbasis web-learning (BITER) sebagai solusi inovatif dalam meningkatkan
-                    kompetensi bisnis kreatif mahasiswa. Fokus utama adalah membekali mahasiswa
-                    dengan kemampuan merancang model bisnis yang adaptif dan orisinal berbasis
-                    potensi lokal.
+                <p
+                    class="mt-4 text-sm leading-relaxed text-slate-600 md:text-base"
+                >
+                    Penelitian ini bertujuan untuk mengembangkan sistem
+                    pembelajaran kewirausahaan berbasis web-learning (BITER)
+                    sebagai solusi inovatif dalam meningkatkan kompetensi bisnis
+                    kreatif mahasiswa. Fokus utama adalah membekali mahasiswa
+                    dengan kemampuan merancang model bisnis yang adaptif dan
+                    orisinal berbasis potensi lokal.
                 </p>
             </div>
             <div class="grid grid-cols-2 gap-4">
-                {#each [
-                    { icon: Lightbulb, label: 'Inovatif', desc: 'Solusi pembelajaran berbasis web-learning' },
-                    { icon: Target, label: 'Berorientasi Hasil', desc: 'Kompetensi bisnis terukur' },
-                    { icon: Users, label: 'Kolaboratif', desc: 'Potensi lokal berbasis komunitas' },
-                    { icon: GraduationCap, label: 'Akademik', desc: 'Terintegrasi dengan kurikulum kriya' },
-                ] as item (item.label)}
+                {#each [{ icon: Lightbulb, label: 'Inovatif', desc: 'Solusi pembelajaran berbasis web-learning' }, { icon: Target, label: 'Berorientasi Hasil', desc: 'Kompetensi bisnis terukur' }, { icon: Users, label: 'Kolaboratif', desc: 'Potensi lokal berbasis komunitas' }, { icon: GraduationCap, label: 'Akademik', desc: 'Terintegrasi dengan kurikulum kriya' }] as item (item.label)}
                     <div
                         class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
                     >
@@ -166,15 +171,22 @@
                     >
                         <Sparkles class="size-6" />
                     </div>
-                    <p class="text-sm font-semibold text-[#1964af]">Visi BITER</p>
+                    <p class="text-sm font-semibold text-[#1964af]">
+                        Visi BITER
+                    </p>
                     <h2 class="mt-2 text-2xl font-bold md:text-3xl">
                         Artpreneur di Lingkungan Kampus Seni
                     </h2>
-                    <p class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base">
-                        Memberikan pengalaman belajar yang adaptif, mandiri, dan interaktif melalui
-                        simulasi model bisnis digital, mentoring, serta ruang kolaborasi yang mendorong
-                        tumbuhnya jiwa <span class="font-semibold text-[#1964af]">artpreneur</span> di
-                        lingkungan kampus seni.
+                    <p
+                        class="mt-4 max-w-3xl text-sm leading-relaxed text-slate-600 md:text-base"
+                    >
+                        Memberikan pengalaman belajar yang adaptif, mandiri, dan
+                        interaktif melalui simulasi model bisnis digital,
+                        mentoring, serta ruang kolaborasi yang mendorong
+                        tumbuhnya jiwa <span
+                            class="font-semibold text-[#1964af]"
+                            >artpreneur</span
+                        > di lingkungan kampus seni.
                     </p>
                 </div>
             </div>
@@ -185,18 +197,21 @@
     <section class="py-16 md:py-20">
         <div class="mx-auto w-full max-w-6xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-[#1964af]">Metodologi Penelitian</p>
+                <p class="text-sm font-semibold text-[#1964af]">
+                    Metodologi Penelitian
+                </p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Research & Development — Model ADDIE
                 </h2>
                 <p class="mt-3 text-sm text-slate-600">
-                    Metode R&D dengan model ADDIE yang terstruktur memastikan setiap komponen
-                    platform memberikan dampak pembelajaran yang terukur.
+                    Metode R&D dengan model ADDIE yang terstruktur memastikan
+                    setiap komponen platform memberikan dampak pembelajaran yang
+                    terukur.
                 </p>
             </div>
 
             <div class="flex flex-col gap-4">
-                {#each addieSteps as step, idx (step.label)}
+                {#each addieSteps as step (step.label)}
                     <div
                         class="group flex items-start gap-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-[#cbe4f8] hover:shadow-lg hover:shadow-[#1964af]/5"
                     >
@@ -207,13 +222,19 @@
                         </div>
                         <div>
                             <div class="flex items-center gap-2">
-                                <p class="text-xs font-semibold uppercase tracking-wider text-[#1964af]">
+                                <p
+                                    class="text-xs font-semibold uppercase tracking-wider text-[#1964af]"
+                                >
                                     {step.label}
                                 </p>
                                 <span class="text-xs text-slate-400">—</span>
-                                <p class="text-xs text-slate-500">{step.title}</p>
+                                <p class="text-xs text-slate-500">
+                                    {step.title}
+                                </p>
                             </div>
-                            <p class="mt-1.5 text-sm leading-relaxed text-slate-700">
+                            <p
+                                class="mt-1.5 text-sm leading-relaxed text-slate-700"
+                            >
                                 {step.description}
                             </p>
                         </div>
@@ -227,17 +248,19 @@
     <section class="bg-white py-16 md:py-20">
         <div class="mx-auto w-full max-w-6xl px-4">
             <div class="mx-auto mb-12 max-w-2xl text-center">
-                <p class="text-sm font-semibold text-[#1964af]">Luaran Penelitian</p>
+                <p class="text-sm font-semibold text-[#1964af]">
+                    Luaran Penelitian
+                </p>
                 <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Target Luaran Strategis
                 </h2>
                 <p class="mt-3 text-sm text-slate-600">
-                    Penelitian ini ditargetkan menghasilkan berbagai luaran strategis yang berdampak
-                    nyata.
+                    Penelitian ini ditargetkan menghasilkan berbagai luaran
+                    strategis yang berdampak nyata.
                 </p>
             </div>
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-                {#each outcomes as item, idx (item.title)}
+                {#each outcomes as item (item.title)}
                     <div
                         class="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-6 shadow-sm transition-all hover:border-[#cbe4f8] hover:bg-white hover:shadow-lg hover:shadow-[#1964af]/5"
                     >
@@ -248,7 +271,9 @@
                         </div>
                         <div>
                             <p class="text-sm font-bold">{item.title}</p>
-                            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                            <p
+                                class="mt-1 text-sm leading-relaxed text-slate-600"
+                            >
                                 {item.description}
                             </p>
                         </div>
@@ -271,17 +296,21 @@
                     >
                         <CheckCircle2 class="size-6" />
                     </div>
-                    <p class="mt-5 text-sm font-semibold text-[#1964af]">Dampak dan Harapan</p>
+                    <p class="mt-5 text-sm font-semibold text-[#1964af]">
+                        Dampak dan Harapan
+                    </p>
                     <h3 class="mt-1 text-xl font-bold">
                         Lulusan Siap Jadi Artpreneur
                     </h3>
                     <p class="mt-3 text-sm leading-relaxed text-slate-600">
-                        Melalui platform BITER, diharapkan mahasiswa Pendidikan Kriya tidak hanya
-                        ahli dalam berkarya seni, tetapi juga percaya diri dan kompeten dalam
-                        mengelola bisnis kreatif secara mandiri. Hal ini bertujuan untuk menciptakan
+                        Melalui platform BITER, diharapkan mahasiswa Pendidikan
+                        Kriya tidak hanya ahli dalam berkarya seni, tetapi juga
+                        percaya diri dan kompeten dalam mengelola bisnis kreatif
+                        secara mandiri. Hal ini bertujuan untuk menciptakan
                         lulusan yang siap menjadi wirausaha muda
-                        <span class="font-semibold text-[#1964af]">(artpreneur)</span> yang mampu
-                        bersaing di era ekonomi kreatif.
+                        <span class="font-semibold text-[#1964af]"
+                            >(artpreneur)</span
+                        > yang mampu bersaing di era ekonomi kreatif.
                     </p>
                 </div>
                 <!-- Transformasi -->
@@ -296,14 +325,16 @@
                     >
                         <Rocket class="size-6" />
                     </div>
-                    <p class="mt-5 text-sm font-semibold text-[#cbe4f8]">Transformasi Bisnis Kreatif</p>
+                    <p class="mt-5 text-sm font-semibold text-[#cbe4f8]">
+                        Transformasi Bisnis Kreatif
+                    </p>
                     <h3 class="mt-1 text-xl font-bold">
                         Katalisator Transformasi Digital
                     </h3>
                     <p class="mt-3 text-sm leading-relaxed text-white/80">
-                        BITER hadir sebagai katalisator transformasi digital dalam pendidikan,
-                        menghubungkan nilai pendidikan dengan teknologi modern yang relevan dengan
-                        perkembangan zaman.
+                        BITER hadir sebagai katalisator transformasi digital
+                        dalam pendidikan, menghubungkan nilai pendidikan dengan
+                        teknologi modern yang relevan dengan perkembangan zaman.
                     </p>
                 </div>
             </div>
@@ -319,34 +350,45 @@
                     Dipimpin oleh Ahlinya
                 </h2>
                 <p class="mt-3 text-sm text-slate-600">
-                    Tim ini berfokus pada inovasi teknologi pendidikan dan pengembangan ekonomi
-                    kreatif berbasis seni kriya.
+                    Tim ini berfokus pada inovasi teknologi pendidikan dan
+                    pengembangan ekonomi kreatif berbasis seni kriya.
                 </p>
             </div>
             <div
                 class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12"
             >
-                <div class="flex flex-col items-start gap-6 md:flex-row md:items-center">
+                <div
+                    class="flex flex-col items-start gap-6 md:flex-row md:items-center"
+                >
                     <div
-                        class="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-[#e8f2fc] text-[#1964af]"
+                        class="size-24 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"
                     >
-                        <Users class="size-10" />
+                        <img
+                            src="/ketua.jpeg"
+                            alt="Foto ketua tim peneliti"
+                            class="h-full w-full object-cover"
+                        />
                     </div>
                     <div>
-                        <p class="text-xs font-semibold uppercase tracking-wider text-[#1964af]">
+                        <p
+                            class="text-xs font-semibold uppercase tracking-wider text-[#1964af]"
+                        >
                             Ketua Tim Peneliti
                         </p>
-                        <h3 class="mt-1 text-2xl font-bold">Andra Saputra, M.Pd.</h3>
+                        <h3 class="mt-1 text-2xl font-bold">
+                            Andra Saputra, M.Pd.
+                        </h3>
                         <p class="mt-2 text-sm text-slate-500">
-                            Program Studi Pendidikan Kriya, Fakultas Seni Rupa dan Desain,<br
-                            /> Institut Seni Indonesia Padangpanjang.
+                            Program Studi Pendidikan Kriya, Fakultas Seni Rupa
+                            dan Desain,<br /> Institut Seni Indonesia Padangpanjang.
                         </p>
                     </div>
                 </div>
                 <div
                     class="mt-8 border-t border-slate-100 pt-6 text-xs text-slate-400"
                 >
-                    Dokumen disusun berdasarkan rencana penelitian pengembangan BITER.
+                    Dokumen disusun berdasarkan rencana penelitian pengembangan
+                    BITER.
                 </div>
             </div>
         </div>

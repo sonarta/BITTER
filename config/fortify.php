@@ -2,6 +2,8 @@
 
 use Laravel\Fortify\Features;
 
+$emailVerificationEnabled = env('FORTIFY_EMAIL_VERIFICATION_ENABLED', true);
+
 return [
 
     /*
@@ -134,6 +136,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Email Verification Toggle
+    |--------------------------------------------------------------------------
+    |
+    | This flag allows email verification to be disabled temporarily for
+    | demo or staging environments without removing the verification flow
+    | from the application permanently.
+    |
+    */
+
+    'email_verification_enabled' => $emailVerificationEnabled,
+
+    /*
+    |--------------------------------------------------------------------------
     | Features
     |--------------------------------------------------------------------------
     |
@@ -143,15 +158,15 @@ return [
     |
     */
 
-    'features' => [
+    'features' => array_values(array_filter([
         Features::registration(),
         Features::resetPasswords(),
-        Features::emailVerification(),
+        $emailVerificationEnabled ? Features::emailVerification() : null,
         Features::twoFactorAuthentication([
             'confirm' => true,
             'confirmPassword' => true,
             // 'window' => 0
         ]),
-    ],
+    ])),
 
 ];
