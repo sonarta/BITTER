@@ -6,10 +6,8 @@
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import Library from 'lucide-svelte/icons/library';
     import Presentation from 'lucide-svelte/icons/presentation';
-    import Menu from 'lucide-svelte/icons/menu';
     import Search from 'lucide-svelte/icons/search';
     import AppLogo from '@/components/AppLogo.svelte';
-    import AppLogoIcon from '@/components/AppLogoIcon.svelte';
     import Breadcrumbs from '@/components/Breadcrumbs.svelte';
     import {
         Avatar,
@@ -28,13 +26,6 @@
         NavigationMenuList,
         navigationMenuTriggerStyle,
     } from '@/components/ui/navigation-menu';
-    import {
-        Sheet,
-        SheetContent,
-        SheetHeader,
-        SheetTitle,
-        SheetTrigger,
-    } from '@/components/ui/sheet';
     import {
         Tooltip,
         TooltipContent,
@@ -56,6 +47,7 @@
 
     const auth = $derived(page.props.auth);
     const url = currentUrlState();
+    const dashboardHref = toUrl(dashboard());
 
     const activeItemStyles =
         'text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100';
@@ -95,75 +87,17 @@
             icon: BookOpen,
         },
     ];
+
+    function isNavItemActive(item: NavItem): boolean {
+        return toUrl(item.href) === dashboardHref
+            ? url.isCurrentUrl(item.href, url.currentUrl)
+            : url.isCurrentOrParentUrl(item.href, url.currentUrl);
+    }
 </script>
 
 <div>
     <div class="border-b border-sidebar-border/80">
         <div class="mx-auto flex h-16 items-center px-4 md:max-w-7xl">
-            <!-- Mobile Menu -->
-            <div class="lg:hidden">
-                <Sheet>
-                    <SheetTrigger asChild>
-                        {#snippet children(props)}
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                class="mr-2 h-9 w-9"
-                                onclick={props.onclick}
-                                aria-expanded={props['aria-expanded']}
-                            >
-                                <Menu class="h-5 w-5" />
-                            </Button>
-                        {/snippet}
-                    </SheetTrigger>
-                    <SheetContent side="left" class="w-[300px] p-6">
-                        <SheetTitle class="sr-only">Navigation menu</SheetTitle>
-                        <SheetHeader class="flex justify-start text-left">
-                            <AppLogoIcon
-                                class="size-6 fill-current text-black dark:text-white"
-                            />
-                        </SheetHeader>
-                        <div
-                            class="flex h-full flex-1 flex-col justify-between space-y-4 pt-6 pb-10"
-                        >
-                            <nav class="-mx-3 space-y-1">
-                                {#each mainNavItems as item (toUrl(item.href))}
-                                    <Link
-                                        href={toUrl(item.href)}
-                                        class="flex items-center gap-x-3 rounded-lg px-3 py-2 text-sm font-medium hover:bg-accent {url.whenCurrentUrl(
-                                            item.href,
-                                            url.currentUrl,
-                                            activeItemStyles,
-                                            '',
-                                        ) ?? ''}"
-                                    >
-                                        {#if item.icon}
-                                            <item.icon class="h-5 w-5" />
-                                        {/if}
-                                        {item.title}
-                                    </Link>
-                                {/each}
-                            </nav>
-                            <div class="flex flex-col space-y-4">
-                                {#each rightNavItems as item (toUrl(item.href))}
-                                    <a
-                                        href={toUrl(item.href)}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class="flex items-center space-x-2 text-sm font-medium"
-                                    >
-                                        {#if item.icon}
-                                            <item.icon class="h-5 w-5" />
-                                        {/if}
-                                        <span>{item.title}</span>
-                                    </a>
-                                {/each}
-                            </div>
-                        </div>
-                    </SheetContent>
-                </Sheet>
-            </div>
-
             <Link href={toUrl(dashboard())} class="flex items-center gap-x-2">
                 <AppLogo />
             </Link>
@@ -179,12 +113,11 @@
                                 class="relative flex h-full items-center"
                             >
                                 <Link
-                                    class="{navigationMenuTriggerStyle()} {url.whenCurrentUrl(
-                                        item.href,
-                                        url.currentUrl,
-                                        activeItemStyles,
-                                        '',
-                                    ) ?? ''} h-9 cursor-pointer px-4"
+                                    class="{navigationMenuTriggerStyle()} {isNavItemActive(
+                                        item,
+                                    )
+                                        ? activeItemStyles
+                                        : ''} h-9 cursor-pointer px-4"
                                     href={toUrl(item.href)}
                                 >
                                     {#if item.icon}
@@ -192,7 +125,7 @@
                                     {/if}
                                     {item.title}
                                 </Link>
-                                {#if url.isCurrentUrl(item.href, url.currentUrl)}
+                                {#if isNavItemActive(item)}
                                     <div
                                         class="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"
                                     ></div>
@@ -282,6 +215,34 @@
                     </DropdownMenuContent>
                 </DropdownMenu>
             </div>
+        </div>
+    </div>
+
+    <div
+        class="fixed inset-x-0 bottom-0 z-40 border-t border-sidebar-border/80 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 lg:hidden"
+    >
+        <div
+            class="mx-auto grid h-20 max-w-7xl grid-cols-4 px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]"
+        >
+            {#each mainNavItems as item (toUrl(item.href))}
+                <Link
+                    href={toUrl(item.href)}
+                    class="flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 text-[11px] font-medium transition-colors {isNavItemActive(
+                        item,
+                    )
+                        ? 'text-foreground'
+                        : 'text-muted-foreground hover:text-foreground'}"
+                >
+                    {#if item.icon}
+                        <item.icon
+                            class="size-5 {isNavItemActive(item)
+                                ? 'text-foreground'
+                                : 'text-muted-foreground'}"
+                        />
+                    {/if}
+                    <span class="truncate">{item.title}</span>
+                </Link>
+            {/each}
         </div>
     </div>
 
