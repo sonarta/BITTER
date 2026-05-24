@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureIsInstructor;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -15,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->trustProxies(at: '*');
 
         $middleware->web(append: [
             HandleAppearance::class,
@@ -23,7 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'instructor' => \App\Http\Middleware\EnsureIsInstructor::class,
+            'instructor' => EnsureIsInstructor::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
