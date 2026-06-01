@@ -5,7 +5,12 @@
     import AppHead from '@/components/AppHead.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
-    import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+    import {
+        Card,
+        CardContent,
+        CardHeader,
+        CardTitle,
+    } from '@/components/ui/card';
     import { Label } from '@/components/ui/label';
     import { Separator } from '@/components/ui/separator';
     import { Textarea } from '@/components/ui/textarea';
@@ -28,8 +33,18 @@
         questions,
     }: {
         course: { slug: string; title: string };
-        exam: { id: string; title: string; duration_minutes: number; pass_score: number };
-        attempt: { id: string; attempt_number: number; expires_at: string; remaining_seconds: number };
+        exam: {
+            id: string;
+            title: string;
+            duration_minutes: number;
+            pass_score: number;
+        };
+        attempt: {
+            id: string;
+            attempt_number: number;
+            expires_at: string;
+            remaining_seconds: number;
+        };
         questions: ExamQuestion[];
     } = $props();
 
@@ -37,7 +52,11 @@
     let submitting = $state(false);
     let lastSubmitReason = $state<'manual' | 'timeout' | null>(null);
 
-    type AnswerDraft = { question_id: string; selected_option_ids: string[]; answer_text: string };
+    type AnswerDraft = {
+        question_id: string;
+        selected_option_ids: string[];
+        answer_text: string;
+    };
     let draft = $state<Record<string, AnswerDraft>>({});
     let timer: ReturnType<typeof setInterval> | null = null;
 
@@ -63,7 +82,7 @@
     }
 
     $effect(() => {
-        remaining = attempt.remaining_seconds;
+        remaining = Math.floor(attempt.remaining_seconds);
     });
 
     $effect(() => {
@@ -125,7 +144,12 @@
         if (reason === 'manual') {
             const unanswered = questions.length - answeredCount;
 
-            if (unanswered > 0 && !confirm(`Masih ada ${unanswered} soal yang belum dijawab. Tetap submit?`)) {
+            if (
+                unanswered > 0 &&
+                !confirm(
+                    `Masih ada ${unanswered} soal yang belum dijawab. Tetap submit?`,
+                )
+            ) {
                 return;
             }
         }
@@ -152,8 +176,9 @@
     }
 
     function formatTime(seconds: number): string {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
+        const totalSeconds = Math.floor(seconds);
+        const m = Math.floor(totalSeconds / 60);
+        const s = totalSeconds % 60;
         return `${m}:${String(s).padStart(2, '0')}`;
     }
 
@@ -223,8 +248,12 @@
         </CardHeader>
         <CardContent>
             <div class="flex flex-wrap items-center gap-2">
-                <p class="text-sm text-muted-foreground">Pass score: {exam.pass_score}%</p>
-                <Badge variant="outline">Answered: {answeredCount}/{questions.length}</Badge>
+                <p class="text-sm text-muted-foreground">
+                    Pass score: {exam.pass_score}%
+                </p>
+                <Badge variant="outline"
+                    >Answered: {answeredCount}/{questions.length}</Badge
+                >
                 {#if remaining <= 300}
                     <Badge variant="destructive">Hampir habis</Badge>
                 {/if}
@@ -242,7 +271,9 @@
                     <CardTitle class="text-base">
                         {index + 1}. {q.prompt}
                     </CardTitle>
-                    <p class="text-xs text-muted-foreground">{q.points} point(s)</p>
+                    <p class="text-xs text-muted-foreground">
+                        {q.points} point(s)
+                    </p>
                 </CardHeader>
                 <CardContent class="space-y-3">
                     {#if q.type === 'essay'}
@@ -252,28 +283,43 @@
                                 id={`q-${q.id}`}
                                 rows={5}
                                 value={getAnswerText(q.id)}
-                                oninput={(event: Event & { currentTarget: HTMLTextAreaElement }) =>
-                                    setEssayAnswer(q.id, event.currentTarget.value)}
+                                oninput={(
+                                    event: Event & {
+                                        currentTarget: HTMLTextAreaElement;
+                                    },
+                                ) =>
+                                    setEssayAnswer(
+                                        q.id,
+                                        event.currentTarget.value,
+                                    )}
                             />
                         </div>
                     {:else}
                         <div class="space-y-2">
                             {#each q.options as opt (opt.id)}
-                                <label class="flex cursor-pointer items-start gap-2 rounded-md px-2 py-1 hover:bg-accent/40">
+                                <label
+                                    class="flex cursor-pointer items-start gap-2 rounded-md px-2 py-1 hover:bg-accent/40"
+                                >
                                     {#if q.type === 'multiple'}
                                         <input
                                             type="checkbox"
                                             class="mt-1 size-4 accent-primary"
-                                            checked={getSelectedOptionIds(q.id).includes(opt.id)}
-                                            onchange={() => toggleOption(q.id, opt.id)}
+                                            checked={getSelectedOptionIds(
+                                                q.id,
+                                            ).includes(opt.id)}
+                                            onchange={() =>
+                                                toggleOption(q.id, opt.id)}
                                         />
                                     {:else}
                                         <input
                                             type="radio"
                                             name={`q-${q.id}`}
                                             class="mt-1 size-4 accent-primary"
-                                            checked={getSelectedOptionIds(q.id)[0] === opt.id}
-                                            onchange={() => setSingleOption(q.id, opt.id)}
+                                            checked={getSelectedOptionIds(
+                                                q.id,
+                                            )[0] === opt.id}
+                                            onchange={() =>
+                                                setSingleOption(q.id, opt.id)}
                                         />
                                     {/if}
                                     <span class="leading-6">{opt.text}</span>
@@ -288,7 +334,12 @@
 
     <Separator class="my-6" />
 
-    <Button size="lg" class="w-full" disabled={submitting} onclick={() => submit('manual')}>
+    <Button
+        size="lg"
+        class="w-full"
+        disabled={submitting}
+        onclick={() => submit('manual')}
+    >
         Submit exam
     </Button>
 </div>

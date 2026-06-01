@@ -101,15 +101,19 @@
                         <ArrowRight class="size-5" />
                     </Button>
                 </Link>
-                <Link href="/biter/tentang">
+                <a
+                    href="https://drive.google.com/file/d/1Aj_83LBjEZsdrStiNhgtBlyPkHZfrWZB/view"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
                     <Button
                         size="lg"
                         variant="outline"
                         class="h-13 rounded-full border-slate-300 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50 md:border-white/40 md:bg-white/10 md:text-white md:backdrop-blur-sm md:hover:bg-white/20 md:hover:text-white"
                     >
-                        Pelajari Lebih Lanjut
+                        Download APK
                     </Button>
-                </Link>
+                </a>
             </div>
         </div>
     </section>
@@ -121,9 +125,7 @@
                 <p class="text-sm font-semibold text-[#1964af]">
                     Katalog Materi
                 </p>
-                <h2
-                    class="mt-2 text-3xl font-bold tracking-tight md:text-4xl"
-                >
+                <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     Struktur Pembelajaran Terpadu
                 </h2>
                 <p class="mt-3 text-sm text-slate-600">
@@ -161,7 +163,9 @@
                                     </h3>
                                 </div>
                             </div>
-                            <ul class="mt-5 space-y-2 border-t border-slate-100 pt-4">
+                            <ul
+                                class="mt-5 space-y-2 border-t border-slate-100 pt-4"
+                            >
                                 {#each mod.items as item (item)}
                                     <li
                                         class="flex items-start gap-2 text-sm text-slate-700"
@@ -189,7 +193,9 @@
                         <Award class="size-5" />
                     </div>
                     <div>
-                        <p class="text-xs font-semibold uppercase text-[#1964af]">
+                        <p
+                            class="text-xs font-semibold uppercase text-[#1964af]"
+                        >
                             Bobot Penilaian
                         </p>
                         <p class="text-sm font-semibold">
@@ -222,9 +228,7 @@
                 <p class="text-sm font-semibold text-[#1964af]">
                     Model Pembelajaran
                 </p>
-                <h2
-                    class="mt-2 text-3xl font-bold tracking-tight md:text-4xl"
-                >
+                <h2 class="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
                     FLIS-FREAN Learning Flow
                 </h2>
                 <p class="mt-3 text-sm text-slate-600">
@@ -255,7 +259,9 @@
                         <p class="relative text-xs font-medium text-[#1964af]">
                             {phase.subtitle}
                         </p>
-                        <p class="relative mt-3 text-sm leading-relaxed text-slate-600">
+                        <p
+                            class="relative mt-3 text-sm leading-relaxed text-slate-600"
+                        >
                             {phase.description}
                         </p>
                     </div>
@@ -276,10 +282,14 @@
                 <h2 class="text-2xl font-bold md:text-3xl">
                     Siap memulai perjalanan bisnis kreatif Anda?
                 </h2>
-                <p class="mx-auto mt-3 max-w-xl text-sm text-white/80 md:text-base">
+                <p
+                    class="mx-auto mt-3 max-w-xl text-sm text-white/80 md:text-base"
+                >
                     Akses seluruh materi pembelajaran melalui LMS BITER.
                 </p>
-                <div class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <div
+                    class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
+                >
                     <Link href="/login">
                         <Button
                             size="lg"

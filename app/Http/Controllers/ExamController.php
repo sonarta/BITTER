@@ -197,7 +197,7 @@ class ExamController extends Controller
                 'id' => $attempt->id,
                 'attempt_number' => $attempt->attempt_number,
                 'expires_at' => $attempt->expires_at?->toIso8601String(),
-                'remaining_seconds' => max(0, now()->diffInSeconds($attempt->expires_at, false)),
+                'remaining_seconds' => (int) max(0, now()->diffInSeconds($attempt->expires_at, false)),
             ],
             'questions' => $exam->questions->map(fn (ExamQuestion $q) => [
                 'id' => $q->id,
