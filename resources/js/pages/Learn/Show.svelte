@@ -17,6 +17,7 @@
     import { Separator } from '@/components/ui/separator';
     import { getInitials } from '@/lib/initials';
     import { cn, getYouTubeEmbedUrl } from '@/lib/utils';
+    import DOMPurify from 'dompurify';
     import type {
         LessonRef,
         PlayerCourse,
@@ -59,10 +60,14 @@
     function toggleComplete(): void {
         const url = `/learn/${course.slug}/${current.slug}/${completed ? 'incomplete' : 'complete'}`;
 
-        router.post(url, {}, {
-            preserveScroll: true,
-            preserveState: true,
-        });
+        router.post(
+            url,
+            {},
+            {
+                preserveScroll: true,
+                preserveState: true,
+            },
+        );
     }
 
     function openPdfModal(url: string) {
@@ -131,9 +136,7 @@
     <div
         class={cn(
             'grid flex-1',
-            sidebarOpen
-                ? 'lg:grid-cols-[1fr_22rem]'
-                : 'lg:grid-cols-[1fr_0]',
+            sidebarOpen ? 'lg:grid-cols-[1fr_22rem]' : 'lg:grid-cols-[1fr_0]',
         )}
     >
         <!-- Video + content -->
@@ -162,16 +165,21 @@
             </div>
 
             <div class="mx-auto w-full max-w-5xl px-4 py-6 md:px-8">
-                <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                <div
+                    class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between"
+                >
                     <div>
                         <Badge variant="secondary" class="mb-2 font-normal">
                             {current.module_title}
                         </Badge>
-                        <h1 class="text-2xl font-bold tracking-tight md:text-3xl">
+                        <h1
+                            class="text-2xl font-bold tracking-tight md:text-3xl"
+                        >
                             {current.title}
                         </h1>
                         <p class="mt-1 text-xs text-muted-foreground">
-                            {current.duration} · Lesson {progress.completed + 1} of {progress.total}
+                            {current.duration} · Lesson {progress.completed + 1} of
+                            {progress.total}
                         </p>
                     </div>
                     <Button
@@ -216,14 +224,20 @@
                 <div class="py-6">
                     {#if activeTab === 'overview'}
                         <div class="space-y-6">
-                            <p class="text-sm leading-relaxed text-muted-foreground">
-                                {current.description}
-                            </p>
+                            <div
+                                class="rich-content text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap"
+                            >
+                                {@html DOMPurify.sanitize(
+                                    current.description || '',
+                                )}
+                            </div>
                             <div
                                 class="flex items-center gap-3 rounded-lg border bg-accent/30 p-4"
                             >
                                 <Avatar class="size-10">
-                                    <AvatarFallback class="bg-primary/15 text-primary">
+                                    <AvatarFallback
+                                        class="bg-primary/15 text-primary"
+                                    >
                                         {getInitials(course.instructor.name)}
                                     </AvatarFallback>
                                 </Avatar>
@@ -231,7 +245,9 @@
                                     <p class="truncate text-sm font-medium">
                                         {course.instructor.name}
                                     </p>
-                                    <p class="truncate text-xs text-muted-foreground">
+                                    <p
+                                        class="truncate text-xs text-muted-foreground"
+                                    >
                                         {course.instructor.title}
                                     </p>
                                 </div>
@@ -252,7 +268,8 @@
                                     {#if isPdf}
                                         <button
                                             type="button"
-                                            onclick={() => openPdfModal(resource.url)}
+                                            onclick={() =>
+                                                openPdfModal(resource.url)}
                                             class="flex w-full items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent/40"
                                         >
                                             <span
@@ -261,10 +278,14 @@
                                                 <Icon class="size-4" />
                                             </span>
                                             <div class="min-w-0 flex-1">
-                                                <p class="truncate text-sm font-medium">
+                                                <p
+                                                    class="truncate text-sm font-medium"
+                                                >
                                                     {resource.title}
                                                 </p>
-                                                <p class="text-xs text-muted-foreground">
+                                                <p
+                                                    class="text-xs text-muted-foreground"
+                                                >
                                                     {resource.type}
                                                 </p>
                                             </div>
@@ -282,10 +303,14 @@
                                                 <Icon class="size-4" />
                                             </span>
                                             <div class="min-w-0 flex-1">
-                                                <p class="truncate text-sm font-medium">
+                                                <p
+                                                    class="truncate text-sm font-medium"
+                                                >
                                                     {resource.title}
                                                 </p>
-                                                <p class="text-xs text-muted-foreground">
+                                                <p
+                                                    class="text-xs text-muted-foreground"
+                                                >
                                                     {resource.type}
                                                 </p>
                                             </div>
@@ -298,7 +323,9 @@
                 </div>
 
                 <!-- Prev / Next footer -->
-                <div class="flex items-stretch justify-between gap-3 border-t pt-6">
+                <div
+                    class="flex items-stretch justify-between gap-3 border-t pt-6"
+                >
                     {#if previous}
                         <Link
                             href={`/learn/${course.slug}/${previous.slug}`}
@@ -333,7 +360,9 @@
                             <ChevronRight class="size-5 shrink-0" />
                         </Link>
                     {:else}
-                        <div class="flex-1 rounded-lg border bg-accent/30 p-3 text-center text-sm text-muted-foreground">
+                        <div
+                            class="flex-1 rounded-lg border bg-accent/30 p-3 text-center text-sm text-muted-foreground"
+                        >
                             You've reached the end of the course
                         </div>
                     {/if}
@@ -343,9 +372,7 @@
 
         <!-- Lesson sidebar -->
         {#if sidebarOpen}
-            <aside
-                class="hidden overflow-y-auto border-l lg:block"
-            >
+            <aside class="hidden overflow-y-auto border-l lg:block">
                 <div class="sticky top-0 border-b bg-background px-4 py-3">
                     <p class="text-sm font-semibold">Course content</p>
                     <p class="text-xs text-muted-foreground">
@@ -356,7 +383,9 @@
                     {#each modules as module, mIndex (module.title)}
                         <div class="border-b last:border-b-0">
                             <div class="bg-muted/40 px-4 py-2.5">
-                                <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                <p
+                                    class="text-xs font-semibold uppercase tracking-wide text-muted-foreground"
+                                >
                                     Module {mIndex + 1}
                                 </p>
                                 <p class="text-sm font-medium">
@@ -365,7 +394,8 @@
                             </div>
                             <ul>
                                 {#each module.lessons as lesson (lesson.slug)}
-                                    {@const isActive = lesson.slug === current.slug}
+                                    {@const isActive =
+                                        lesson.slug === current.slug}
                                     <li>
                                         <Link
                                             href={`/learn/${course.slug}/${lesson.slug}`}
@@ -390,10 +420,14 @@
                                                     )}
                                                 />
                                             {/if}
-                                            <span class="min-w-0 flex-1 truncate">
+                                            <span
+                                                class="min-w-0 flex-1 truncate"
+                                            >
                                                 {lesson.title}
                                             </span>
-                                            <span class="shrink-0 text-xs text-muted-foreground">
+                                            <span
+                                                class="shrink-0 text-xs text-muted-foreground"
+                                            >
                                                 {lesson.duration}
                                             </span>
                                         </Link>
@@ -409,3 +443,47 @@
 </div>
 
 <PdfViewerModal bind:open={pdfModalOpen} url={pdfModalUrl} />
+
+<style>
+    /* Styling for rich text overview content */
+    .rich-content :global(p) {
+        margin-bottom: 0.75rem;
+    }
+    .rich-content :global(p:last-child) {
+        margin-bottom: 0;
+    }
+    .rich-content :global(strong) {
+        font-weight: 600;
+        color: hsl(var(--foreground));
+    }
+    .rich-content :global(ul) {
+        list-style-type: disc;
+        padding-left: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+    .rich-content :global(ol) {
+        list-style-type: decimal;
+        padding-left: 1.25rem;
+        margin-bottom: 0.75rem;
+    }
+    .rich-content :global(li) {
+        margin-bottom: 0.2rem;
+    }
+    .rich-content :global(h1),
+    .rich-content :global(h2),
+    .rich-content :global(h3) {
+        font-weight: 700;
+        color: hsl(var(--foreground));
+        margin-top: 1.25rem;
+        margin-bottom: 0.5rem;
+    }
+    .rich-content :global(h1) {
+        font-size: 1.2rem;
+    }
+    .rich-content :global(h2) {
+        font-size: 1.1rem;
+    }
+    .rich-content :global(h3) {
+        font-size: 1rem;
+    }
+</style>

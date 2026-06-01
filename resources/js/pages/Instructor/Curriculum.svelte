@@ -32,6 +32,7 @@
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
     import { Textarea } from '@/components/ui/textarea';
+    import RichTextEditor from '@/components/RichTextEditor.svelte';
 
     type Resource = {
         id: string;
@@ -117,10 +118,9 @@
             return;
         }
 
-        router.delete(
-            `/instructor/courses/${course.id}/modules/${moduleId}`,
-            { preserveScroll: true },
-        );
+        router.delete(`/instructor/courses/${course.id}/modules/${moduleId}`, {
+            preserveScroll: true,
+        });
     }
 
     // --- Lesson add ---
@@ -169,7 +169,12 @@
         video_url: '',
         duration_seconds: 0,
         is_preview: false,
-        resources: [] as { id?: string; title: string; url: string; type: string }[],
+        resources: [] as {
+            id?: string;
+            title: string;
+            url: string;
+            type: string;
+        }[],
     });
 
     function startEditLesson(mod: Module, lesson: Lesson) {
@@ -208,7 +213,6 @@
         );
     }
 
-
     function deleteLesson(moduleId: string, lessonId: string) {
         if (!confirm('Delete this lesson?')) {
             return;
@@ -233,8 +237,7 @@
     const totalDuration = $derived(
         course.modules.reduce(
             (sum, m) =>
-                sum +
-                m.lessons.reduce((ls, l) => ls + l.duration_seconds, 0),
+                sum + m.lessons.reduce((ls, l) => ls + l.duration_seconds, 0),
             0,
         ),
     );
@@ -246,7 +249,9 @@
 
 <div class="mx-auto w-full max-w-4xl space-y-6 px-4 py-8">
     <!-- Header -->
-    <section class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <section
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+    >
         <div>
             <h1 class="text-3xl font-bold tracking-tight">Curriculum</h1>
             <p class="mt-1 text-sm text-muted-foreground">
@@ -382,7 +387,9 @@
                                 onsubmit={saveEditLesson}
                                 class="space-y-3 rounded-lg border bg-muted/30 p-4"
                             >
-                                <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                <div
+                                    class="grid grid-cols-1 gap-3 sm:grid-cols-2"
+                                >
                                     <div class="space-y-1.5">
                                         <Label>Title</Label>
                                         <Input
@@ -397,7 +404,9 @@
                                         <Label>Duration (seconds)</Label>
                                         <Input
                                             type="number"
-                                            bind:value={editLessonForm.duration_seconds}
+                                            bind:value={
+                                                editLessonForm.duration_seconds
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -410,9 +419,9 @@
                                 </div>
                                 <div class="space-y-1.5">
                                     <Label>Content</Label>
-                                    <Textarea
+                                    <RichTextEditor
                                         bind:value={editLessonForm.content}
-                                        rows={3}
+                                        placeholder="Lesson content..."
                                     />
                                 </div>
                                 <div class="space-y-1.5">
@@ -432,10 +441,12 @@
                                                 placeholder="Resource title"
                                                 class="flex-1"
                                             />
-                                            <div class="flex flex-1 items-center gap-1">
+                                            <div
+                                                class="flex flex-1 items-center gap-1"
+                                            >
                                                 <Input
                                                     bind:value={resource.url}
-                                                    placeholder='https://...'
+                                                    placeholder="https://..."
                                                     class="flex-1"
                                                 />
                                             </div>
@@ -443,9 +454,13 @@
                                                 bind:value={resource.type}
                                                 class="h-9 rounded-md border border-input bg-transparent px-2 text-sm"
                                             >
-                                                <option value="Link">Link</option>
+                                                <option value="Link"
+                                                    >Link</option
+                                                >
                                                 <option value="PDF">PDF</option>
-                                                <option value="File">File</option>
+                                                <option value="File"
+                                                    >File</option
+                                                >
                                             </select>
                                             <Button
                                                 variant="ghost"
@@ -453,7 +468,11 @@
                                                 type="button"
                                                 class="size-9 text-destructive hover:text-destructive"
                                                 onclick={() => {
-                                                    editLessonForm.resources = editLessonForm.resources.filter((_, idx) => idx !== i);
+                                                    editLessonForm.resources =
+                                                        editLessonForm.resources.filter(
+                                                            (_, idx) =>
+                                                                idx !== i,
+                                                        );
                                                 }}
                                             >
                                                 <X class="size-4" />
@@ -468,7 +487,11 @@
                                         onclick={() => {
                                             editLessonForm.resources = [
                                                 ...editLessonForm.resources,
-                                                { title: '', url: '', type: 'Link' },
+                                                {
+                                                    title: '',
+                                                    url: '',
+                                                    type: 'Link',
+                                                },
                                             ];
                                         }}
                                     >
@@ -482,7 +505,9 @@
                                     >
                                         <input
                                             type="checkbox"
-                                            bind:checked={editLessonForm.is_preview}
+                                            bind:checked={
+                                                editLessonForm.is_preview
+                                            }
                                             class="rounded border-input"
                                         />
                                         Free preview
@@ -567,9 +592,7 @@
                             onsubmit={addLesson}
                             class="space-y-3 rounded-lg border border-dashed bg-muted/20 p-4"
                         >
-                            <div
-                                class="grid grid-cols-1 gap-3 sm:grid-cols-2"
-                            >
+                            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
                                 <div class="space-y-1.5">
                                     <Label>Title</Label>
                                     <Input
@@ -597,9 +620,8 @@
                             </div>
                             <div class="space-y-1.5">
                                 <Label>Content</Label>
-                                <Textarea
+                                <RichTextEditor
                                     bind:value={lessonForm.content}
-                                    rows={3}
                                     placeholder="Lesson content..."
                                 />
                             </div>
@@ -620,10 +642,12 @@
                                             placeholder="Resource title"
                                             class="flex-1"
                                         />
-                                        <div class="flex flex-1 items-center gap-1">
+                                        <div
+                                            class="flex flex-1 items-center gap-1"
+                                        >
                                             <Input
                                                 bind:value={resource.url}
-                                                placeholder='https://...'
+                                                placeholder="https://..."
                                                 class="flex-1"
                                             />
                                         </div>
@@ -641,7 +665,10 @@
                                             type="button"
                                             class="size-9 text-destructive hover:text-destructive"
                                             onclick={() => {
-                                                lessonForm.resources = lessonForm.resources.filter((_, idx) => idx !== i);
+                                                lessonForm.resources =
+                                                    lessonForm.resources.filter(
+                                                        (_, idx) => idx !== i,
+                                                    );
                                             }}
                                         >
                                             <X class="size-4" />
@@ -656,7 +683,11 @@
                                     onclick={() => {
                                         lessonForm.resources = [
                                             ...lessonForm.resources,
-                                            { title: '', url: '', type: 'Link' },
+                                            {
+                                                title: '',
+                                                url: '',
+                                                type: 'Link',
+                                            },
                                         ];
                                     }}
                                 >
@@ -665,9 +696,7 @@
                                 </Button>
                             </div>
                             <div class="flex items-center gap-4">
-                                <label
-                                    class="flex items-center gap-2 text-sm"
-                                >
+                                <label class="flex items-center gap-2 text-sm">
                                     <input
                                         type="checkbox"
                                         bind:checked={lessonForm.is_preview}
