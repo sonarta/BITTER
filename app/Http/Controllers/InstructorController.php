@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CourseRequest;
 use App\Models\Course;
+use App\Models\Enrollment;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -87,6 +88,102 @@ class InstructorController extends Controller
 
         return Inertia::render('Instructor/Courses', [
             'courses' => $courses,
+        ]);
+    }
+
+    public function students(): Response
+    {
+        $user = Auth::user();
+        assert($user instanceof User);
+
+        Gate::authorize('viewAny', Course::class);
+
+        $courseIds = $user->taughtCourses()->select('id');
+
+        $enrollments = Enrollment::query()
+            ->whereIn('course_id', $courseIds)
+            ->with([
+                'user:id,name,email',
+                'course:id,title,slug',
+            ])
+            ->latest('enrolled_at')
+            ->get()
+            ->map(fn (Enrollment $enrollment) => [
+                'id' => (string) $enrollment->id,
+                'student' => [
+                    'name' => $enrollment->user?->name ?? '—',
+                    'email' => $enrollment->user?->email ?? '—',
+                ],
+                'course' => [
+                    'title' => $enrollment->course?->title ?? '—',
+                    'slug' => $enrollment->course?->slug ?? null,
+                ],
+                'enrolled_at' => $enrollment->enrolled_at?->diffForHumans(),
+            ]);
+
+        return Inertia::render('Instructor/Students', [
+            'enrollments' => $enrollments,
+        ]);
+    }
+
+    public function earnings(): Response
+    {
+        $user = Auth::user();
+        assert($user instanceof User);
+
+        Gate::authorize('viewAny', Course::class);
+
+        $courseIds = $user->taughtCourses()->select('id');
+
+        $totalStudents = Enrollment::query()
+            ->whereIn('course_id', $courseIds)
+            ->count();
+
+        $revenue30d = Enrollment::query()
+            ->whereIn('course_id', $courseIds)
+            ->where('enrolled_at', '>=', now()->subDays(30))
+            ->join('courses', 'courses.id', '=', 'enrollments.course_id')
+            ->sum('courses.price');
+
+        $start = now()->subDays(6)->startOfDay();
+
+        $dailyRevenue = Enrollment::query()
+            ->whereIn('course_id', $courseIds)
+            ->where('enrolled_at', '>=', $start)
+            ->join('courses', 'courses.id', '=', 'enrollments.course_id')
+            ->selectRaw('DATE(enrollments.enrolled_at) as date, SUM(courses.price) as revenue')
+            ->groupBy('date')
+            ->pluck('revenue', 'date');
+
+        $revenueSeries = collect(range(0, 6))
+            ->map(function (int $offset) use ($dailyRevenue, $start): array {
+                $date = (clone $start)->addDays($offset);
+                $key = $date->toDateString();
+
+                return [
+                    'label' => $date->format('D'),
+                    'value' => (int) ($dailyRevenue[$key] ?? 0),
+                ];
+            });
+
+        return Inertia::render('Instructor/Earnings', [
+            'stats' => [
+                [
+                    'label' => 'Total students',
+                    'value' => number_format($totalStudents),
+                    'delta' => '',
+                    'trend' => 'neutral',
+                    'icon' => 'Users',
+                ],
+                [
+                    'label' => 'Revenue (30d)',
+                    'value' => 'Rp '.number_format($revenue30d),
+                    'delta' => '',
+                    'trend' => 'neutral',
+                    'icon' => 'DollarSign',
+                ],
+            ],
+            'revenue_series' => $revenueSeries,
         ]);
     }
 

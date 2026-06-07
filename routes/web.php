@@ -35,6 +35,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('instructor')->middleware('instructor')->name('instructor.')->group(function () {
         Route::get('/', [InstructorController::class, 'index'])->name('index');
         Route::get('courses', [InstructorController::class, 'courses'])->name('courses');
+        Route::get('students', [InstructorController::class, 'students'])->name('students');
+        Route::get('earnings', [InstructorController::class, 'earnings'])->name('earnings');
         Route::get('courses/create', [InstructorController::class, 'create'])->name('courses.create');
         Route::post('courses', [InstructorController::class, 'store'])->name('courses.store');
         Route::get('courses/{course}/edit', [InstructorController::class, 'edit'])->name('courses.edit');

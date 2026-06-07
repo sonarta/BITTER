@@ -7,8 +7,8 @@
     const tabs = [
         { key: 'dashboard', label: 'Dashboard', href: '/instructor' },
         { key: 'courses', label: 'My Courses', href: '/instructor/courses' },
-        { key: 'students', label: 'Students', href: '/instructor' },
-        { key: 'earnings', label: 'Earnings', href: '/instructor' },
+        { key: 'students', label: 'Students', href: '/instructor/students' },
+        { key: 'earnings', label: 'Earnings', href: '/instructor/earnings' },
     ] as const;
 </script>
 
