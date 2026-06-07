@@ -2,7 +2,7 @@
 
 use Laravel\Fortify\Features;
 
-$emailVerificationEnabled = env('FORTIFY_EMAIL_VERIFICATION_ENABLED', true);
+$emailVerificationEnabled = false;
 
 return [
 

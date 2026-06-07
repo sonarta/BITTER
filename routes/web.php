@@ -17,7 +17,7 @@ Route::get('/', [BiterController::class, 'welcome'])->name('home');
 Route::get('courses', [CourseController::class, 'index'])->name('courses.index');
 Route::get('courses/{slug}', [CourseController::class, 'show'])->name('courses.show');
 
-Route::middleware(['auth', 'verified_enabled'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('my-learning', [CourseController::class, 'myLearning'])->name('my-learning');
     Route::post('courses/{slug}/enroll', [CourseController::class, 'enroll'])->name('courses.enroll');
