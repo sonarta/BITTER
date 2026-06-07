@@ -25,8 +25,13 @@
         showBadge?: boolean;
     } = $props();
 
-    let currentSrc = $state(src);
-    let currentSource = $state<CoverSource>(source);
+    let currentSrc = $state('');
+    let currentSource = $state<CoverSource>('placeholder');
+
+    $effect(() => {
+        currentSrc = src;
+        currentSource = source;
+    });
 
     function badgeText(s: CoverSource): string {
         return s === 'manual' ? 'Manual' : 'Default';
