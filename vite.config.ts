@@ -22,14 +22,27 @@ export default defineConfig({
             strategies: 'generateSW',
             injectRegister: false,
             registerType: 'autoUpdate',
+            includeAssets: [
+                'offline.html',
+                'favicon.ico',
+                'favicon.svg',
+                'apple-touch-icon.png',
+                'biru@4x.png',
+            ],
             manifest: {
                 name: 'BITTER',
                 short_name: 'BITTER',
+                description:
+                    'Platform Business & Entrepreneurship Mahasiswa Pendidikan Kriya berbasis Model Pembelajaran FLIS-FREAN.',
+                lang: 'id',
                 start_url: '/',
+                id: '/',
                 scope: '/',
                 display: 'standalone',
+                orientation: 'portrait',
                 background_color: '#ffffff',
                 theme_color: '#1e63a8',
+                categories: ['education', 'productivity'],
                 icons: [
                     {
                         src: '/biru@4x.png',
@@ -42,7 +55,7 @@ export default defineConfig({
             workbox: {
                 swDest: 'public/sw.js',
                 globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,woff2}'],
-                navigateFallback: '/build/offline.html',
+                navigateFallback: '/offline.html',
                 cleanupOutdatedCaches: true,
             },
         }),
