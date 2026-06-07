@@ -89,31 +89,21 @@
                     berbasis Model Pembelajaran FLIS-FREAN.
                 </p>
             </div>
-            <div
-                class="mt-10 flex flex-col items-center gap-4 sm:flex-row md:gap-5"
-            >
-                <Link href="/login">
-                    <Button
-                        size="lg"
-                        class="h-13 gap-2 rounded-full bg-[#1964af] px-8 text-base font-semibold text-white hover:bg-[#1964af] md:bg-white md:text-[#14508f] md:hover:bg-white/90"
-                    >
-                        Masuk Ke LMS
-                        <ArrowRight class="size-5" />
-                    </Button>
-                </Link>
-                <a
-                    href="https://drive.google.com/file/d/1Aj_83LBjEZsdrStiNhgtBlyPkHZfrWZB/view"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    <Button
-                        size="lg"
-                        variant="outline"
-                        class="h-13 rounded-full border-slate-300 bg-white px-6 text-base font-medium text-slate-700 hover:bg-slate-50 md:border-white/40 md:bg-white/10 md:text-white md:backdrop-blur-sm md:hover:bg-white/20 md:hover:text-white"
-                    >
-                        Download APK
-                    </Button>
-                </a>
+            <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+                <div class="rounded-2xl bg-white/90 p-3 shadow-sm">
+                    <img
+                        src="/unp.png"
+                        alt="Logo Universitas Negeri Padang"
+                        class="h-14 w-auto object-contain md:h-16"
+                    />
+                </div>
+                <div class="rounded-2xl bg-white/90 p-3 shadow-sm">
+                    <img
+                        src="/ISI.png"
+                        alt="Logo Institut Seni Indonesia Padangpanjang"
+                        class="h-14 w-auto object-contain md:h-16"
+                    />
+                </div>
             </div>
         </div>
     </section>
@@ -285,7 +275,8 @@
                 <p
                     class="mx-auto mt-3 max-w-xl text-sm text-white/80 md:text-base"
                 >
-                    Akses seluruh materi pembelajaran melalui LMS BITER.
+                    Akses seluruh materi pembelajaran melalui LMS BITER atau unduh
+                    aplikasi Android.
                 </p>
                 <div
                     class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
@@ -299,15 +290,19 @@
                             <ArrowRight class="size-4" />
                         </Button>
                     </Link>
-                    <Link href="/biter/kontak">
+                    <a
+                        href="https://drive.google.com/file/d/1Aj_83LBjEZsdrStiNhgtBlyPkHZfrWZB/view"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
                         <Button
                             size="lg"
                             variant="outline"
                             class="h-12 rounded-full border-white/40 bg-white/10 px-6 text-white hover:bg-white/20 hover:text-white"
                         >
-                            Hubungi Tim Peneliti
+                            Download APK
                         </Button>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>
