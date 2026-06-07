@@ -8,10 +8,10 @@
         <div class="md:col-span-2">
             <BiterBrand
                 mode="dark"
-                subtitle="Bisnis & Kewirausahaan Kreatif Pendidikan Kriya"
+                subtitle="Bisnis & Entrepreneurship"
             />
             <p class="mt-4 max-w-md text-sm text-slate-400">
-                Platform Inkubator Bisnis Digital Mahasiswa Pendidikan Kriya
+                Platform Bisnis & Entrepreneurship Mahasiswa Pendidikan Kriya
                 berbasis Model Pembelajaran FLIS-FREAN. Dikembangkan melalui
                 Penelitian R&D (Model ADDIE).
             </p>

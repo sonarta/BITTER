@@ -49,7 +49,7 @@
         {
             icon: Globe,
             label: 'Sistem',
-            value: 'BITER – Inkubator Bisnis Kreatif',
+            value: 'BITER – Bisnis & Entrepreneurship',
         },
         {
             icon: Lightbulb,

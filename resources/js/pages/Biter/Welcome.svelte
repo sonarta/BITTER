@@ -52,7 +52,7 @@
     };
 </script>
 
-<AppHead title="BITER - Inkubator Bisnis Kreatif" />
+<AppHead title="BITER - Bisnis & Entrepreneurship" />
 
 <div class="flex min-h-screen flex-col bg-slate-50 text-slate-900">
     <BiterHeader />
@@ -85,7 +85,7 @@
                 <p
                     class="text-sm font-medium text-slate-700 md:text-base md:text-white/90 lg:text-lg"
                 >
-                    Platform Inkubator Bisnis Digital Mahasiswa Pendidikan Kriya
+                    Platform Bisnis & Entrepreneurship Mahasiswa Pendidikan Kriya
                     berbasis Model Pembelajaran FLIS-FREAN.
                 </p>
             </div>

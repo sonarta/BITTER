@@ -4,7 +4,7 @@
 
     let {
         mode = 'light',
-        subtitle = 'Bisnis & Kewirausahaan Kreatif',
+        subtitle = 'Bisnis & Entrepreneurship',
         class: className = '',
     }: {
         mode?: 'light' | 'dark';
