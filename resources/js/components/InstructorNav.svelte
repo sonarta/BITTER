@@ -1,15 +1,21 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, page } from '@inertiajs/svelte';
     import { cn } from '@/lib/utils';
 
     let { active }: { active: 'dashboard' | 'courses' | 'students' | 'earnings' } = $props();
 
-    const tabs = [
-        { key: 'dashboard', label: 'Dashboard', href: '/instructor' },
-        { key: 'courses', label: 'My Courses', href: '/instructor/courses' },
-        { key: 'students', label: 'Students', href: '/instructor/students' },
-        { key: 'earnings', label: 'Earnings', href: '/instructor/earnings' },
-    ] as const;
+    const earningsEnabled = $derived(Boolean(page.props.features?.earnings));
+
+    const tabs = $derived(
+        [
+            { key: 'dashboard', label: 'Dashboard', href: '/instructor' },
+            { key: 'courses', label: 'My Courses', href: '/instructor/courses' },
+            { key: 'students', label: 'Students', href: '/instructor/students' },
+            ...(earningsEnabled
+                ? [{ key: 'earnings', label: 'Earnings', href: '/instructor/earnings' }]
+                : []),
+        ] as const,
+    );
 </script>
 
 <div class="border-b">

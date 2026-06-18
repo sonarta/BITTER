@@ -128,6 +128,8 @@ class InstructorController extends Controller
 
     public function earnings(): Response
     {
+        abort_unless(config('features.earnings'), 404);
+
         $user = Auth::user();
         assert($user instanceof User);
 
