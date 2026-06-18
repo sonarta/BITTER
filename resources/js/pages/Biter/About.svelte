@@ -14,6 +14,34 @@
     import BiterHeader from '@/components/Biter/BiterHeader.svelte';
     import { Button } from '@/components/ui/button';
 
+    type Researcher = {
+        type: 'lead' | 'researcher';
+        name: string;
+        role: string;
+        institution: string;
+        expertise: string;
+        email: string;
+        department: string;
+        photo: string | null;
+        photo_alt: string;
+        photo_status: 'ready' | 'pending';
+    };
+
+    type ResearchPartner = {
+        name: string;
+        title: string;
+        photo: string | null;
+        photo_alt: string;
+    };
+
+    let {
+        researchers,
+        researchPartners,
+    }: {
+        researchers: Researcher[];
+        researchPartners: ResearchPartner[];
+    } = $props();
+
     const addieSteps = [
         {
             code: 'A',
@@ -78,6 +106,23 @@
                 'Perlindungan atas karya digital dan inovasi sistem pembelajaran yang dikembangkan.',
         },
     ];
+
+    function getInitials(name: string): string {
+        return name
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((word) => word[0]?.toUpperCase() ?? '')
+            .join('');
+    }
+
+    const leadResearcher = $derived(
+        researchers.find((person) => person.type === 'lead') ?? null,
+    );
+
+    const supportingResearchers = $derived(
+        researchers.filter((person) => person.type !== 'lead'),
+    );
 </script>
 
 <AppHead title="Tentang Kami - BITER" />
@@ -354,40 +399,174 @@
                 </p>
             </div>
             <div
-                class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-12"
+                class="rounded-[32px] border border-slate-200 bg-linear-to-br from-white to-slate-50 p-6 shadow-sm md:p-8"
             >
-                <div
-                    class="flex flex-col items-start gap-6 md:flex-row md:items-center"
-                >
-                    <div
-                        class="size-24 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"
-                    >
-                        <img
-                            src="/ketua.jpeg"
-                            alt="Foto ketua tim peneliti"
-                            class="h-full w-full object-cover"
-                        />
-                    </div>
-                    <div>
-                        <p
-                            class="text-xs font-semibold uppercase tracking-wider text-[#1964af]"
+                <div class="grid gap-6 lg:grid-cols-2">
+                    {#if leadResearcher}
+                        <article
+                            class="relative overflow-hidden rounded-[28px] border border-[#d8e7f7] bg-white p-6 shadow-[0_18px_45px_-35px_rgba(25,100,175,0.45)]"
                         >
-                            Ketua Tim Peneliti
-                        </p>
-                        <h3 class="mt-1 text-2xl font-bold">
-                            Andra Saputra, M.Pd.
-                        </h3>
-                        <p class="mt-2 text-sm text-slate-500">
-                            Program Studi Pendidikan Kriya, Fakultas Seni Rupa
-                            dan Desain,<br /> Institut Seni Indonesia Padangpanjang.
-                        </p>
+                            <div
+                                class="absolute top-0 right-0 h-28 w-28 rounded-full bg-[#eaf3fc] blur-3xl"
+                            ></div>
+                            <div class="relative flex items-start gap-5">
+                                <div
+                                    class="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-100 md:size-28"
+                                >
+                                    {#if leadResearcher.photo}
+                                        <img
+                                            src={leadResearcher.photo}
+                                            alt={leadResearcher.photo_alt}
+                                            class="h-full w-full object-cover"
+                                        />
+                                    {:else}
+                                        <div
+                                            class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f3f8fe] to-[#e7f1fb] text-[#1964af]"
+                                        >
+                                            <div
+                                                class="flex size-14 items-center justify-center rounded-full bg-white text-lg font-bold shadow-sm"
+                                            >
+                                                {getInitials(leadResearcher.name)}
+                                            </div>
+                                            <p
+                                                class="mt-2 text-[11px] font-medium tracking-wide text-[#4d7dad]"
+                                            >
+                                                Foto Segera Hadir
+                                            </p>
+                                        </div>
+                                    {/if}
+                                </div>
+                                <div class="min-w-0">
+                                    <p
+                                        class="inline-flex rounded-full bg-[#eaf3fc] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1964af]"
+                                    >
+                                        {leadResearcher.role}
+                                    </p>
+                                    <h3 class="mt-4 text-2xl font-bold text-slate-900">
+                                        {leadResearcher.name}
+                                    </h3>
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                        {leadResearcher.department}<br />
+                                        {leadResearcher.institution}
+                                    </p>
+                                    <p class="mt-4 text-sm leading-relaxed text-slate-600">
+                                        {leadResearcher.expertise}
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <div class="space-y-6">
+                            {#each supportingResearchers as member (member.email)}
+                                <article
+                                    class="flex h-full flex-col justify-between rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
+                                >
+                                    <div class="flex items-start gap-5">
+                                        <div
+                                            class="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-100 md:size-28"
+                                        >
+                                            {#if member.photo}
+                                                <img
+                                                    src={member.photo}
+                                                    alt={member.photo_alt}
+                                                    class="h-full w-full object-cover"
+                                                />
+                                            {:else}
+                                                <div
+                                                    class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f8fbff] to-[#eef5fc] text-[#1964af]"
+                                                >
+                                                    <div
+                                                        class="flex size-14 items-center justify-center rounded-full bg-white text-lg font-bold shadow-sm"
+                                                    >
+                                                        {getInitials(member.name)}
+                                                    </div>
+                                                    <p
+                                                        class="mt-2 text-[11px] font-medium tracking-wide text-[#6c89a7]"
+                                                    >
+                                                        Foto Menyusul
+                                                    </p>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                        <div class="min-w-0">
+                                            <p
+                                                class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1964af]"
+                                            >
+                                                {member.role}
+                                            </p>
+                                            <h3 class="mt-4 text-2xl font-bold text-slate-900">
+                                                {member.name}
+                                            </h3>
+                                            <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                                {member.department}<br />
+                                                {member.institution}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-5 border-t border-slate-100 pt-5">
+                                        <p class="text-sm leading-relaxed text-slate-600">
+                                            {member.expertise}
+                                        </p>
+                                    </div>
+                                </article>
+                            {/each}
+                        </div>
+                    {/if}
+                </div>
+
+                <div class="mt-10 border-t border-slate-200 pt-8">
+                    <p
+                        class="mb-6 text-xs font-semibold uppercase tracking-[0.22em] text-[#1964af]"
+                    >
+                        Mitra Penelitian
+                    </p>
+                    <div class="grid gap-6 lg:grid-cols-2">
+                        {#each researchPartners as partner (partner.name)}
+                            <article
+                                class="flex items-center gap-5 rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)] transition-shadow hover:shadow-md"
+                            >
+                                <div
+                                    class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-[20px] border border-slate-200 bg-slate-100"
+                                >
+                                    {#if partner.photo}
+                                        <img
+                                            src={partner.photo}
+                                            alt={partner.photo_alt}
+                                            class="h-full w-full object-cover"
+                                        />
+                                    {:else}
+                                        <div
+                                            class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f8fbff] to-[#eef5fc] text-[#1964af]"
+                                        >
+                                            <div
+                                                class="flex size-11 items-center justify-center rounded-full bg-white text-sm font-bold shadow-sm"
+                                            >
+                                                {getInitials(partner.name)}
+                                            </div>
+                                            <p
+                                                class="mt-1.5 text-[10px] font-medium tracking-wide text-[#6c89a7]"
+                                            >
+                                                Foto Menyusul
+                                            </p>
+                                        </div>
+                                    {/if}
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-lg font-bold text-slate-900">
+                                        {partner.name}
+                                    </h3>
+                                    <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                                        {partner.title}
+                                    </p>
+                                </div>
+                            </article>
+                        {/each}
                     </div>
                 </div>
-                <div
-                    class="mt-8 border-t border-slate-100 pt-6 text-xs text-slate-400"
-                >
-                    Dokumen disusun berdasarkan rencana penelitian pengembangan
-                    BITER.
+
+                <div class="mt-8 border-t border-slate-100 pt-6 text-xs text-slate-400">
+                        Dokumen disusun berdasarkan rencana penelitian
+                        pengembangan BITER.
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@
 </script>
 
 <script lang="ts">
-    import { Form } from '@inertiajs/svelte';
+    import { Form, Link } from '@inertiajs/svelte';
     import AppHead from '@/components/AppHead.svelte';
     import InputError from '@/components/InputError.svelte';
     import PasswordInput from '@/components/PasswordInput.svelte';
@@ -97,9 +97,21 @@
         </div>
 
         {#if canRegister}
-            <div class="text-center text-sm text-muted-foreground">
-                Don't have an account?
-                <TextLink href={register()}>Sign up</TextLink>
+            <div class="mt-2 rounded-xl border border-border/70 bg-muted/30 p-4 text-center">
+                <p class="text-sm text-muted-foreground">
+                    Don't have an account yet?
+                </p>
+                <Button
+                    asChild
+                    variant="outline"
+                    class="mt-3 h-11 w-full border-primary/30 bg-primary/8 text-sm font-semibold text-primary hover:border-primary/50 hover:bg-primary/14 hover:text-primary"
+                >
+                    {#snippet children({ class: className })}
+                        <Link href={register()} class={className}>
+                            Sign up
+                        </Link>
+                    {/snippet}
+                </Button>
             </div>
         {/if}
     {/snippet}

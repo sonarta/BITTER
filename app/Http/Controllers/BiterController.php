@@ -21,7 +21,8 @@ class BiterController extends Controller
     public function about(): Response
     {
         return Inertia::render('Biter/About', [
-            'learningModel' => $this->learningModel(),
+            'researchers' => $this->researchers(),
+            'researchPartners' => $this->researchPartners(),
         ]);
     }
 
@@ -157,12 +158,49 @@ class BiterController extends Controller
     {
         return [
             [
+                'type' => 'lead',
                 'name' => 'Andra Saputra, M.Pd.',
-                'role' => 'Ketua Tim Peneliti / Dosen Pengampu',
+                'role' => 'Ketua Tim Peneliti',
                 'institution' => 'ISI Padangpanjang',
                 'expertise' => 'Teknologi Pendidikan, Kewirausahaan Kreatif, Pengembangan Media Pembelajaran Seni.',
                 'email' => 'andra.saputra@isi-padangpanjang.ac.id',
                 'department' => 'Program Studi Pendidikan Kriya, FSRD',
+                'photo' => '/ketua.jpeg',
+                'photo_alt' => 'Foto Andra Saputra',
+                'photo_status' => 'ready',
+            ],
+            [
+                'type' => 'researcher',
+                'name' => 'Khairunnisa, M.Kom',
+                'role' => 'Peneliti',
+                'institution' => 'ISI Padangpanjang',
+                'expertise' => 'Desain Komunikasi Visual, media digital, dan komunikasi visual untuk pengembangan pembelajaran.',
+                'email' => 'khairunnisa@isi-padangpanjang.ac.id',
+                'department' => 'Prodi Desain Komunikasi Visual',
+                'photo' => '/peneliti-1.jpeg',
+                'photo_alt' => 'Foto Khairunnisa',
+                'photo_status' => 'ready',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, string|null>>
+     */
+    private function researchPartners(): array
+    {
+        return [
+            [
+                'name' => 'Prof. Dr. Alwen Bentri, M.Pd',
+                'title' => 'Dosen Teknologi Pendidikan, Universitas Negeri Padang',
+                'photo' => '/alwen.png',
+                'photo_alt' => 'Foto Prof. Dr. Alwen Bentri',
+            ],
+            [
+                'name' => 'Prof. Dr. Abna Hidayati, M.Pd',
+                'title' => 'Dosen Teknologi Pendidikan, Universitas Negeri Padang',
+                'photo' => '/abna.png',
+                'photo_alt' => 'Foto Prof. Dr. Abna Hidayati',
             ],
         ];
     }

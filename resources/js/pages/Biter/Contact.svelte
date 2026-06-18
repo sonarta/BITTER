@@ -19,12 +19,16 @@
     import Spinner from '@/components/ui/spinner/Spinner.svelte';
 
     type Researcher = {
+        type: 'lead' | 'researcher';
         name: string;
         role: string;
         institution: string;
         expertise: string;
         email: string;
         department: string;
+        photo: string | null;
+        photo_alt: string;
+        photo_status: 'ready' | 'pending';
     };
 
     let {
@@ -75,6 +79,15 @@
             text: 'Hasil pengembangan sistem dipublikasikan pada jurnal ilmiah bereputasi.',
         },
     ];
+
+    function getInitials(name: string): string {
+        return name
+            .split(' ')
+            .filter(Boolean)
+            .slice(0, 2)
+            .map((word) => word[0]?.toUpperCase() ?? '')
+            .join('');
+    }
 </script>
 
 <AppHead title="Kontak Kami - BITER" />
@@ -161,23 +174,46 @@
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
                 {#each researchers as person (person.email)}
                     <article
-                        class="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
+                        class="flex flex-col rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
                     >
                         <div class="flex items-start gap-4">
                             <div
-                                class="size-20 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100"
+                                class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-[22px] border border-slate-200 bg-slate-100"
                             >
-                                <img
-                                    src="/ketua.jpeg"
-                                    alt={`Foto ${person.name}`}
-                                    class="h-full w-full object-cover"
-                                />
+                                {#if person.photo}
+                                    <img
+                                        src={person.photo}
+                                        alt={person.photo_alt}
+                                        class="h-full w-full object-cover"
+                                    />
+                                {:else}
+                                    <div
+                                        class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f8fbff] to-[#eef5fc] text-[#1964af]"
+                                    >
+                                        <div
+                                            class="flex size-11 items-center justify-center rounded-full bg-white text-sm font-bold shadow-sm"
+                                        >
+                                            {getInitials(person.name)}
+                                        </div>
+                                        <p
+                                            class="mt-1.5 text-[10px] font-medium tracking-wide text-[#6c89a7]"
+                                        >
+                                            Foto Menyusul
+                                        </p>
+                                    </div>
+                                {/if}
                             </div>
                             <div class="min-w-0">
                                 <h3 class="truncate text-base font-bold">
                                     {person.name}
                                 </h3>
-                                <p class="text-xs font-medium text-[#1964af]">
+                                <p
+                                    class={`mt-2 inline-flex rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] ${
+                                        person.type === 'lead'
+                                            ? 'bg-[#eaf3fc] text-[#1964af]'
+                                            : 'bg-slate-100 text-[#1964af]'
+                                    }`}
+                                >
                                     {person.role}
                                 </p>
                             </div>
