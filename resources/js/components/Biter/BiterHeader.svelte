@@ -1,14 +1,23 @@
 <script lang="ts">
     import { Link } from '@inertiajs/svelte';
+    import Download from 'lucide-svelte/icons/download';
     import Home from 'lucide-svelte/icons/home';
     import Info from 'lucide-svelte/icons/info';
+    import LogIn from 'lucide-svelte/icons/log-in';
     import Mail from 'lucide-svelte/icons/mail';
+    import { onMount } from 'svelte';
     import BiterBrand from '@/components/Biter/BiterBrand.svelte';
     import { Button } from '@/components/ui/button';
     import { currentUrlState } from '@/lib/currentUrl.svelte';
+    import {
+        isInstalledPwa,
+        shouldShowInstallButton,
+    } from '@/lib/pwa-install';
 
     const url = currentUrlState();
     const currentPath = $derived(url.currentUrl);
+    let installPrompt = $state<BeforeInstallPromptEvent | null>(null);
+    let isInstalled = $state(false);
 
     const navItems: {
         label: string;
@@ -27,6 +36,66 @@
 
         return currentPath.startsWith(href);
     }
+
+    const showInstallButton = $derived(
+        shouldShowInstallButton(isInstalled, installPrompt),
+    );
+
+    async function promptInstall(): Promise<void> {
+        if (!installPrompt) {
+            return;
+        }
+
+        const pendingInstallPrompt = installPrompt;
+
+        installPrompt = null;
+
+        await pendingInstallPrompt.prompt();
+
+        const { outcome } = await pendingInstallPrompt.userChoice;
+
+        if (outcome === 'accepted') {
+            isInstalled = true;
+        }
+    }
+
+    onMount(() => {
+        isInstalled = isInstalledPwa(window);
+
+        const handleBeforeInstallPrompt = (event: Event): void => {
+            if (isInstalledPwa(window)) {
+                installPrompt = null;
+                isInstalled = true;
+
+                return;
+            }
+
+            const beforeInstallPromptEvent =
+                event as BeforeInstallPromptEvent;
+
+            beforeInstallPromptEvent.preventDefault();
+            installPrompt = beforeInstallPromptEvent;
+        };
+
+        const handleAppInstalled = (): void => {
+            isInstalled = true;
+            installPrompt = null;
+        };
+
+        window.addEventListener(
+            'beforeinstallprompt',
+            handleBeforeInstallPrompt,
+        );
+        window.addEventListener('appinstalled', handleAppInstalled);
+
+        return () => {
+            window.removeEventListener(
+                'beforeinstallprompt',
+                handleBeforeInstallPrompt,
+            );
+            window.removeEventListener('appinstalled', handleAppInstalled);
+        };
+    });
 </script>
 
 <header
@@ -89,26 +158,21 @@
                 <span class="text-[11px] font-medium">{item.label}</span>
             </Link>
         {/each}
+        {#if showInstallButton}
+            <button
+                type="button"
+                onclick={promptInstall}
+                class="flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center text-slate-500 transition-colors hover:text-slate-900"
+            >
+                <Download class="size-5" />
+                <span class="text-[11px] font-medium">Install</span>
+            </button>
+        {/if}
         <Link
             href="/login"
             class="flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center text-slate-500 transition-colors hover:text-slate-900"
         >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-5"
-            >
-                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                <polyline points="10 17 15 12 10 7"></polyline>
-                <line x1="15" x2="3" y1="12" y2="12"></line>
-            </svg>
+            <LogIn class="size-5" />
             <span class="text-[11px] font-medium">Masuk</span>
         </Link>
     </div>
