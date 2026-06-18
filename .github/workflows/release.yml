@@ -1,0 +1,74 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*' # Workflow berjalan otomatis jika ada push tag versi, contoh: v1.0.0
+  workflow_dispatch: # Memungkinkan workflow dijalankan secara manual dari tab Actions
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4' # Sesuai dengan spesifikasi project
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite3, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Menggunakan Node.js versi LTS
+
+      - name: Install NPM Dependencies
+        run: npm ci
+
+      - name: Build Frontend Assets
+        run: npm run build
+
+      - name: Clean Up Unnecessary Files for Production
+        run: |
+          # Menghapus folder yang tidak dibutuhkan di shared hosting agar ukuran zip lebih kecil
+          rm -rf node_modules
+          rm -rf tests
+          rm -rf .git
+          rm -rf .github
+          rm -rf .cursor
+          rm -rf .trae
+          rm -rf .claude
+          rm -rf .agents
+          rm -rf storage/logs/*.log
+
+      - name: Create Zip Archive
+        run: |
+          # Mendapatkan nama versi (dari tag atau commit hash jika manual)
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            VERSION=${GITHUB_SHA::7}
+          fi
+          
+          ZIP_NAME="bitter-release-${VERSION}.zip"
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_ENV
+          
+          # Membuat file zip dari semua file yang tersisa
+          zip -r $ZIP_NAME . -x "*.zip"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ZIP_NAME }}
+          generate_release_notes: true
+          name: Release ${{ github.ref_name }}
