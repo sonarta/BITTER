@@ -1,4 +1,5 @@
 import { createInertiaApp } from '@inertiajs/svelte';
+import { registerSW } from 'virtual:pwa-register';
 import AppLayout from '@/layouts/AppLayout.svelte';
 import AuthLayout from '@/layouts/AuthLayout.svelte';
 import SettingsLayout from '@/layouts/settings/Layout.svelte';
@@ -32,8 +33,17 @@ initializeTheme();
 
 initializeFlashToast();
 
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js');
+if (import.meta.env.PROD) {
+    registerSW({
+        immediate: true,
+        onOfflineReady() {
+            console.info('BITTER is ready to work offline.');
+        },
+        onNeedRefresh() {
+            console.info('A new version of BITTER is available.');
+        },
+        onRegisterError(error: unknown) {
+            console.error('Service worker registration failed.', error);
+        },
     });
 }
