@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
     import Download from 'lucide-svelte/icons/download';
     import Home from 'lucide-svelte/icons/home';
     import Info from 'lucide-svelte/icons/info';
@@ -104,14 +103,14 @@
     <div
         class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-4"
     >
-        <Link href="/biter" class="flex items-center gap-3 outline-none">
+        <a href="/biter" class="flex items-center gap-3 outline-none">
             <BiterBrand />
-        </Link>
+        </a>
 
         <!-- Desktop nav -->
         <nav class="hidden items-center gap-1 md:flex">
             {#each navItems as item (item.href)}
-                <Link
+                <a
                     href={item.href}
                     class={[
                         'rounded-md px-3 py-2 text-sm font-medium transition-colors',
@@ -121,19 +120,19 @@
                     ]}
                 >
                     {item.label}
-                </Link>
+                </a>
             {/each}
         </nav>
 
         <div class="hidden md:block">
-            <Link href="/login">
+            <a href="/login">
                 <Button
                     size="sm"
                     class="bg-[#1964af] text-white hover:bg-[#1964af]"
                 >
                     Masuk Ke LMS
                 </Button>
-            </Link>
+            </a>
         </div>
     </div>
 </header>
@@ -145,7 +144,7 @@
     <div class="mx-auto flex max-w-7xl">
         {#each navItems as item (item.href)}
             {@const Icon = item.icon}
-            <Link
+            <a
                 href={item.href}
                 class={[
                     'flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center transition-colors',
@@ -156,7 +155,7 @@
             >
                 <Icon class="size-5" />
                 <span class="text-[11px] font-medium">{item.label}</span>
-            </Link>
+            </a>
         {/each}
         {#if showInstallButton}
             <button
@@ -168,12 +167,12 @@
                 <span class="text-[11px] font-medium">Install</span>
             </button>
         {/if}
-        <Link
+        <a
             href="/login"
             class="flex flex-1 flex-col items-center justify-center gap-1 px-2 py-3 text-center text-slate-500 transition-colors hover:text-slate-900"
         >
             <LogIn class="size-5" />
             <span class="text-[11px] font-medium">Masuk</span>
-        </Link>
+        </a>
     </div>
 </nav>

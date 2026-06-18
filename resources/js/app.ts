@@ -4,6 +4,10 @@ import AppLayout from '@/layouts/AppLayout.svelte';
 import AuthLayout from '@/layouts/AuthLayout.svelte';
 import SettingsLayout from '@/layouts/settings/Layout.svelte';
 import { initializeFlashToast } from '@/lib/flash-toast';
+import {
+    offlineEnabledPaths,
+    offlinePageCacheName,
+} from '@/lib/pwa-offline';
 import { initializeTheme } from '@/lib/theme.svelte';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -32,6 +36,51 @@ createInertiaApp({
 initializeTheme();
 
 initializeFlashToast();
+
+async function warmOfflinePages(): Promise<void> {
+    if (
+        typeof window === 'undefined' ||
+        !('caches' in window) ||
+        !window.navigator.onLine
+    ) {
+        return;
+    }
+
+    const cache = await caches.open(offlinePageCacheName);
+
+    await Promise.allSettled(
+        offlineEnabledPaths.map(async (path) => {
+            const request = new Request(new URL(path, window.location.origin), {
+                credentials: 'same-origin',
+            });
+            const response = await fetch(request);
+
+            if (response.ok) {
+                await cache.put(request, response.clone());
+            }
+        }),
+    );
+}
+
+function initializeOfflinePageWarmup(): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    const scheduleWarmup = (): void => {
+        void warmOfflinePages();
+    };
+
+    if (document.readyState === 'complete') {
+        scheduleWarmup();
+    } else {
+        window.addEventListener('load', scheduleWarmup, { once: true });
+    }
+
+    window.addEventListener('online', scheduleWarmup);
+}
+
+initializeOfflinePageWarmup();
 
 if (import.meta.env.PROD) {
     registerSW({

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
     import BiterBrand from '@/components/Biter/BiterBrand.svelte';
 </script>
 
@@ -43,12 +42,12 @@
                 penelitian R&D.
             </p>
             <div class="flex gap-4">
-                <Link href="/biter/tentang" class="hover:text-slate-300">
+                <a href="/biter/tentang" class="hover:text-slate-300">
                     Tentang
-                </Link>
-                <Link href="/biter/kontak" class="hover:text-slate-300">
+                </a>
+                <a href="/biter/kontak" class="hover:text-slate-300">
                     Kontak
-                </Link>
+                </a>
             </div>
         </div>
     </div>

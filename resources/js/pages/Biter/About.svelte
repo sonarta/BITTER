@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
     import BookOpen from 'lucide-svelte/icons/book-open';
     import CheckCircle2 from 'lucide-svelte/icons/check-circle-2';
     import FileText from 'lucide-svelte/icons/file-text';
@@ -404,14 +403,14 @@
                 Hubungi tim peneliti kami untuk informasi lebih lanjut.
             </p>
             <div class="mt-6">
-                <Link href="/biter/kontak">
+                <a href="/biter/kontak">
                     <Button
                         size="lg"
                         class="h-12 rounded-full bg-[#1964af] px-8 text-base font-semibold text-white hover:bg-[#1964af]"
                     >
                         Hubungi Kami
                     </Button>
-                </Link>
+                </a>
             </div>
         </div>
     </section>

@@ -6,6 +6,10 @@ import laravel from 'laravel-vite-plugin';
 import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { resolvePwaAppName } from './resources/js/lib/pwa-config';
+import {
+    isOfflineEnabledPath,
+    offlinePageCacheName,
+} from './resources/js/lib/pwa-offline';
 
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, process.cwd(), '');
@@ -65,6 +69,24 @@ export default defineConfig(({ mode }) => {
                     navigateFallback: '/offline.html',
                     cleanupOutdatedCaches: true,
                     runtimeCaching: [
+                        {
+                            urlPattern: ({ request, sameOrigin, url }) =>
+                                sameOrigin &&
+                                request.method === 'GET' &&
+                                isOfflineEnabledPath(url.pathname),
+                            handler: 'NetworkFirst',
+                            options: {
+                                cacheName: offlinePageCacheName,
+                                networkTimeoutSeconds: 3,
+                                cacheableResponse: {
+                                    statuses: [200],
+                                },
+                                expiration: {
+                                    maxEntries: 8,
+                                    maxAgeSeconds: 60 * 60 * 24 * 7,
+                                },
+                            },
+                        },
                         {
                             urlPattern: ({ request, sameOrigin }) =>
                                 sameOrigin &&

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
     import ArrowRight from 'lucide-svelte/icons/arrow-right';
     import Award from 'lucide-svelte/icons/award';
     import BookOpen from 'lucide-svelte/icons/book-open';
@@ -281,7 +280,7 @@
                 <div
                     class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
                 >
-                    <Link href="/login">
+                    <a href="/login">
                         <Button
                             size="lg"
                             class="h-12 gap-2 rounded-full bg-white px-8 text-base font-semibold text-[#1964af] hover:bg-white/90"
@@ -289,7 +288,7 @@
                             Masuk Ke LMS
                             <ArrowRight class="size-4" />
                         </Button>
-                    </Link>
+                    </a>
                     <a
                         href="https://drive.google.com/file/d/1Aj_83LBjEZsdrStiNhgtBlyPkHZfrWZB/view"
                         target="_blank"
