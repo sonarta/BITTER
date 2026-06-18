@@ -16,8 +16,8 @@ test('new users can register', function () {
     $response = $this->post(route('register.store'), [
         'name' => 'Test User',
         'email' => 'test@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => '1234',
+        'password_confirmation' => '1234',
     ]);
 
     $this->assertAuthenticated();
@@ -38,8 +38,8 @@ test('new users can access the dashboard immediately when email verification is 
     $response = $this->post(route('register.store'), [
         'name' => 'Demo User',
         'email' => 'demo@example.com',
-        'password' => 'password',
-        'password_confirmation' => 'password',
+        'password' => '1234',
+        'password_confirmation' => '1234',
     ]);
 
     $this->assertAuthenticated();
