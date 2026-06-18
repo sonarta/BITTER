@@ -40,6 +40,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'features' => [
                 'earnings' => config('features.earnings'),
+                'exam_editor_v2' => config('features.exam_editor_v2'),
             ],
             'name' => config('app.name'),
             'auth' => [

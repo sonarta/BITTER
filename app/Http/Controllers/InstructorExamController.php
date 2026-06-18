@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Exams\BuildInstructorExamEditorData;
+use App\Actions\Exams\ComputeExamPublishReadiness;
+use App\Http\Requests\Instructor\ReorderExamQuestionsRequest;
+use App\Http\Requests\Instructor\StoreExamQuestionRequest;
+use App\Http\Requests\Instructor\UpdateExamQuestionRequest;
+use App\Http\Requests\Instructor\UpsertCourseExamRequest;
 use App\Models\Course;
 use App\Models\CourseExam;
 use App\Models\ExamAnswer;
 use App\Models\ExamAttempt;
 use App\Models\ExamQuestion;
-use App\Models\ExamQuestionOption;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -17,83 +22,27 @@ use Inertia\Response;
 
 class InstructorExamController extends Controller
 {
-    public function edit(Course $course): Response
+    public function __construct(
+        private readonly BuildInstructorExamEditorData $buildInstructorExamEditorData,
+        private readonly ComputeExamPublishReadiness $computeExamPublishReadiness,
+    ) {}
+
+    public function edit(Request $request, Course $course): Response
     {
         Gate::authorize('update', $course);
 
-        $course->load(['exam.questions.options']);
+        $component = config('features.exam_editor_v2')
+            ? 'Instructor/ExamEditorV2'
+            : 'Instructor/ExamEditor';
 
-        $exam = $course->exam;
-
-        $attempts = $exam instanceof CourseExam
-            ? $exam->attempts()
-                ->with('user')
-                ->latest('started_at')
-                ->take(20)
-                ->get()
-                ->map(fn (ExamAttempt $a) => [
-                    'id' => $a->id,
-                    'user' => [
-                        'id' => $a->user_id,
-                        'name' => $a->user?->name ?? 'Unknown',
-                    ],
-                    'attempt_number' => $a->attempt_number,
-                    'status' => $a->status,
-                    'started_at' => $a->started_at?->diffForHumans(),
-                    'submitted_at' => $a->submitted_at?->diffForHumans(),
-                    'score_points' => $a->score_points,
-                    'max_points' => $a->max_points,
-                    'needs_manual_review' => $a->needs_manual_review,
-                    'passed' => $a->passed,
-                ])
-                ->values()
-            : collect();
-
-        return Inertia::render('Instructor/ExamEditor', [
-            'course' => [
-                'id' => $course->id,
-                'title' => $course->title,
-                'slug' => $course->slug,
-                'status' => $course->status,
-            ],
-            'exam' => $exam instanceof CourseExam ? [
-                'id' => $exam->id,
-                'title' => $exam->title,
-                'description' => $exam->description ?? '',
-                'duration_minutes' => $exam->duration_minutes,
-                'max_attempts' => $exam->max_attempts,
-                'pass_score' => $exam->pass_score,
-                'is_published' => $exam->is_published,
-                'questions' => $exam->questions->map(fn (ExamQuestion $q) => [
-                    'id' => $q->id,
-                    'type' => $q->type,
-                    'prompt' => $q->prompt,
-                    'points' => $q->points,
-                    'sort_order' => $q->sort_order,
-                    'options' => $q->options->map(fn (ExamQuestionOption $o) => [
-                        'id' => $o->id,
-                        'text' => $o->text,
-                        'is_correct' => $o->is_correct,
-                        'sort_order' => $o->sort_order,
-                    ])->values(),
-                ])->values(),
-            ] : null,
-            'attempts' => $attempts,
-        ]);
+        return Inertia::render($component, ($this->buildInstructorExamEditorData)($course, $request));
     }
 
-    public function upsert(Request $request, Course $course): RedirectResponse
+    public function upsert(UpsertCourseExamRequest $request, Course $course): RedirectResponse
     {
         Gate::authorize('update', $course);
 
-        $data = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'duration_minutes' => ['required', 'integer', 'min:1', 'max:600'],
-            'max_attempts' => ['required', 'integer', 'min:1', 'max:50'],
-            'pass_score' => ['required', 'integer', 'min:0', 'max:100'],
-            'is_published' => ['required', 'boolean'],
-        ]);
+        $data = $request->validated();
 
         if ($data['is_published']) {
             $exam = $course->exam()->with('questions.options')->first();
@@ -115,7 +64,7 @@ class InstructorExamController extends Controller
         return back()->with('success', 'Exam saved.');
     }
 
-    public function storeQuestion(Request $request, Course $course): RedirectResponse
+    public function storeQuestion(StoreExamQuestionRequest $request, Course $course): RedirectResponse
     {
         Gate::authorize('update', $course);
 
@@ -131,11 +80,7 @@ class InstructorExamController extends Controller
             ],
         );
 
-        $data = $request->validate([
-            'type' => ['required', 'string', 'in:single,multiple,true_false,essay'],
-            'prompt' => ['required', 'string'],
-            'points' => ['required', 'integer', 'min:1', 'max:100'],
-        ]);
+        $data = $request->validated();
 
         $nextOrder = (int) $exam->questions()->max('sort_order') + 1;
 
@@ -154,7 +99,7 @@ class InstructorExamController extends Controller
         return back()->with('success', 'Question added.');
     }
 
-    public function updateQuestion(Request $request, Course $course, ExamQuestion $question): RedirectResponse
+    public function updateQuestion(UpdateExamQuestionRequest $request, Course $course, ExamQuestion $question): RedirectResponse
     {
         Gate::authorize('update', $course);
 
@@ -164,16 +109,7 @@ class InstructorExamController extends Controller
             abort(404);
         }
 
-        $data = $request->validate([
-            'type' => ['required', 'string', 'in:single,multiple,true_false,essay'],
-            'prompt' => ['required', 'string'],
-            'points' => ['required', 'integer', 'min:1', 'max:100'],
-            'options' => ['array'],
-            'options.*.id' => ['nullable', 'string'],
-            'options.*.text' => ['required_with:options', 'string', 'max:255'],
-            'options.*.is_correct' => ['required_with:options', 'boolean'],
-            'options.*.sort_order' => ['required_with:options', 'integer', 'min:0'],
-        ]);
+        $data = $request->validated();
 
         $question->update([
             'type' => $data['type'],
@@ -244,7 +180,7 @@ class InstructorExamController extends Controller
         return back()->with('success', 'Question deleted.');
     }
 
-    public function reorderQuestions(Request $request, Course $course): RedirectResponse
+    public function reorderQuestions(ReorderExamQuestionsRequest $request, Course $course): RedirectResponse
     {
         Gate::authorize('update', $course);
 
@@ -254,10 +190,7 @@ class InstructorExamController extends Controller
             abort(404);
         }
 
-        $data = $request->validate([
-            'order' => ['required', 'array'],
-            'order.*' => ['string'],
-        ]);
+        $data = $request->validated();
 
         $questions = $exam->questions()->get()->keyBy('id');
 
@@ -403,38 +336,13 @@ class InstructorExamController extends Controller
 
     private function ensureExamCanBePublished(CourseExam $exam): void
     {
-        $exam->loadMissing('questions.options');
+        $readiness = ($this->computeExamPublishReadiness)($exam);
+        $firstBlocker = $readiness['blockers'][0]['message'] ?? null;
 
-        if ($exam->questions->isEmpty()) {
+        if ($firstBlocker !== null) {
             throw ValidationException::withMessages([
-                'is_published' => 'Add at least one valid question before publishing the exam.',
+                'is_published' => $firstBlocker,
             ]);
-        }
-
-        foreach ($exam->questions as $question) {
-            if ($question->type === 'essay') {
-                continue;
-            }
-
-            if ($question->options->isEmpty()) {
-                throw ValidationException::withMessages([
-                    'is_published' => 'Every objective question must have options before publishing the exam.',
-                ]);
-            }
-
-            $correctOptionsCount = $question->options->where('is_correct', true)->count();
-
-            if (in_array($question->type, ['single', 'true_false'], true) && $correctOptionsCount !== 1) {
-                throw ValidationException::withMessages([
-                    'is_published' => 'Single choice and true/false questions must have exactly one correct option.',
-                ]);
-            }
-
-            if ($question->type === 'multiple' && $correctOptionsCount < 1) {
-                throw ValidationException::withMessages([
-                    'is_published' => 'Multiple choice questions must have at least one correct option.',
-                ]);
-            }
         }
     }
 }
