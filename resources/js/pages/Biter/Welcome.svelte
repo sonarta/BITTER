@@ -12,6 +12,7 @@
     import AppHead from '@/components/AppHead.svelte';
     import BiterFooter from '@/components/Biter/BiterFooter.svelte';
     import BiterHeader from '@/components/Biter/BiterHeader.svelte';
+    import PwaInstallButton from '@/components/Biter/PwaInstallButton.svelte';
     import { Button } from '@/components/ui/button';
 
     type Module = {
@@ -274,8 +275,8 @@
                 <p
                     class="mx-auto mt-3 max-w-xl text-sm text-white/80 md:text-base"
                 >
-                    Akses seluruh materi pembelajaran melalui LMS BITER atau unduh
-                    aplikasi Android.
+                    Akses seluruh materi pembelajaran melalui LMS BITER atau
+                    install aplikasi BITER ke perangkat Anda.
                 </p>
                 <div
                     class="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
@@ -289,19 +290,7 @@
                             <ArrowRight class="size-4" />
                         </Button>
                     </a>
-                    <a
-                        href="https://drive.google.com/file/d/1Aj_83LBjEZsdrStiNhgtBlyPkHZfrWZB/view"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        <Button
-                            size="lg"
-                            variant="outline"
-                            class="h-12 rounded-full border-white/40 bg-white/10 px-6 text-white hover:bg-white/20 hover:text-white"
-                        >
-                            Download APK
-                        </Button>
-                    </a>
+                    <PwaInstallButton appearance="hero" />
                 </div>
             </div>
         </div>
