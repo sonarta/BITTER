@@ -181,6 +181,18 @@ class BiterController extends Controller
                 'photo_alt' => 'Foto Khairunnisa',
                 'photo_status' => 'ready',
             ],
+            [
+                'type' => 'researcher',
+                'name' => 'Asmidar, M.Sn',
+                'role' => 'Peneliti',
+                'institution' => 'ISI Padangpanjang',
+                'expertise' => 'Pendidikan kriya dan pengembangan pembelajaran kewirausahaan seni.',
+                'email' => null,
+                'department' => 'Dosen Pendidikan Kriya',
+                'photo' => '/asmidar.png',
+                'photo_alt' => 'Foto Asmidar',
+                'photo_status' => 'ready',
+            ],
         ];
     }
 

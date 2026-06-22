@@ -24,7 +24,7 @@
         role: string;
         institution: string;
         expertise: string;
-        email: string;
+        email: string | null;
         department: string;
         photo: string | null;
         photo_alt: string;
@@ -172,7 +172,7 @@
             </div>
 
             <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                {#each researchers as person (person.email)}
+                {#each researchers as person (person.name)}
                     <article
                         class="flex flex-col rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
                     >
@@ -247,24 +247,26 @@
                                     <p>{person.department}</p>
                                 </div>
                             </div>
-                            <div class="flex items-start gap-2">
-                                <Mail
-                                    class="mt-0.5 size-4 shrink-0 text-[#1964af]"
-                                />
-                                <div class="min-w-0">
-                                    <p
-                                        class="text-xs font-semibold text-slate-500"
-                                    >
-                                        Email
-                                    </p>
-                                    <a
-                                        href={`mailto:${person.email}`}
-                                        class="block truncate text-[#1964af] hover:underline"
-                                    >
-                                        {person.email}
-                                    </a>
+                            {#if person.email}
+                                <div class="flex items-start gap-2">
+                                    <Mail
+                                        class="mt-0.5 size-4 shrink-0 text-[#1964af]"
+                                    />
+                                    <div class="min-w-0">
+                                        <p
+                                            class="text-xs font-semibold text-slate-500"
+                                        >
+                                            Email
+                                        </p>
+                                        <a
+                                            href={`mailto:${person.email}`}
+                                            class="block truncate text-[#1964af] hover:underline"
+                                        >
+                                            {person.email}
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            {/if}
                         </div>
                         <div
                             class="mt-4 rounded-lg border-l-4 border-[#1964af] bg-[#f0f7ff] p-3"

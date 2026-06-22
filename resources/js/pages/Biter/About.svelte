@@ -20,7 +20,7 @@
         role: string;
         institution: string;
         expertise: string;
-        email: string;
+        email: string | null;
         department: string;
         photo: string | null;
         photo_alt: string;
@@ -457,7 +457,7 @@
                         </article>
 
                         <div class="space-y-6">
-                            {#each supportingResearchers as member (member.email)}
+                            {#each supportingResearchers as member (member.name)}
                                 <article
                                     class="flex h-full flex-col justify-between rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
                                 >
