@@ -24,6 +24,19 @@ test('new users can register', function () {
     $response->assertRedirect(route('dashboard', absolute: false));
 });
 
+test('new users are automatically logged in after registering', function () {
+    $response = $this->post(route('register.store'), [
+        'name' => 'Auto Login User',
+        'email' => 'autologin@example.com',
+        'password' => '1234',
+        'password_confirmation' => '1234',
+    ]);
+
+    $this->assertAuthenticated();
+    $this->get(route('dashboard'))->assertOk();
+    $response->assertRedirect(route('dashboard', absolute: false));
+});
+
 test('new users can access the dashboard immediately when email verification is disabled', function () {
     $fortifyFeatures = config('fortify.features', []);
 
