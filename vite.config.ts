@@ -7,7 +7,8 @@ import { defineConfig, loadEnv } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { resolvePwaAppName } from './resources/js/lib/pwa-config';
 import {
-    isOfflineEnabledPath,
+    offlineEnabledPathMatcher,
+    offlineEnabledPathPatterns,
     offlinePageCacheName,
 } from './resources/js/lib/pwa-offline';
 
@@ -32,6 +33,11 @@ export default defineConfig(({ mode }) => {
                 strategies: 'generateSW',
                 injectRegister: false,
                 registerType: 'autoUpdate',
+                devOptions: {
+                    enabled: true,
+                    navigateFallbackAllowlist: offlineEnabledPathPatterns,
+                    type: 'module',
+                },
                 includeAssets: [
                     'offline.html',
                     'favicon.ico',
@@ -67,13 +73,14 @@ export default defineConfig(({ mode }) => {
                         '**/*.{js,css,html,ico,png,svg,webmanifest,woff2}',
                     ],
                     navigateFallback: '/offline.html',
+                    navigateFallbackDenylist: offlineEnabledPathPatterns,
                     cleanupOutdatedCaches: true,
                     runtimeCaching: [
                         {
-                            urlPattern: ({ request, sameOrigin, url }) =>
-                                sameOrigin &&
-                                request.method === 'GET' &&
-                                isOfflineEnabledPath(url.pathname),
+                            // generateSW stringifies route matchers into the final
+                            // service worker, so runtime caching must use a serializable
+                            // matcher instead of referencing external helpers.
+                            urlPattern: offlineEnabledPathMatcher,
                             handler: 'NetworkFirst',
                             options: {
                                 cacheName: offlinePageCacheName,

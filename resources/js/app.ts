@@ -82,17 +82,15 @@ function initializeOfflinePageWarmup(): void {
 
 initializeOfflinePageWarmup();
 
-if (import.meta.env.PROD) {
-    registerSW({
-        immediate: true,
-        onOfflineReady() {
-            console.info('BITTER is ready to work offline.');
-        },
-        onNeedRefresh() {
-            console.info('A new version of BITTER is available.');
-        },
-        onRegisterError(error: unknown) {
-            console.error('Service worker registration failed.', error);
-        },
-    });
-}
+registerSW({
+    immediate: true,
+    onOfflineReady() {
+        console.info('BITTER is ready to work offline.');
+    },
+    onNeedRefresh() {
+        console.info('A new version of BITTER is available.');
+    },
+    onRegisterError(error: unknown) {
+        console.error('Service worker registration failed.', error);
+    },
+});
