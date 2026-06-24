@@ -401,15 +401,15 @@
             <div
                 class="rounded-[32px] border border-slate-200 bg-linear-to-br from-white to-slate-50 p-6 shadow-sm md:p-8"
             >
-                <div class="grid gap-6 lg:grid-cols-2">
+                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {#if leadResearcher}
                         <article
-                            class="relative overflow-hidden rounded-[28px] border border-[#d8e7f7] bg-white p-6 shadow-[0_18px_45px_-35px_rgba(25,100,175,0.45)]"
+                            class="relative flex h-full flex-col justify-between overflow-hidden rounded-[28px] border border-[#d8e7f7] bg-white p-6 shadow-[0_18px_45px_-35px_rgba(25,100,175,0.45)]"
                         >
                             <div
                                 class="absolute top-0 right-0 h-28 w-28 rounded-full bg-[#eaf3fc] blur-3xl"
                             ></div>
-                            <div class="relative flex items-start gap-5">
+                            <div class="relative flex flex-col items-center text-center gap-5">
                                 <div
                                     class="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-100 md:size-28"
                                 >
@@ -436,82 +436,82 @@
                                         </div>
                                     {/if}
                                 </div>
-                                <div class="min-w-0">
+                                <div class="flex min-w-0 flex-col items-center">
                                     <p
                                         class="inline-flex rounded-full bg-[#eaf3fc] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1964af]"
                                     >
                                         {leadResearcher.role}
                                     </p>
-                                    <h3 class="mt-4 text-2xl font-bold text-slate-900">
+                                    <h3 class="mt-4 text-xl font-bold text-slate-900">
                                         {leadResearcher.name}
                                     </h3>
-                                    <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                    <p class="mt-2 text-sm leading-relaxed text-slate-600">
                                         {leadResearcher.department}<br />
                                         {leadResearcher.institution}
                                     </p>
-                                    <p class="mt-4 text-sm leading-relaxed text-slate-600">
-                                        {leadResearcher.expertise}
-                                    </p>
                                 </div>
                             </div>
+                            <div class="relative mt-5 w-full border-t border-slate-100 pt-5 text-center">
+                                <p class="text-sm leading-relaxed text-slate-600">
+                                    {leadResearcher.expertise}
+                                </p>
+                            </div>
                         </article>
+                    {/if}
 
-                        <div class="space-y-6">
-                            {#each supportingResearchers as member (member.name)}
-                                <article
-                                    class="flex h-full flex-col justify-between rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
-                                >
-                                    <div class="flex items-start gap-5">
+                    {#each supportingResearchers as member (member.name)}
+                        <article
+                            class="flex h-full flex-col justify-between rounded-[28px] border border-slate-200 bg-white p-6 shadow-[0_18px_45px_-40px_rgba(15,23,42,0.4)]"
+                        >
+                                    <div class="flex flex-col items-center text-center gap-5">
                                         <div
                                             class="flex size-24 shrink-0 items-center justify-center overflow-hidden rounded-[24px] border border-slate-200 bg-slate-100 md:size-28"
                                         >
-                                            {#if member.photo}
-                                                <img
-                                                    src={member.photo}
-                                                    alt={member.photo_alt}
-                                                    class="h-full w-full object-cover"
-                                                />
-                                            {:else}
-                                                <div
-                                                    class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f8fbff] to-[#eef5fc] text-[#1964af]"
-                                                >
-                                                    <div
-                                                        class="flex size-14 items-center justify-center rounded-full bg-white text-lg font-bold shadow-sm"
-                                                    >
-                                                        {getInitials(member.name)}
-                                                    </div>
-                                                    <p
-                                                        class="mt-2 text-[11px] font-medium tracking-wide text-[#6c89a7]"
-                                                    >
-                                                        Foto Menyusul
-                                                    </p>
-                                                </div>
-                                            {/if}
+                                    {#if member.photo}
+                                        <img
+                                            src={member.photo}
+                                            alt={member.photo_alt}
+                                            class="h-full w-full object-cover"
+                                        />
+                                    {:else}
+                                        <div
+                                            class="flex h-full w-full flex-col items-center justify-center bg-linear-to-br from-[#f8fbff] to-[#eef5fc] text-[#1964af]"
+                                        >
+                                            <div
+                                                class="flex size-14 items-center justify-center rounded-full bg-white text-lg font-bold shadow-sm"
+                                            >
+                                                {getInitials(member.name)}
+                                            </div>
+                                            <p
+                                                class="mt-2 text-[11px] font-medium tracking-wide text-[#6c89a7]"
+                                            >
+                                                Foto Menyusul
+                                            </p>
                                         </div>
-                                        <div class="min-w-0">
+                                    {/if}
+                                </div>
+                                        <div class="flex min-w-0 flex-col items-center">
                                             <p
                                                 class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#1964af]"
                                             >
                                                 {member.role}
                                             </p>
-                                            <h3 class="mt-4 text-2xl font-bold text-slate-900">
+                                            <h3 class="mt-4 text-xl font-bold text-slate-900">
                                                 {member.name}
                                             </h3>
-                                            <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                            <p class="mt-2 text-sm leading-relaxed text-slate-600">
                                                 {member.department}<br />
                                                 {member.institution}
                                             </p>
                                         </div>
                                     </div>
-                                    <div class="mt-5 border-t border-slate-100 pt-5">
+                                    <div class="mt-5 w-full border-t border-slate-100 pt-5 text-center">
                                         <p class="text-sm leading-relaxed text-slate-600">
                                             {member.expertise}
                                         </p>
                                     </div>
                                 </article>
-                            {/each}
-                        </div>
-                    {/if}
+                    {/each}
                 </div>
 
                 <div class="mt-10 border-t border-slate-200 pt-8">
