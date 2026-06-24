@@ -34,7 +34,7 @@ export default defineConfig(({ mode }) => {
                 injectRegister: false,
                 registerType: 'autoUpdate',
                 devOptions: {
-                    enabled: true,
+                    enabled: false,
                     navigateFallbackAllowlist: offlineEnabledPathPatterns,
                     type: 'module',
                 },

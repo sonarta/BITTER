@@ -28,8 +28,21 @@
     let currentSrc = $state('');
     let currentSource = $state<CoverSource>('placeholder');
 
+    function transformImageUrl(url: string): string {
+        if (!url) return url;
+        
+        // Handle Google Drive /view URLs
+        const driveRegex = /^https?:\/\/(?:drive|docs)\.google\.com\/(?:file\/d\/|open\?id=)([\w-]+)(?:\/.*)?$/i;
+        const match = url.match(driveRegex);
+        if (match && match[1]) {
+            return `https://lh3.googleusercontent.com/d/${match[1]}`;
+        }
+        
+        return url;
+    }
+
     $effect(() => {
-        currentSrc = src;
+        currentSrc = transformImageUrl(src);
         currentSource = source;
     });
 
