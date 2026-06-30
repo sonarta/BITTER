@@ -1,5 +1,6 @@
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
+    import DOMPurify from 'dompurify';
     import ArrowLeft from 'lucide-svelte/icons/arrow-left';
     import Check from 'lucide-svelte/icons/check';
     import CheckCircle2 from 'lucide-svelte/icons/check-circle-2';
@@ -14,10 +15,18 @@
     import { Avatar, AvatarFallback } from '@/components/ui/avatar';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
+    import {
+        Select,
+        SelectContent,
+        SelectItem,
+        SelectLabel,
+        SelectSeparator,
+        SelectTrigger,
+        SelectValue,
+    } from '@/components/ui/select';
     import { Separator } from '@/components/ui/separator';
     import { getInitials } from '@/lib/initials';
     import { cn, getYouTubeEmbedUrl } from '@/lib/utils';
-    import DOMPurify from 'dompurify';
     import type {
         LessonRef,
         PlayerCourse,
@@ -73,6 +82,14 @@
     function openPdfModal(url: string) {
         pdfModalUrl = url;
         pdfModalOpen = true;
+    }
+
+    function visitLesson(lessonSlug: string): void {
+        if (!lessonSlug || lessonSlug === current.slug) {
+            return;
+        }
+
+        router.visit(`/learn/${course.slug}/${lessonSlug}`);
     }
 
     function iconForResource(type: string) {
@@ -197,6 +214,43 @@
                     </Button>
                 </div>
 
+                <div class="mt-6 space-y-2 lg:hidden">
+                    <div class="flex items-center justify-between gap-3">
+                        <p class="text-sm font-medium">Choose lesson</p>
+                        <p class="text-xs text-muted-foreground">
+                            {progress.completed}/{progress.total} complete
+                        </p>
+                    </div>
+                    <Select
+                        type="single"
+                        value={current.slug}
+                        onValueChange={(value) => {
+                            if (value) {
+                                visitLesson(value);
+                            }
+                        }}
+                    >
+                        <SelectTrigger aria-label="Choose lesson">
+                            <SelectValue placeholder="Choose lesson" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {#each modules as module, mIndex (module.title)}
+                                <SelectLabel>
+                                    Module {mIndex + 1}: {module.title}
+                                </SelectLabel>
+                                {#each module.lessons as lesson (lesson.slug)}
+                                    <SelectItem value={lesson.slug}>
+                                        {lesson.title}
+                                    </SelectItem>
+                                {/each}
+                                {#if mIndex < modules.length - 1}
+                                    <SelectSeparator />
+                                {/if}
+                            {/each}
+                        </SelectContent>
+                    </Select>
+                </div>
+
                 <!-- Tabs -->
                 <div class="mt-6 flex items-center gap-1 border-b">
                     {#each ['overview', 'transcript', 'resources'] as const as tab (tab)}
@@ -227,6 +281,7 @@
                             <div
                                 class="rich-content text-sm leading-relaxed text-muted-foreground whitespace-pre-wrap"
                             >
+                                <!-- eslint-disable-next-line svelte/no-at-html-tags -->
                                 {@html DOMPurify.sanitize(
                                     current.description || '',
                                 )}
