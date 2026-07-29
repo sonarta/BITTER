@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { onDestroy } from 'svelte';
     import { router } from '@inertiajs/svelte';
-    import { submit as submitExam } from '@/routes/courses/exam';
+    import { onDestroy } from 'svelte';
+    import { SvelteSet } from 'svelte/reactivity';
     import AppHead from '@/components/AppHead.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@
     import { Label } from '@/components/ui/label';
     import { Separator } from '@/components/ui/separator';
     import { Textarea } from '@/components/ui/textarea';
+    import { submit as submitExam } from '@/routes/courses/exam';
 
     type ExamOption = { id: string; text: string };
 
@@ -82,10 +83,6 @@
     }
 
     $effect(() => {
-        remaining = Math.floor(attempt.remaining_seconds);
-    });
-
-    $effect(() => {
         const next: Record<string, AnswerDraft> = {};
 
         for (const q of questions) {
@@ -101,7 +98,7 @@
 
     function toggleOption(questionId: string, optionId: string): void {
         const current = ensureDraft(questionId);
-        const next = new Set(current.selected_option_ids);
+        const next = new SvelteSet(current.selected_option_ids);
 
         if (next.has(optionId)) {
             next.delete(optionId);
@@ -139,7 +136,9 @@
     );
 
     function submit(reason: 'manual' | 'timeout' = 'manual'): void {
-        if (submitting) return;
+        if (submitting) {
+return;
+}
 
         if (reason === 'manual') {
             const unanswered = questions.length - answeredCount;
@@ -179,6 +178,7 @@
         const totalSeconds = Math.floor(seconds);
         const m = Math.floor(totalSeconds / 60);
         const s = totalSeconds % 60;
+
         return `${m}:${String(s).padStart(2, '0')}`;
     }
 

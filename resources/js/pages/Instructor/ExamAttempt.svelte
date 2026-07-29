@@ -48,9 +48,12 @@
     let gradesInitialized = $state(false);
 
     $effect(() => {
-        if (gradesInitialized) return;
+        if (gradesInitialized) {
+return;
+}
 
         const next: Record<string, number> = {};
+
         for (const a of answers) {
             if (a.question.type === 'essay') {
                 next[a.id] = a.points_awarded ?? 0;

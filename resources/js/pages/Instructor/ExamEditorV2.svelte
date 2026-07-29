@@ -16,17 +16,9 @@
     import Plus from 'lucide-svelte/icons/plus';
     import Trash2 from 'lucide-svelte/icons/trash-2';
     import X from 'lucide-svelte/icons/x';
+    import { onDestroy, untrack } from 'svelte';
+    import { SvelteMap } from 'svelte/reactivity';
     import { toast } from 'svelte-sonner';
-    import { show as courseShow } from '@/routes/courses';
-    import { curriculum as instructorCourseCurriculum } from '@/routes/instructor/courses';
-    import { upsert as examUpsert } from '@/routes/instructor/courses/exam';
-    import {
-        destroy as destroyQuestionRoute,
-        reorder as reorderQuestionsRoute,
-        store as storeQuestionRoute,
-        update as updateQuestionRoute,
-    } from '@/routes/instructor/courses/exam/questions';
-    import { show as showAttemptRoute } from '@/routes/instructor/courses/exam/attempts';
     import AppHead from '@/components/AppHead.svelte';
     import InputError from '@/components/InputError.svelte';
     import { Badge } from '@/components/ui/badge';
@@ -36,7 +28,16 @@
     import { Label } from '@/components/ui/label';
     import { Separator } from '@/components/ui/separator';
     import { Textarea } from '@/components/ui/textarea';
-    import { onDestroy, untrack } from 'svelte';
+    import { show as courseShow } from '@/routes/courses';
+    import { curriculum as instructorCourseCurriculum } from '@/routes/instructor/courses';
+    import { upsert as examUpsert } from '@/routes/instructor/courses/exam';
+    import { show as showAttemptRoute } from '@/routes/instructor/courses/exam/attempts';
+    import {
+        destroy as destroyQuestionRoute,
+        reorder as reorderQuestionsRoute,
+        store as storeQuestionRoute,
+        update as updateQuestionRoute,
+    } from '@/routes/instructor/courses/exam/questions';
 
     type Option = { id: string; text: string; is_correct: boolean; sort_order: number };
     type Question = {
@@ -123,7 +124,7 @@
     let activeTab = $state<EditorTab>('overview');
 
     let settingsAutosaveTimer: ReturnType<typeof setTimeout> | null = null;
-    const questionAutosaveTimers = new Map<string, ReturnType<typeof setTimeout>>();
+    const questionAutosaveTimers = new SvelteMap<string, ReturnType<typeof setTimeout>>();
     let highlightTimer: ReturnType<typeof setTimeout> | null = null;
 
     const tabs: { id: EditorTab; label: string }[] = [
@@ -245,6 +246,7 @@
 
         if (list.length === 0) {
             issues.push({ message: 'Tambahkan minimal 1 pertanyaan.', questionId: null });
+
             return issues;
         }
 
@@ -265,6 +267,7 @@
             }
 
             const hasEmptyOption = question.options.some((option) => !option.text.trim());
+
             if (hasEmptyOption) {
                 issues.push({ message: `${label}: ada opsi yang masih kosong.`, questionId: question.id });
             }
@@ -409,6 +412,7 @@
 
         if (dirtyQuestionsList.length === 0) {
             toast.info('Tidak ada soal yang perlu disimpan.');
+
             return;
         }
 
@@ -418,12 +422,14 @@
 
         const done = (success: boolean) => {
             bulkSavePending = Math.max(0, bulkSavePending - 1);
+
             if (!success) {
                 bulkSaveErrors = bulkSaveErrors + 1;
             }
 
             if (bulkSavePending === 0) {
                 bulkSaving = false;
+
                 if (bulkSaveErrors === 0) {
                     if (settingsDirty && !form.processing) {
                         saveExam('auto');
@@ -464,6 +470,7 @@
     function normalizeCorrectOptions(question: Question): void {
         if (question.type === 'essay') {
             question.options = [];
+
             return;
         }
 
@@ -494,6 +501,7 @@
     function handleQuestionTypeChange(question: Question): void {
         if (question.type === 'essay') {
             question.options = [];
+
             return;
         }
 
@@ -523,6 +531,7 @@
             if (mode === 'manual') {
                 toast.error('Ada opsi yang masih kosong.');
             }
+
             return;
         }
 
@@ -553,6 +562,7 @@
             },
             onError: () => {
                 hasError = true;
+
                 if (mode === 'manual') {
                     toast.error('Gagal menyimpan soal.');
                 }
@@ -613,6 +623,7 @@
     function moveQuestion(questionId: string, direction: -1 | 1): void {
         const index = questions.findIndex((question) => question.id === questionId);
         const nextIndex = index + direction;
+
         if (index < 0 || nextIndex < 0 || nextIndex >= questions.length) {
             return;
         }

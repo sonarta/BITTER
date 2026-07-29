@@ -35,6 +35,7 @@
     const filtered = $derived(
         enrollments.filter((enrollment) => {
             const q = query.trim().toLowerCase();
+
             if (q === '') {
                 return true;
             }

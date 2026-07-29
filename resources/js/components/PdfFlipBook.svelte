@@ -22,16 +22,19 @@
 
     function extractGoogleDriveId(input: string): string | null {
         const fileMatch = input.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+
         if (fileMatch?.[1]) {
             return fileMatch[1];
         }
 
         const idParamMatch = input.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+
         if (idParamMatch?.[1]) {
             return idParamMatch[1];
         }
 
         const ucMatch = input.match(/drive\.google\.com\/uc\?id=([a-zA-Z0-9_-]+)/);
+
         if (ucMatch?.[1]) {
             return ucMatch[1];
         }

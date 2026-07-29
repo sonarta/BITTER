@@ -11,10 +11,11 @@
 <script lang="ts">
     import { useForm } from '@inertiajs/svelte';
     import Save from 'lucide-svelte/icons/save';
+    import { untrack } from 'svelte';
     import AppHead from '@/components/AppHead.svelte';
     import CourseCover from '@/components/CourseCover.svelte';
-    import InstructorNav from '@/components/InstructorNav.svelte';
     import InputError from '@/components/InputError.svelte';
+    import InstructorNav from '@/components/InstructorNav.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
@@ -46,7 +47,6 @@
         price: number;
     } | null;
 
-    import { untrack } from 'svelte';
 
     let {
         course = null,

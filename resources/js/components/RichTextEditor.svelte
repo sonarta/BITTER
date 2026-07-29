@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
     import Quill from 'quill';
     import 'quill/dist/quill.snow.css';
 
@@ -15,7 +14,9 @@
     let quill: Quill | null = null;
 
     $effect(() => {
-        if (!editorRef || quill) return;
+        if (!editorRef || quill) {
+return;
+}
 
         quill = new Quill(editorRef, {
             theme: 'snow',
@@ -37,12 +38,16 @@
 
         // Listen for changes in the editor
         quill.on('text-change', () => {
-            if (!quill) return;
+            if (!quill) {
+return;
+}
+
             const html = quill.root.innerHTML;
             const text = quill.getText().trim();
 
             // Set value to empty string if editor is empty
             const newVal = text === '' && !html.includes('<img') ? '' : html;
+
             if (value !== newVal) {
                 value = newVal;
             }
@@ -54,6 +59,7 @@
         if (quill && value !== undefined && value !== quill.root.innerHTML) {
             // Avoid setting empty default paragraph to prevent infinite updates
             const currentHTML = quill.root.innerHTML;
+
             if (value !== currentHTML) {
                 quill.root.innerHTML = value || '';
             }

@@ -21,6 +21,7 @@
     import AppHead from '@/components/AppHead.svelte';
     import InputError from '@/components/InputError.svelte';
     import InstructorNav from '@/components/InstructorNav.svelte';
+    import RichTextEditor from '@/components/RichTextEditor.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import {
@@ -32,7 +33,6 @@
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
     import { Textarea } from '@/components/ui/textarea';
-    import RichTextEditor from '@/components/RichTextEditor.svelte';
 
     type Resource = {
         id: string;

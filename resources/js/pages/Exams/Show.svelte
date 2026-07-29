@@ -11,12 +11,12 @@
 
 <script lang="ts">
     import { Link, router } from '@inertiajs/svelte';
-    import { show as courseShow } from '@/routes/courses';
-    import { start as examStart, take as examTake } from '@/routes/courses/exam';
     import AppHead from '@/components/AppHead.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+    import { show as courseShow } from '@/routes/courses';
+    import { start as examStart, take as examTake } from '@/routes/courses/exam';
 
     let {
         course,
