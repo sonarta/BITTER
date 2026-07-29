@@ -133,6 +133,8 @@
         { id: 'attempts', label: 'Attempts' },
     ];
 
+    let initialized = $state(false);
+
     $effect(() => {
         activeTab = ui?.active_tab ?? 'overview';
         form.title = exam?.title ?? 'Final Exam';
@@ -142,16 +144,23 @@
         form.pass_score = exam?.pass_score ?? 70;
         form.is_published = exam?.is_published ?? false;
 
-        questions =
-            exam?.questions.map((question) => ({
-                ...question,
-                options: question.options.map((option) => ({ ...option })),
-            })) ?? [];
+        const hasDirtyQuestions = Object.values(dirtyQuestions).some(Boolean);
+        const hasSavingQuestions = Object.values(savingQuestions).some(Boolean);
 
-        dirtyQuestions = {};
-        savedQuestions = {};
-        settingsDirty = false;
-        settingsSaved = false;
+        if (!initialized || (!hasDirtyQuestions && !hasSavingQuestions && !reordering)) {
+            questions =
+                exam?.questions.map((question) => ({
+                    ...question,
+                    options: question.options.map((option) => ({ ...option })),
+                })) ?? [];
+
+            dirtyQuestions = {};
+            savedQuestions = {};
+            settingsDirty = false;
+            settingsSaved = false;
+        }
+
+        initialized = true;
     });
 
     let newQuestion = $state({
@@ -490,8 +499,8 @@
 
         if (question.type === 'true_false' && question.options.length === 0) {
             question.options = [
-                { id: '', text: 'True', is_correct: false, sort_order: 0 },
-                { id: '', text: 'False', is_correct: false, sort_order: 1 },
+                { id: crypto.randomUUID(), text: 'True', is_correct: false, sort_order: 0 },
+                { id: crypto.randomUUID(), text: 'False', is_correct: false, sort_order: 1 },
             ];
         }
 
@@ -509,6 +518,13 @@
 
         question.points = Number(question.points) || 0;
         normalizeCorrectOptions(question);
+
+        if (question.type !== 'essay' && question.options.some((option) => !option.text.trim())) {
+            if (mode === 'manual') {
+                toast.error('Ada opsi yang masih kosong.');
+            }
+            return;
+        }
 
         let hasError = false;
 
@@ -571,7 +587,7 @@
 
         question.options = [
             ...question.options,
-            { id: '', text: '', is_correct: false, sort_order: question.options.length },
+            { id: crypto.randomUUID(), text: '', is_correct: false, sort_order: question.options.length },
         ];
         markDirty(question.id);
     }
@@ -966,7 +982,7 @@
                                                 Add option
                                             </Button>
                                         </div>
-                                        {#each question.options as option, optionIndex (optionIndex)}
+                                        {#each question.options as option, optionIndex (option.id)}
                                             <div class="flex items-start gap-2">
                                                 {#if question.type === 'multiple'}
                                                     <input
