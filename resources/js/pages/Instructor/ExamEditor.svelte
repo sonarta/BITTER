@@ -97,6 +97,7 @@
     let settingsAutosaveTimer: ReturnType<typeof setTimeout> | null = null;
     const questionAutosaveTimers = new SvelteMap<string, ReturnType<typeof setTimeout>>();
     let highlightTimer: ReturnType<typeof setTimeout> | null = null;
+    let initialized = $state(false);
 
     $effect(() => {
         form.title = exam?.title ?? 'Final Exam';
@@ -106,16 +107,23 @@
         form.pass_score = exam?.pass_score ?? 70;
         form.is_published = exam?.is_published ?? false;
 
-        questions =
-            exam?.questions.map((q) => ({
-                ...q,
-                options: q.options.map((o) => ({ ...o })),
-            })) ?? [];
+        const hasDirtyQuestions = Object.values(dirtyQuestions).some(Boolean);
+        const hasSavingQuestions = Object.values(savingQuestions).some(Boolean);
 
-        dirtyQuestions = {};
-        savedQuestions = {};
-        settingsDirty = false;
-        settingsSaved = false;
+        if (!initialized || (!hasDirtyQuestions && !hasSavingQuestions && !reordering)) {
+            questions =
+                exam?.questions.map((q) => ({
+                    ...q,
+                    options: q.options.map((o) => ({ ...o })),
+                })) ?? [];
+
+            dirtyQuestions = {};
+            savedQuestions = {};
+            settingsDirty = false;
+            settingsSaved = false;
+        }
+
+        initialized = true;
     });
 
     let newQuestion = $state({
@@ -421,8 +429,8 @@
         if (q.type === 'true_false') {
             if (q.options.length === 0) {
                 q.options = [
-                    { id: '', text: 'True', is_correct: false, sort_order: 0 },
-                    { id: '', text: 'False', is_correct: false, sort_order: 1 },
+                    { id: crypto.randomUUID(), text: 'True', is_correct: false, sort_order: 0 },
+                    { id: crypto.randomUUID(), text: 'False', is_correct: false, sort_order: 1 },
                 ];
             }
         }
@@ -441,6 +449,14 @@
 
         q.points = Number(q.points) || 0;
         normalizeCorrectOptions(q);
+
+        if (q.type !== 'essay' && q.options.some((o) => !o.text.trim())) {
+            if (mode === 'manual') {
+                toast.error('Ada opsi yang masih kosong.');
+            }
+
+            return;
+        }
 
         let hasError = false;
 
@@ -504,7 +520,7 @@
 
         q.options = [
             ...q.options,
-            { id: '', text: '', is_correct: false, sort_order: q.options.length },
+            { id: crypto.randomUUID(), text: '', is_correct: false, sort_order: q.options.length },
         ];
         markDirty(q.id);
     }
@@ -888,7 +904,7 @@ return;
                                             Add option
                                         </Button>
                                     </div>
-                                    {#each q.options as opt, oi (oi)}
+                                    {#each q.options as opt, oi (opt.id)}
                                         <div class="flex items-start gap-2">
                                             {#if q.type === 'multiple'}
                                                 <input
