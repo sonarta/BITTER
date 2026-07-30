@@ -107,10 +107,11 @@
         form.pass_score = exam?.pass_score ?? 70;
         form.is_published = exam?.is_published ?? false;
 
-        const hasDirtyQuestions = Object.values(dirtyQuestions).some(Boolean);
-        const hasSavingQuestions = Object.values(savingQuestions).some(Boolean);
+        const hasDirtyQuestions = untrack(() => Object.values(dirtyQuestions).some(Boolean));
+        const hasSavingQuestions = untrack(() => Object.values(savingQuestions).some(Boolean));
+        const isReordering = untrack(() => reordering);
 
-        if (!initialized || (!hasDirtyQuestions && !hasSavingQuestions && !reordering)) {
+        if (!initialized || (!hasDirtyQuestions && !hasSavingQuestions && !isReordering)) {
             questions =
                 exam?.questions.map((q) => ({
                     ...q,
